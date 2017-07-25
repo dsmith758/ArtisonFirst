@@ -1,0 +1,15 @@
+<section id="content">
+	<div class="container" ng-controller="loginController">
+		<ng-include src="'app/views/templates/header.html'"/>
+		<div id="sub-group" class="sub-group">
+			<ng-include src="'app/views/body/login-body.html'"/>
+		</div>
+		<div class="action-btn-div">
+			<input type="button" class="action-btn" value="LOGIN"  ng-click="login()"/>
+			<input type="button" class="action-btn" value="REGISTER"  ng-click="go('/register')"/>
+		</div>
+		<div class="group-link-div">
+			<a ng-click="go('/reset-password')" class="form-anchor">Forgot password</a><br>
+		</div>
+	</div>
+</section>

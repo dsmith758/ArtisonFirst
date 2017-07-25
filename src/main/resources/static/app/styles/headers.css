@@ -1,0 +1,75 @@
+.header {
+	font-family: sans-serif;
+	color: #046493;
+	font-size: 30px;
+	font-weight: bold;
+	text-align: center;
+	padding: 0px 0px 0px 0px;
+}
+
+.sub-header {
+	font-family: sans-serif;
+	color: #AAA;
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	padding: 0px 0px 0px 0px;
+}
+
+.group-header {
+	font-family: sans-serif;
+	color: #046493;
+	font-size: 15px;
+	font-weight: bold;
+	text-align: left;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.message {
+	font-family: sans-serif;
+	color: #900;
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	padding-top: 0px;
+}
+
+.notification {
+	font-family: sans-serif;
+	color: #046493;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.identity-div {
+	padding-top: 0px;
+	padding-botton: 25px;
+	border-bottom: 1px solid #aaa;
+	height: auto;
+	overflow: hidden;
+}
+
+.identity-text {
+	float: right;
+	width: auto;
+	font-family: sans-serif;
+	color: #009;
+	font-size: 12px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.back-text {
+	float: none;
+	width: auto;
+	overflow: hidden;
+	font-family: sans-serif;
+	color: #009;
+	font-size: 12px;
+	font-weight: bold;
+	cursor: pointer;
+}

@@ -1,0 +1,16 @@
+<section id="content">
+	<div class="container" ng-controller="registrationController">
+		<ng-include src="'app/views/templates/header.html'"/>
+		<div id="option-group" class="group">
+			<ng-include src="'app/views/body/profile-body.html'"/>
+			<ng-include src="'app/views/body/registration-body.html'"/>
+			<ng-include src="'app/views/body/business-body.html'"/>
+			<ng-include src="'app/views/body/location-body.html'"/>
+			<ng-include src="'app/views/body/contact-info-body.html'"/>
+		</div>
+		<div class="action-btn-div">
+			<input type="button" class="action-btn" value="SUBMIT"  ng-click="saveRegistration()"/>
+			<input type="button" class="action-btn" value="CANCEL"  ng-click="go('/login')"/>
+		</div>
+	</div>
+</section>

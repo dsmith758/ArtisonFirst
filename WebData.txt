@@ -1,0 +1,17 @@
+aws.amazon.com
+login: dsmith75
+password: Doctor73#
+
+App Name: ArtisonFirst
+
+MySQL Database
+
+java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n -jar build/libs/ArtisonFirst-1.0.0-SNAPSHOT.jar --spring.profiles.active=dev
+
+java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n -jar build/libs/ArtisonFirst-1.0.14.war --spring.profiles.active=dev
+
+AWS:
+
+dmith758
+AKIAJWDGAKWDJ5PK2RVA
+mI+yK6Hxkra+QT6WzavhGyvtA5Th9U8iDX3NzaZ1

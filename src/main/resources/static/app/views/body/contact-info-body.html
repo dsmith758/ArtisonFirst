@@ -1,0 +1,28 @@
+<div class="group-header">
+	Contact Information:
+</div>
+<div class="sub-group">
+	<table class='form-table' style="windows: 100%;">
+		<tbody>
+			<tr class='form-row-group' ng-repeat="ci in registration.person.contactInfo">
+				<td class='form-cell'>
+					<select class="form-input" ng-model="ci.contactType" ng-options="contactOption.value as contactOption.name for contactOption in contactOptions"></select> <br>
+					<label class='form-label'>Contact Type</label>
+				</td>
+				<td class='form-cell'>
+					<input type="text" placeholder="E.g., email address" ng-model="ci.value" class="form-input"/><br> 
+					<label class='form-label'>Information</label>
+				</td>
+				<td class='form-button' >
+					<a ng-click="removeContactInfo($index)"><img src="image/system/trash.png" width="30" style="cursor: pointer;"></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="group-link-div">
+		<a ng-click="addContactInfo()"  class="form-anchor">Add new contact information</a>
+	</div>
+</div>
+
+
+		

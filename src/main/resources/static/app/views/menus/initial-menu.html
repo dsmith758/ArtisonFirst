@@ -1,0 +1,23 @@
+
+<div class="nav-div">
+		<ul>
+			<li><a ng-click="go('/about')" class="menu-item">About ArtisonFirst</a></li>
+		</ul>
+
+	<div ng-hide="authenticated">
+		<ul>
+			<li><a ng-click="go('/login')" class="menu-item">Login</a></li>
+			<li><a ng-click="go('/register')" class="menu-item">Register Account</a></li>
+		</ul>
+	</div>
+		
+	<div ng-show="authenticated">
+		<ul>
+			<li><a ng-click="go('/main')" class="menu-item">Manage User Profile</a></li>
+			<li><a ng-click="go('/profile')" class="menu-item">Manage User Profile</a></li>
+			<li><a ng-click="go('/business')" class="menu-item">Manage Business Profile</a></li>
+			<li><a ng-click="go('/products')" class="menu-item">Manage Products</a></li>
+			<li><a ng-click="logout()" class="menu-item">logout</a></li>
+		</ul>
+	</div>
+</div>

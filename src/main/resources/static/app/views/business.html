@@ -1,0 +1,15 @@
+<section id="content">
+	<div class="container" ng-controller="businessController">
+		<ng-include src="'app/views/templates/identifier.html'"/>
+		<ng-include src="'app/views/templates/header.html'"/>
+		<div id="option-group" class="group">
+			<ng-include src="'app/views/body/business-image-body.html'"/>
+			<ng-include src="'app/views/body/business-body.html'"/>
+			<ng-include src="'app/views/body/location-body.html'"/>
+		</div>
+		<div class="action-btn-div">
+			<input type="button" class="action-btn" value="SUBMIT"  ng-click="saveBusiness()"/>
+			<input type="button" class="action-btn" value="CANCEL"  ng-click="go('/main')"/>
+		</div>
+	</div>
+</section>

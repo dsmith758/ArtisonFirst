@@ -1,0 +1,66 @@
+nav {
+	position: fixed;
+	left: -16em;
+	top: 0;
+	bottom: 0;
+	background-color: #fff;
+	border-right: 50px solid #046493;
+	box-shadow: 5px 0px 5px #888;
+	z-index: 1;
+	cursor: pointer;
+}
+
+nav:after {
+	position: absolute;
+	content: ' ';
+	width: 0;
+	height: 0;
+	right: -70px;
+	top: 50%;
+	border-width: 15px 10px;
+	border-style: solid;
+	border-color: transparent transparent transparent transparent;
+}
+
+.nav-div {
+	width: 255px;
+	color: #FFF;
+}
+
+nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 1em;
+	font-family: sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+nav, nav * {
+	-webkit-transition: all 300ms ease;
+	-moz-transition: all 300ms ease;
+	-ms-transition: all 300ms ease;
+	-o-transition: all 300ms ease;
+	transition: all 300ms ease;
+}
+
+.menu-item {
+	width: 14em;
+	font-family: sans-serif;
+	color: #000;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 999;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}​

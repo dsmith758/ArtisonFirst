@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    platform: mysql
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://aambo705txuq1p.co3k35ieamtz.us-east-2.rds.amazonaws.com:3306/ebdb
+    username: dsmith758
+    password: Doctor73#
+    testWhileIdle: true
+    validationQuery: "/* ping */ SELECT 1"
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+flyway:
+  outOfOrder: true
+  
+artisonfirst:
+  key: zxkBxQhpLhwYZex=
+ 
+server:
+  port: 5000

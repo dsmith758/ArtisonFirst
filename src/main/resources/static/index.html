@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ArtisonFirst.artison">
+<head>
+
+<title>Artison First</title>
+
+<meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8" />
+<meta name="description" content="The official website for Artison First" />
+<meta name="resource-type" content="document" />
+<meta name="distribution" content="global" />
+<meta name="author" content="Walkersmith Tech" />
+<meta name="copyright" content="Copyright (c) Artison First" />
+<meta name="robots" content="index, follow/" />
+<meta name="revisit-after" content="1 days" />
+<meta name="rating" content="general" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="-1" />
+
+
+<script type="text/javascript" src="include/jquery-3.2.0.js"></script>
+<script type="text/javascript" src="include/angular-1.6.3/angular.js"></script>
+<script type="text/javascript" src="include/angular-1.6.3/angular-route.js"></script>
+<script type="text/javascript" src="include/angular-1.6.3/angular-resource.js"></script>
+
+<script type="text/javascript" src="app/app.js"></script>
+
+<script type="text/javascript" src="app/services/ProfileService.js"></script>
+<script type="text/javascript" src="app/services/LoginService.js"></script>
+<script type="text/javascript" src="app/services/BusinessService.js"></script>
+<script type="text/javascript" src="app/services/RegistrationService.js"></script>
+
+<script type="text/javascript" src="app/controllers/LoginController.js"></script>
+<script type="text/javascript" src="app/controllers/MenuController.js"></script>
+<script type="text/javascript" src="app/controllers/LandingController.js"></script>
+<script type="text/javascript" src="app/controllers/ProfileController.js"></script>
+<script type="text/javascript" src="app/controllers/BusinessController.js"></script>
+<script type="text/javascript" src="app/controllers/RegistrationController.js"></script>
+<script type="text/javascript" src="app/controllers/ProductController.js"></script>
+
+<script type="text/javascript" src="app/directives/PreLoginDirective.js"></script>
+
+<link rel="stylesheet" type="text/css" href="app/styles/nav.css">
+<link rel="stylesheet" type="text/css" href="app/styles/article.css">
+<link rel="stylesheet" type="text/css" href="app/styles/main.css">
+<link rel="stylesheet" type="text/css" href="app/styles/headers.css">
+<link rel="stylesheet" type="text/css" href="app/styles/forms.css">
+<link rel="stylesheet" type="text/css" href="app/styles/buttons.css">
+<link rel="stylesheet" type="text/css" href="app/styles/product.css">
+<link rel="stylesheet" type="text/css" href="app/styles/effects.css">
+
+</head>
+<body style="background-color: #000;">
+
+	<div class="overlay" ng-controller="menuController" ng-show="isMenuOpen == true"></div>
+	
+	<nav>
+		<div ng-controller="menuController">
+			<div id="menu-icon" ng-click="toggleMenuBtn()"><img class="menu-btn" src="image/system/menu.png" /></div>
+			<div id="menu-icon" ng-click="go( '/message')"><img class="message-btn" src="image/system/message.png"/></div>
+			<div id="menu-icon" ng-click="go( '/profile' )"><img class="profile-btn" src="image/system/profile.png"/></div>
+			<div id="MenuBody" ng-include="'app/views/menus/initial-menu.html'"></div>
+		</div>
+	</nav>
+	
+	<article>
+		<div>
+			<input id="menu-toggle" class="menu-toggle" type="checkbox"/>
+			<div ng-view></div>
+		</div>
+	</article>
+
+
+
+</body>
+</html>

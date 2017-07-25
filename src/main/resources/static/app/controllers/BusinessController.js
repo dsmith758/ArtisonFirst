@@ -16,6 +16,7 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 	        displayName: "",
 	    },
 		company : {
+			uid : "",
 			companyName : "",
 			businessType : ""
 		},
@@ -47,8 +48,8 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 			if ( results.data.account.authenticated == true ) {
 				LoginService.setAuth(results.data);
 				$scope.registration.account = results.data.account;
-				$scope.registration.organization.company = results.data.company;
-				$scope.registration.organization.addressInfo = results.data.addressInfo;
+				$scope.registration.company = results.data.company;
+				$scope.registration.addressInfo = results.data.addressInfo;
 				$scope.message = "Business Profile updated";
 			} else {
 				LoginService.clearAuth();

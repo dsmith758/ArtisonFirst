@@ -1,0 +1,13 @@
+<section id="content">
+	<div class="container" ng-controller="productController">
+		<ng-include src="'app/views/templates/identifier.html'"/>
+		<ng-include src="'app/views/templates/header.html'"/>
+		<div id="option-group" class="group">
+			<ng-include src="'app/views/body/product-body.html'"/>
+		</div>
+		<div class="action-btn-div">
+			<input type="button" class="action-btn" value="SUBMIT"  ng-click="saveProduct()"/>
+			<input type="button" class="action-btn" value="CANCEL"  ng-click="go('/main')"/>
+		</div>
+	</div>
+</section>

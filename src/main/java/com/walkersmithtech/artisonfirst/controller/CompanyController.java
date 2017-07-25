@@ -41,7 +41,7 @@ public class CompanyController extends BaseController
 	}
 
 	@RequestMapping( method = RequestMethod.PUT, value = "/companies/{uid}" )
-	public ResponseEntity<OrganizationDto> update( HttpServletRequest requestContext, @RequestBody OrganizationDto model, @RequestBody String uid )
+	public ResponseEntity<OrganizationDto> update( HttpServletRequest requestContext, @PathVariable String uid, @RequestBody OrganizationDto model )
 	{
 		try
 		{

@@ -16,7 +16,7 @@ public class PersonCompanyServiceImpl extends BaseRelationService<PersonCompany>
 {
 	public PersonCompanyServiceImpl()
 	{
-		roleType = RelationshipRole.PERSON_COMPANY;
+		roleType = RelationshipRole.PERSON_COMPANY.name();
 		relationClass = PersonCompany.class;
 		sourceClass = Person.class;
 		targetClass = Company.class;

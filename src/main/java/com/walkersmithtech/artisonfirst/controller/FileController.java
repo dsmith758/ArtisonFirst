@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
-import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.data.model.dto.FileDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
 import com.walkersmithtech.artisonfirst.service.ServiceException;
+import com.walkersmithtech.artisonfirst.service.impl.CompanyServiceImpl;
 import com.walkersmithtech.artisonfirst.service.impl.FileManagerSerivceImpl;
-import com.walkersmithtech.artisonfirst.service.impl.PersonServiceImpl;
+import com.walkersmithtech.artisonfirst.service.impl.PersonImageServiceImpl;
 
 public class FileController extends BaseController
 {
@@ -28,7 +28,10 @@ public class FileController extends BaseController
 	private FileManagerSerivceImpl service;
 	
 	@Autowired
-	private PersonServiceImpl personService;
+	private PersonImageServiceImpl personImageService;
+	
+	@Autowired
+	private CompanyServiceImpl companyService;
 	
 	@RequestMapping( method = RequestMethod.POST, value = "/persons/{uid}/images" )
 	public ResponseEntity<ImageDto> importPersonImage( HttpServletRequest requestContext, @RequestHeader( value = "session-id" ) String sessionId, @RequestHeader( value = "user-token" ) String token, @PathVariable String uid, @RequestParam( "file" ) MultipartFile file )
@@ -40,7 +43,7 @@ public class FileController extends BaseController
 			{
 				auth = ( ImageDto ) validateSession( requestContext, auth, sessionId, token );
 				auth.setFileName( file.getOriginalFilename() );
-				auth = personService.addProfileImage( auth, uid, file.getBytes() );
+				auth = personImageService.addAndSetAsProfileImage( auth, uid, file.getBytes() );
 				return new ResponseEntity<ImageDto>( auth, HttpStatus.OK );
 			}
 			catch ( ServiceException ex )
@@ -73,8 +76,7 @@ public class FileController extends BaseController
 			{
 				auth = ( ImageDto ) validateSession( requestContext, auth, sessionId, token );
 				auth.setFileName( file.getOriginalFilename() );
-				auth = ( ImageDto ) service.createFileRecord( file.getBytes(), auth );
-				auth = (ImageDto) service.createFileRelation( uid, RelationshipRole.COMPANY_LOGO.name(), auth );
+				auth = companyService.addAndSetCompanyLogo( auth, uid, file.getBytes() );
 				return new ResponseEntity<ImageDto>( auth, HttpStatus.OK );
 			}
 			catch ( ServiceException ex )

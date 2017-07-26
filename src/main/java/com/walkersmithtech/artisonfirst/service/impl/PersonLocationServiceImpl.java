@@ -14,7 +14,7 @@ public class PersonLocationServiceImpl extends BaseRelationService< PersonLocati
 {
 	public PersonLocationServiceImpl()
 	{
-		roleType = RelationshipRole.PERSON_LOCATION;
+		roleType = RelationshipRole.PERSON_LOCATION.name();
 		relationClass = PersonLocation.class;
 		sourceClass = Person.class;
 		targetClass = Location.class;

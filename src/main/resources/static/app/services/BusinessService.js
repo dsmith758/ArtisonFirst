@@ -12,7 +12,7 @@ app.factory('BusinessService', function($http, $rootScope, $window) {
 					'user-token' : $rootScope.token
 				}
 			}
-			var path = "/persons/" + $rootScope.personUid + "/companies";
+			var path = "/persons/" + $rootScope.personUid + "/companies" + "?session-id=" + $rootScope.sessionId + "&user-token=" + encodeURIComponent( $rootScope.token );
 			return $http.get(path, headers);
 		}
 	};

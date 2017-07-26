@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.walkersmithtech.artisonfirst.constant.IndexType;
-import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationData;
 import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationDataIndex;
 import com.walkersmithtech.artisonfirst.data.model.relation.BaseObjectRelation;
@@ -27,7 +26,7 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 	@Autowired
 	private BaseService baseService;
 
-	protected RelationshipRole roleType;
+	protected String roleType;
 	protected Class<?> relationClass;
 	protected Class<?> modelClass;
 	protected Class<?> sourceClass;
@@ -74,7 +73,7 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 	
 	public List<T> getAllRelations()
 	{
-		List<ObjectRelationData> entities = dataRepo.findByRole( roleType.name() );
+		List<ObjectRelationData> entities = dataRepo.findByRole( roleType );
 		return convertEntitiesToModels( entities );
 	}
 
@@ -108,7 +107,7 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 		entity.setTargetUid( relation.getTargetUid() );
 		entity.setCreatedOn( DateUtil.getCurrentDate() );
 		entity.setUpdatedOn( DateUtil.getCurrentDate() );
-		entity.setRole( relation.getRole().name() );
+		entity.setRole( relation.getRole() );
 		entity.setData( JsonUtil.createJsonFromModel( relation ));
 		entity = dataRepo.save( entity );
 		relation.setId( entity.getId() );

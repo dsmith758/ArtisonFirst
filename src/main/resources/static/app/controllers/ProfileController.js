@@ -76,6 +76,8 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 				$scope.message = "Authentication lost";
 				$location.path('/login');
 			}
+		}, function(error) {
+			$scope.message = "Error retrieving profile: " + error;
 		});
 	};
 
@@ -93,7 +95,7 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 				$location.path('/login');
 			}
 		}, function(error) {
-			$scope.message = "Error saving profile";
+			$scope.message = "Error saving profile: " + error;
 		});
 	};
 

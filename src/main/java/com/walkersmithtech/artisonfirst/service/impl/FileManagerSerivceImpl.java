@@ -1,6 +1,7 @@
 package com.walkersmithtech.artisonfirst.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.walkersmithtech.artisonfirst.data.entity.FileData;
 import com.walkersmithtech.artisonfirst.data.entity.FileRelationData;
@@ -12,6 +13,7 @@ import com.walkersmithtech.artisonfirst.service.ServiceException;
 import com.walkersmithtech.artisonfirst.util.DateUtil;
 import com.walkersmithtech.artisonfirst.util.JsonUtil;
 
+@Service
 public class FileManagerSerivceImpl extends BaseService
 {
 	@Autowired
@@ -36,7 +38,8 @@ public class FileManagerSerivceImpl extends BaseService
 	
 	public void deleteFileRecord( String uid )
 	{
-		relationRepo.deleteByUid( uid );
+		dataRepo.deleteByUid( uid );
+		relationRepo.deleteByFileUid( uid );
 	}
 	
 	public FileDto createFileRelation( String objectUid, String role, FileDto auth )
@@ -53,9 +56,15 @@ public class FileManagerSerivceImpl extends BaseService
 		return auth;
 	}
 	
-	public void deleteFileRelation( String objectUid, String role )
+	public void deleteFileRelationByObjectAndRole( String objectUid, String role )
 	{
 		relationRepo.deleteByObjectUidAndRole( objectUid, role );
 	}
+	
+	public void deleteFileRelationByObject( String objectUid )
+	{
+		relationRepo.deleteByObjectUid( objectUid );
+	}
+
 
 }

@@ -17,7 +17,7 @@ public interface ObjectRelationDataIndexRepository extends JpaRepository<ObjectR
 
 	@Modifying
 	@Transactional
-	@Query("delete from RelationDataIndex idx where idx.uid = ?1")
+	@Query("delete from ObjectRelationDataIndex idx where idx.uid = ?1")
 	public void deleteByUid( String objectUid );
 	
 }

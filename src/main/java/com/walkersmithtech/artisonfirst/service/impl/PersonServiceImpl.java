@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.constant.IndexType;
-import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.data.model.Person;
-import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
 import com.walkersmithtech.artisonfirst.data.model.fragment.ContactInfo;
 import com.walkersmithtech.artisonfirst.service.BaseModelService;
 import com.walkersmithtech.artisonfirst.service.ServiceException;
@@ -20,7 +18,7 @@ public class PersonServiceImpl extends BaseModelService<Person>
 {
 	
 	@Autowired
-	private FileManagerSerivceImpl fileService;
+	private PersonImageServiceImpl imageService;
 
 	public PersonServiceImpl()
 	{
@@ -43,6 +41,12 @@ public class PersonServiceImpl extends BaseModelService<Person>
 			throw ErrorCode.PERSON_NOT_FOUND.exception;
 		}
 		return updateModel( person );
+	}
+	
+	public void deletePerson( String uid ) throws ServiceException
+	{
+		imageService.removePersonImages( uid );
+		deleteModel( uid );
 	}
 
 	@Override
@@ -106,14 +110,6 @@ public class PersonServiceImpl extends BaseModelService<Person>
 		return models;
 	}
 	
-	public ImageDto addProfileImage( ImageDto auth, String personUid, byte[] file ) throws ServiceException
-	{
-		auth = ( ImageDto ) fileService.createFileRecord( file, auth );
-		fileService.deleteFileRelation( personUid, RelationshipRole.PERSON_IMAGE.name() );
-		auth = (ImageDto) fileService.createFileRelation( personUid, RelationshipRole.PERSON_IMAGE.name(), auth );
-		return auth;
-	}
-
 	private void validatePerson( Person person ) throws ServiceException
 	{
 		if ( person == null )

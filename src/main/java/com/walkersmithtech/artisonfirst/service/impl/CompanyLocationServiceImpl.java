@@ -18,7 +18,7 @@ public class CompanyLocationServiceImpl extends BaseRelationService<CompanyLocat
 
 	public CompanyLocationServiceImpl()
 	{
-		roleType = RelationshipRole.COMPANY_LOCATION;
+		roleType = RelationshipRole.COMPANY_LOCATION.name();
 		relationClass = CompanyLocation.class;
 		sourceClass = Company.class;
 		targetClass = Location.class;

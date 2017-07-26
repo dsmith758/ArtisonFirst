@@ -11,7 +11,7 @@ app.factory('ProfileService', function($http, $rootScope, $window) {
 					'user-token' : $rootScope.token
 				}
 			}
-			var path = "/persons/" + $rootScope.personUid;
+			var path = "/persons/" + $rootScope.personUid + "?session-id=" + $rootScope.sessionId + "&user-token=" + encodeURIComponent( $rootScope.token );
 			return $http.get(path, headers);
 		}
 

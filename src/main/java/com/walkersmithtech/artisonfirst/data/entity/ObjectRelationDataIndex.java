@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table( name = "object_relation_data_index" )
-@NamedQuery( name = "ObjectRelationDataIndex.findAll", query = "SELECT o FROM RelationDataIndex o" )
+@NamedQuery( name = "ObjectRelationDataIndex.findAll", query = "SELECT o FROM ObjectRelationDataIndex o" )
 public class ObjectRelationDataIndex
 {
 

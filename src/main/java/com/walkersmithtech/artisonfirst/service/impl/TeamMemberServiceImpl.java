@@ -13,7 +13,7 @@ public class TeamMemberServiceImpl extends BaseRelationService<TeamMember>
 {
 	public TeamMemberServiceImpl()
 	{
-		roleType = RelationshipRole.TEAM_MEMBER;
+		roleType = RelationshipRole.TEAM_MEMBER.name();
 		relationClass = TeamMember.class;
 		sourceClass = Team.class;
 		targetClass = Person.class;

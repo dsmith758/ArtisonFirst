@@ -61,7 +61,7 @@ public class CompanyController extends BaseController
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE, value = "/companies/{uid}" )
-	public ResponseEntity<CompanyDto> delete( HttpServletRequest requestContext, @PathVariable String uid, @RequestHeader( value = "session-id" ) String sessionId, @RequestHeader( value = "user-token" ) String token )
+	public ResponseEntity<CompanyDto> delete( HttpServletRequest requestContext, @PathVariable String uid, @RequestHeader( "session-id" ) String sessionId, @RequestHeader( "user-token" ) String token )
 	{
 		CompanyDto auth = new CompanyDto();
 		try
@@ -78,7 +78,7 @@ public class CompanyController extends BaseController
 	}
 
 	@RequestMapping( method = RequestMethod.GET, value = "/companies/{uid}" )
-	public ResponseEntity<CompanyDto> getByUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestHeader( value = "session-id" ) String sessionId, @RequestHeader( value = "user-token" ) String token )
+	public ResponseEntity<CompanyDto> getByUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestHeader( "session-id" ) String sessionId, @RequestHeader( "user-token" ) String token )
 	{
 		CompanyDto auth = new CompanyDto();
 		try

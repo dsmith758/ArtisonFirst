@@ -75,7 +75,7 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 				$location.path('/login');
 			}
 		}, function(error) {
-			$scope.message = "Error saving business profile";
+			$scope.message = "Error retrieving business: ";
 		});
 	}
 

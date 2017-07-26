@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table( name = "object_relation_data" )
-@NamedQuery( name = "ObjectRelationData.findAll", query = "SELECT r FROM RelationData r" )
+@NamedQuery( name = "ObjectRelationData.findAll", query = "SELECT r FROM ObjectRelationData r" )
 public class ObjectRelationData
 {
 

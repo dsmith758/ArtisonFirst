@@ -14,9 +14,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table( name = "relation_data" )
-@NamedQuery( name = "RelationData.findAll", query = "SELECT r FROM RelationData r" )
-public class RelationData
+@Table( name = "object_relation_data" )
+@NamedQuery( name = "ObjectRelationData.findAll", query = "SELECT r FROM RelationData r" )
+public class ObjectRelationData
 {
 
 	@Id
@@ -33,10 +33,10 @@ public class RelationData
 	@Column( name = "role", nullable = false, length = 32 )
 	private String role;
 
-	@Column( name = "source_uid", nullable = false, length = 36 )
+	@Column( name = "source_uid", nullable = false, length = 64 )
 	private String sourceUid;
 
-	@Column( name = "target_uid", nullable = false, length = 36 )
+	@Column( name = "target_uid", nullable = false, length = 64 )
 	private String targetUid;
 
 	@Temporal( TemporalType.TIMESTAMP )

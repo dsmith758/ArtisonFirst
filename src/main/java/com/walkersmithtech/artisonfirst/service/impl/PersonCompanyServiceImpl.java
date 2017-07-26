@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
-import com.walkersmithtech.artisonfirst.data.entity.RelationData;
+import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationData;
 import com.walkersmithtech.artisonfirst.data.model.Company;
 import com.walkersmithtech.artisonfirst.data.model.Person;
 import com.walkersmithtech.artisonfirst.data.model.relation.PersonCompany;
@@ -27,7 +27,7 @@ public class PersonCompanyServiceImpl extends BaseRelationService<PersonCompany>
 	{
 		if ( relation != null )
 		{
-			RelationData match = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
+			ObjectRelationData match = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
 			if ( match == null )
 			{
 				relation = createData( relation );
@@ -41,7 +41,7 @@ public class PersonCompanyServiceImpl extends BaseRelationService<PersonCompany>
 	{
 		if ( relation != null )
 		{
-			RelationData match = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
+			ObjectRelationData match = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
 			if ( match == null )
 			{
 				return createModel( relation );
@@ -52,10 +52,10 @@ public class PersonCompanyServiceImpl extends BaseRelationService<PersonCompany>
 	
 	public PersonCompany getModelBySourceUid( String uid )
 	{
-		List<RelationData> entities = dataRepo.findBySourceUidAndRole( uid, RelationshipRole.PERSON_COMPANY.name() );
+		List<ObjectRelationData> entities = dataRepo.findBySourceUidAndRole( uid, RelationshipRole.PERSON_COMPANY.name() );
 		if ( entities != null && entities.size() > 0 )
 		{
-			RelationData entity = entities.get( 0 );
+			ObjectRelationData entity = entities.get( 0 );
 			return convertEntityToModel( entity );
 		}
 		return null;

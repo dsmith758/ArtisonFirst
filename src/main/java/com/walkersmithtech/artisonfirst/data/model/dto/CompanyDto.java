@@ -8,7 +8,7 @@ import com.walkersmithtech.artisonfirst.data.model.Company;
 import com.walkersmithtech.artisonfirst.data.model.Location;
 
 @JsonInclude( Include.NON_EMPTY )
-public class OrganizationDto extends BaseDto
+public class CompanyDto extends BaseDto
 {
 	private Company company;
 	private List<Location> addressInfo;

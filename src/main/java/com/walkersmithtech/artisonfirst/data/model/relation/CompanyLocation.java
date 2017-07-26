@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 
 @JsonInclude( Include.NON_EMPTY )
-public class CompanyLocation extends BaseRelation
+public class CompanyLocation extends BaseObjectRelation
 {
 
 	public CompanyLocation()
 	{
-		this.role = RelationshipRole.COMPANY_LOCATION;
+		this.role = RelationshipRole.COMPANY_LOCATION.name();
 	}
 }

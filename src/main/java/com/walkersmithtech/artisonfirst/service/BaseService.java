@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.walkersmithtech.artisonfirst.data.entity.ObjectData;
-import com.walkersmithtech.artisonfirst.data.entity.RelationData;
+import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationData;
 import com.walkersmithtech.artisonfirst.data.repository.ObjectDataIndexRepository;
 import com.walkersmithtech.artisonfirst.data.repository.ObjectDataRepository;
-import com.walkersmithtech.artisonfirst.data.repository.RelationDataIndexRepository;
-import com.walkersmithtech.artisonfirst.data.repository.RelationDataRepository;
+import com.walkersmithtech.artisonfirst.data.repository.ObjectRelationDataIndexRepository;
+import com.walkersmithtech.artisonfirst.data.repository.ObjectRelationDataRepository;
 
 @Service
 public class BaseService
@@ -23,10 +23,10 @@ public class BaseService
 	protected ObjectDataIndexRepository objectIndexRepo;
 
 	@Autowired
-	protected RelationDataRepository relationDataRepo;
+	protected ObjectRelationDataRepository relationDataRepo;
 
 	@Autowired
-	protected RelationDataIndexRepository relationIndexRepo;
+	protected ObjectRelationDataIndexRepository relationIndexRepo;
 
 	@Transactional
 	public boolean deleteObjectModel( String objectUid )
@@ -56,7 +56,7 @@ public class BaseService
 
 	public boolean deleteRelationModel( Integer id )
 	{
-		RelationData entity = relationDataRepo.findOne( id );
+		ObjectRelationData entity = relationDataRepo.findOne( id );
 		if ( entity == null )
 		{
 			return false;
@@ -73,10 +73,10 @@ public class BaseService
 
 	public boolean deleteRelationModelsBySourceUid( String uid )
 	{
-		List<RelationData> relations = getRelationsBySourceUid( uid );
+		List<ObjectRelationData> relations = getRelationsBySourceUid( uid );
 		if ( relations != null && relations.size() > 0 )
 		{
-			for ( RelationData relation : relations )
+			for ( ObjectRelationData relation : relations )
 			{
 				deleteRelationIndexByUid( relation.getUid() );
 			}
@@ -88,10 +88,10 @@ public class BaseService
 
 	public boolean deleteRelationModelsBySourceUidAndRole( String uid, String role )
 	{
-		List<RelationData> relations = getRelationsBySourceUidAndRole( uid, role );
+		List<ObjectRelationData> relations = getRelationsBySourceUidAndRole( uid, role );
 		if ( relations != null && relations.size() > 0 )
 		{
-			for ( RelationData relation : relations )
+			for ( ObjectRelationData relation : relations )
 			{
 				deleteRelationIndexByUid( relation.getUid() );
 			}
@@ -103,10 +103,10 @@ public class BaseService
 
 	public boolean deleteRelationModelsByTargetUid( String uid )
 	{
-		List<RelationData> relations = getRelationsByTargetUid( uid );
+		List<ObjectRelationData> relations = getRelationsByTargetUid( uid );
 		if ( relations != null && relations.size() > 0 )
 		{
-			for ( RelationData relation : relations )
+			for ( ObjectRelationData relation : relations )
 			{
 				deleteRelationIndexByUid( relation.getUid() );
 			}
@@ -117,10 +117,10 @@ public class BaseService
 
 	public boolean deleteRelationModelsByTargetUidAndRole( String uid, String role )
 	{
-		List<RelationData> relations = getRelationsByTargetUidAndRole( uid, role );
+		List<ObjectRelationData> relations = getRelationsByTargetUidAndRole( uid, role );
 		if ( relations != null && relations.size() > 0 )
 		{
-			for ( RelationData relation : relations )
+			for ( ObjectRelationData relation : relations )
 			{
 				deleteRelationIndexByUid( relation.getUid() );
 			}
@@ -132,10 +132,10 @@ public class BaseService
 
 	public boolean deleteRelationModelsByUid( String uid )
 	{
-		List<RelationData> relations = getRelationsBySourceUid( uid );
+		List<ObjectRelationData> relations = getRelationsBySourceUid( uid );
 		if ( relations != null && relations.size() > 0 )
 		{
-			for ( RelationData relation : relations )
+			for ( ObjectRelationData relation : relations )
 			{
 				deleteRelationIndexByUid( relation.getUid() );
 			}
@@ -143,7 +143,7 @@ public class BaseService
 		relations = getRelationsByTargetUid( uid );
 		if ( relations != null && relations.size() > 0 )
 		{
-			for ( RelationData relation : relations )
+			for ( ObjectRelationData relation : relations )
 			{
 				deleteRelationIndexByUid( relation.getUid() );
 			}
@@ -164,27 +164,27 @@ public class BaseService
 		return true;
 	}
 
-	public List<RelationData> getRelationsBySourceUid( String uid )
+	public List<ObjectRelationData> getRelationsBySourceUid( String uid )
 	{
-		List<RelationData> entities = relationDataRepo.findBySourceUid( uid );
+		List<ObjectRelationData> entities = relationDataRepo.findBySourceUid( uid );
 		return entities;
 	}
 
-	public List<RelationData> getRelationsByTargetUid( String uid )
+	public List<ObjectRelationData> getRelationsByTargetUid( String uid )
 	{
-		List<RelationData> entities = relationDataRepo.findByTargetUid( uid );
+		List<ObjectRelationData> entities = relationDataRepo.findByTargetUid( uid );
 		return entities;
 	}
 	
-	public List<RelationData> getRelationsBySourceUidAndRole( String uid, String role )
+	public List<ObjectRelationData> getRelationsBySourceUidAndRole( String uid, String role )
 	{
-		List<RelationData> entities = relationDataRepo.findBySourceUidAndRole( uid, role );
+		List<ObjectRelationData> entities = relationDataRepo.findBySourceUidAndRole( uid, role );
 		return entities;
 	}
 
-	public List<RelationData> getRelationsByTargetUidAndRole( String uid, String role )
+	public List<ObjectRelationData> getRelationsByTargetUidAndRole( String uid, String role )
 	{
-		List<RelationData> entities = relationDataRepo.findByTargetUidAndRole( uid, role );
+		List<ObjectRelationData> entities = relationDataRepo.findByTargetUidAndRole( uid, role );
 		return entities;
 	}
 

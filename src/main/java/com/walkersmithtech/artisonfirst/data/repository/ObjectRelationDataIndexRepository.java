@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.walkersmithtech.artisonfirst.data.entity.RelationDataIndex;
+import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationDataIndex;
 
-public interface RelationDataIndexRepository extends JpaRepository<RelationDataIndex, Integer>
+public interface ObjectRelationDataIndexRepository extends JpaRepository<ObjectRelationDataIndex, Integer>
 {
-	public List<RelationDataIndex> findByUid( String uid );
+	public List<ObjectRelationDataIndex> findByUid( String uid );
 
-	public RelationDataIndex findByUidAndType( String uid, String type );
+	public ObjectRelationDataIndex findByUidAndType( String uid, String type );
 
 	@Modifying
 	@Transactional

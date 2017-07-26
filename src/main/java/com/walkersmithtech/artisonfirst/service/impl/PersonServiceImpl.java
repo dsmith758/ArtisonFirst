@@ -2,12 +2,15 @@ package com.walkersmithtech.artisonfirst.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.constant.IndexType;
+import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.data.model.Person;
+import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
 import com.walkersmithtech.artisonfirst.data.model.fragment.ContactInfo;
 import com.walkersmithtech.artisonfirst.service.BaseModelService;
 import com.walkersmithtech.artisonfirst.service.ServiceException;
@@ -15,6 +18,9 @@ import com.walkersmithtech.artisonfirst.service.ServiceException;
 @Service
 public class PersonServiceImpl extends BaseModelService<Person>
 {
+	
+	@Autowired
+	private FileManagerSerivceImpl fileService;
 
 	public PersonServiceImpl()
 	{
@@ -98,6 +104,14 @@ public class PersonServiceImpl extends BaseModelService<Person>
 	{
 		List<Person> models = getByTypeAndData( IndexType.FIRSTNAME, firstmane );
 		return models;
+	}
+	
+	public ImageDto addProfileImage( ImageDto auth, String personUid, byte[] file ) throws ServiceException
+	{
+		auth = ( ImageDto ) fileService.createFileRecord( file, auth );
+		fileService.deleteFileRelation( personUid, RelationshipRole.PERSON_IMAGE.name() );
+		auth = (ImageDto) fileService.createFileRelation( personUid, RelationshipRole.PERSON_IMAGE.name(), auth );
+		return auth;
 	}
 
 	private void validatePerson( Person person ) throws ServiceException

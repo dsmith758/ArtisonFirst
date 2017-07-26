@@ -25,7 +25,7 @@ public enum ErrorCode
 	REGISTRATION_ACCOUNT_EXISTS( new ServiceException( "REGIS_11", "Account already exists.", HttpStatus.BAD_REQUEST ) ),
 
 	// PERSON PROFILE ERRORS
-	PERSON_NOT_FOUND( new ServiceException( "PERS_01", "Person record not found.", HttpStatus.NOT_FOUND) ),
+	PERSON_NOT_FOUND( new ServiceException( "PERS_01", "Person record not found.", HttpStatus.NOT_FOUND ) ),
 	PERSON_MISSING_ID( new ServiceException( "PERS_02", "Person ID is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	PERSON_RECORD_NULL( new ServiceException( "PERS_03", "The provided record is null.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	PERSON_FIRSNAME_MISSING( new ServiceException( "PERS_04", "Person's first name is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
@@ -33,14 +33,14 @@ public enum ErrorCode
 	PERSON_ALREADY_EXISTS( new ServiceException( "PERS_06", "Person record already exists.", HttpStatus.BAD_REQUEST ) ),
 
 	// COMPANY PROFILE ERRORS
-	COMPANY_NOT_FOUND( new ServiceException( "COMP_01", "Company record not found.", HttpStatus.NOT_FOUND) ),
+	COMPANY_NOT_FOUND( new ServiceException( "COMP_01", "Company record not found.", HttpStatus.NOT_FOUND ) ),
 	COMPANY_MISSING_ID( new ServiceException( "COMP_02", "Company ID is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	COMPANY_RECORD_NULL( new ServiceException( "COMP_03", "The provided record is null.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	COMPANY_NAME_MISSING( new ServiceException( "COMP_04", "Coampany name is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	COMPANY_ALREADY_EXISTS( new ServiceException( "COMP_05", "Company record already exists.", HttpStatus.BAD_REQUEST ) ),
 
 	// LOCATION PROFILE ERRORS
-	LOCATION_NOT_FOUND( new ServiceException( "LOC_01", "Location record not found.", HttpStatus.NOT_FOUND) ),
+	LOCATION_NOT_FOUND( new ServiceException( "LOC_01", "Location record not found.", HttpStatus.NOT_FOUND ) ),
 	LOCATION_MISSING_ID( new ServiceException( "LOC_02", "Location ID is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	LOCATION_RECORD_NULL( new ServiceException( "LOC_03", "The provided record is null.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	LOCATION_NAME_MISSING( new ServiceException( "LOC_04", "Address name is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
@@ -48,9 +48,12 @@ public enum ErrorCode
 	LOCATION_CITY_MISSING( new ServiceException( "LOC_06", "City is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	LOCATION_ALREADY_EXISTS( new ServiceException( "LOC_07", "Location record already exists.", HttpStatus.BAD_REQUEST ) ),
 
+	// FILE MANAGEMENT ERRORS
+	FILE_MISSING( new ServiceException( "FILE_01", "File was not included in the upload.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+
+	// SYSTEM ERRORS
 	SYSTEM_ERROR( new ServiceException( "SYSTEM_01", "The system has thrown an unexpected error. See logs.", HttpStatus.INTERNAL_SERVER_ERROR ) ),
-	SYSTEM_BAD_REQUEST( new ServiceException( "SYSTEM_02", "Cannot process the request.", HttpStatus.BAD_REQUEST ) ),
-	;
+	SYSTEM_BAD_REQUEST( new ServiceException( "SYSTEM_02", "Cannot process the request.", HttpStatus.BAD_REQUEST ) ),;
 
 	public ServiceException exception;
 

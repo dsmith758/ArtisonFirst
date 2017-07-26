@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
-import com.walkersmithtech.artisonfirst.data.entity.RelationData;
+import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationData;
 import com.walkersmithtech.artisonfirst.data.model.Company;
 import com.walkersmithtech.artisonfirst.data.model.Location;
 import com.walkersmithtech.artisonfirst.data.model.relation.CompanyLocation;
@@ -44,7 +44,7 @@ public class CompanyLocationServiceImpl extends BaseRelationService<CompanyLocat
 	{
 		if ( relation != null )
 		{
-			RelationData entity = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
+			ObjectRelationData entity = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
 			if ( entity == null )
 			{
 				relation = createData( relation );
@@ -58,7 +58,7 @@ public class CompanyLocationServiceImpl extends BaseRelationService<CompanyLocat
 	{
 		if ( relation != null )
 		{
-			RelationData entity = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
+			ObjectRelationData entity = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
 			if ( entity == null )
 			{
 				relation = createData( relation );
@@ -69,11 +69,11 @@ public class CompanyLocationServiceImpl extends BaseRelationService<CompanyLocat
 	
 	public List<CompanyLocation> getCompanyLocationsByCompanyUid( String uid )
 	{
-		List<RelationData> entities = dataRepo.findBySourceUidAndRole( uid, RelationshipRole.COMPANY_LOCATION.name() );
+		List<ObjectRelationData> entities = dataRepo.findBySourceUidAndRole( uid, RelationshipRole.COMPANY_LOCATION.name() );
 		List<CompanyLocation> addresses = new ArrayList<>();
 		if ( entities != null && entities.size() > 0 )
 		{
-			for ( RelationData entity : entities )
+			for ( ObjectRelationData entity : entities )
 			{
 				addresses.add( convertEntityToModel( entity ) );
 			}
@@ -83,11 +83,11 @@ public class CompanyLocationServiceImpl extends BaseRelationService<CompanyLocat
 	
 	public List<CompanyLocation> getCompanyLocationsByLocationUid( String uid )
 	{
-		List<RelationData> entities = dataRepo.findByTargetUidAndRole( uid, RelationshipRole.COMPANY_LOCATION.name() );
+		List<ObjectRelationData> entities = dataRepo.findByTargetUidAndRole( uid, RelationshipRole.COMPANY_LOCATION.name() );
 		List<CompanyLocation> addresses = new ArrayList<>();
 		if ( entities != null && entities.size() > 0 )
 		{
-			for ( RelationData entity : entities )
+			for ( ObjectRelationData entity : entities )
 			{
 				addresses.add( convertEntityToModel( entity ) );
 			}

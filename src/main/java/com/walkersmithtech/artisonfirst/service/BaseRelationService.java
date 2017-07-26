@@ -7,22 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.walkersmithtech.artisonfirst.constant.IndexType;
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
-import com.walkersmithtech.artisonfirst.data.entity.RelationData;
-import com.walkersmithtech.artisonfirst.data.entity.RelationDataIndex;
-import com.walkersmithtech.artisonfirst.data.model.relation.BaseRelation;
-import com.walkersmithtech.artisonfirst.data.repository.RelationDataIndexRepository;
-import com.walkersmithtech.artisonfirst.data.repository.RelationDataRepository;
+import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationData;
+import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationDataIndex;
+import com.walkersmithtech.artisonfirst.data.model.relation.BaseObjectRelation;
+import com.walkersmithtech.artisonfirst.data.repository.ObjectRelationDataIndexRepository;
+import com.walkersmithtech.artisonfirst.data.repository.ObjectRelationDataRepository;
 import com.walkersmithtech.artisonfirst.util.DateUtil;
 import com.walkersmithtech.artisonfirst.util.JsonUtil;
 
-public abstract class BaseRelationService<T extends BaseRelation>
+public abstract class BaseRelationService<T extends BaseObjectRelation>
 {
 
 	@Autowired
-	protected RelationDataRepository dataRepo;
+	protected ObjectRelationDataRepository dataRepo;
 
 	@Autowired
-	protected RelationDataIndexRepository indexRepo;
+	protected ObjectRelationDataIndexRepository indexRepo;
 	
 	@Autowired
 	private BaseService baseService;
@@ -54,7 +54,7 @@ public abstract class BaseRelationService<T extends BaseRelation>
 
 	protected void saveIndexData( String uid, IndexType type, String data )
 	{
-		RelationDataIndex index = new RelationDataIndex();
+		ObjectRelationDataIndex index = new ObjectRelationDataIndex();
 		index.setUid( uid );
 		index.setType( type.name );
 		index.setData( data );
@@ -63,7 +63,7 @@ public abstract class BaseRelationService<T extends BaseRelation>
 
 	protected void updateIndexData( String objectUid, IndexType type, String data )
 	{
-		RelationDataIndex index = indexRepo.findByUidAndType( objectUid, type.name );
+		ObjectRelationDataIndex index = indexRepo.findByUidAndType( objectUid, type.name );
 		if ( index == null )
 		{
 			saveIndexData( objectUid, type, data );
@@ -74,7 +74,7 @@ public abstract class BaseRelationService<T extends BaseRelation>
 	
 	public List<T> getAllRelations()
 	{
-		List<RelationData> entities = dataRepo.findByRole( roleType.name() );
+		List<ObjectRelationData> entities = dataRepo.findByRole( roleType.name() );
 		return convertEntitiesToModels( entities );
 	}
 
@@ -82,7 +82,7 @@ public abstract class BaseRelationService<T extends BaseRelation>
 	{
 		try
 		{
-			RelationData entity = dataRepo.findOne( id );
+			ObjectRelationData entity = dataRepo.findOne( id );
 			if ( entity != null )
 			{
 				return convertEntityToModel( entity );
@@ -102,7 +102,7 @@ public abstract class BaseRelationService<T extends BaseRelation>
 			return null;
 		}
 		relation.setRole( roleType );
-		RelationData entity = new RelationData();
+		ObjectRelationData entity = new ObjectRelationData();
 		entity.setUid( DateUtil.generateUuid() );
 		entity.setSourceUid( relation.getSourceUid() );
 		entity.setTargetUid( relation.getTargetUid() );
@@ -120,7 +120,7 @@ public abstract class BaseRelationService<T extends BaseRelation>
 	{
 		if ( relation != null )
 		{
-			RelationData entity = dataRepo.findOne( relation.getId() );
+			ObjectRelationData entity = dataRepo.findOne( relation.getId() );
 			if ( entity != null )
 			{
 				entity.setSourceUid( relation.getSourceUid() );
@@ -137,10 +137,10 @@ public abstract class BaseRelationService<T extends BaseRelation>
 		return relation;
 	}
 
-	protected List<T> convertEntitiesToModels( List<RelationData> entities )
+	protected List<T> convertEntitiesToModels( List<ObjectRelationData> entities )
 	{
 		List<T> models = new ArrayList<T>();
-		for ( RelationData entity : entities )
+		for ( ObjectRelationData entity : entities )
 		{
 			models.add( convertEntityToModel( entity ) );
 		}
@@ -148,7 +148,7 @@ public abstract class BaseRelationService<T extends BaseRelation>
 	}
 	
 	@SuppressWarnings( "unchecked" )
-	protected T convertEntityToModel( RelationData entity )
+	protected T convertEntityToModel( ObjectRelationData entity )
 	{
 		try
 		{

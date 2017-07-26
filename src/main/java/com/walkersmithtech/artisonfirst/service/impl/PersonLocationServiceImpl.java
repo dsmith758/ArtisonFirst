@@ -3,7 +3,7 @@ package com.walkersmithtech.artisonfirst.service.impl;
 import org.springframework.stereotype.Service;
 
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
-import com.walkersmithtech.artisonfirst.data.entity.RelationData;
+import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationData;
 import com.walkersmithtech.artisonfirst.data.model.Location;
 import com.walkersmithtech.artisonfirst.data.model.Person;
 import com.walkersmithtech.artisonfirst.data.model.relation.PersonLocation;
@@ -26,7 +26,7 @@ public class PersonLocationServiceImpl extends BaseRelationService< PersonLocati
 	{
 		if ( relation != null )
 		{
-			RelationData entity = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
+			ObjectRelationData entity = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
 			if ( entity == null )
 			{
 				relation = createData( relation );
@@ -40,7 +40,7 @@ public class PersonLocationServiceImpl extends BaseRelationService< PersonLocati
 	{
 		if ( relation != null )
 		{
-			RelationData entity = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
+			ObjectRelationData entity = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
 			if ( entity == null )
 			{
 				relation = createData( relation );

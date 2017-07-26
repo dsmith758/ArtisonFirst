@@ -9,16 +9,16 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table( name = "relation_data_index" )
-@NamedQuery( name = "RelationDataIndex.findAll", query = "SELECT o FROM RelationDataIndex o" )
-public class RelationDataIndex
+@Table( name = "object_relation_data_index" )
+@NamedQuery( name = "ObjectRelationDataIndex.findAll", query = "SELECT o FROM RelationDataIndex o" )
+public class ObjectRelationDataIndex
 {
 
 	@Id
 	@GeneratedValue( strategy = GenerationType.AUTO )
 	private int id;
 
-	@Column( name = "uid", nullable = false, length = 36 )
+	@Column( name = "uid", nullable = false, length = 64 )
 	private String uid;
 
 	@Column( name = "type", nullable = false, length = 32 )
@@ -27,7 +27,7 @@ public class RelationDataIndex
 	@Column( name = "data", nullable = false, length = 256 )
 	private String data;
 
-	public RelationDataIndex()
+	public ObjectRelationDataIndex()
 	{
 	}
 

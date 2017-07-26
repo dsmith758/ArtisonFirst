@@ -12,7 +12,7 @@ import com.walkersmithtech.artisonfirst.constant.IndexType;
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.data.model.Company;
 import com.walkersmithtech.artisonfirst.data.model.Location;
-import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
 import com.walkersmithtech.artisonfirst.data.model.relation.CompanyLocation;
 import com.walkersmithtech.artisonfirst.data.model.relation.PersonCompany;
 import com.walkersmithtech.artisonfirst.service.BaseModelService;
@@ -37,7 +37,7 @@ public class CompanyServiceImpl extends BaseModelService<Company>
 		modelClass = Company.class;
 	}
 
-	public OrganizationDto createOrganization( OrganizationDto model ) throws ServiceException
+	public CompanyDto createOrganization( CompanyDto model ) throws ServiceException
 	{
 		Company company = createCompany( model.getCompany() );
 		model.setCompany( company );
@@ -47,7 +47,7 @@ public class CompanyServiceImpl extends BaseModelService<Company>
 		return model;
 	}
 
-	public OrganizationDto updateOrganization( OrganizationDto model ) throws ServiceException
+	public CompanyDto updateOrganization( CompanyDto model ) throws ServiceException
 	{
 		Company company = updateCompany( model.getCompany() );
 		model.setCompany( company );
@@ -58,7 +58,7 @@ public class CompanyServiceImpl extends BaseModelService<Company>
 		return model;
 	}
 
-	public OrganizationDto getOrganizationByPersonUid( OrganizationDto model ) throws ServiceException
+	public CompanyDto getOrganizationByPersonUid( CompanyDto model ) throws ServiceException
 	{
 		PersonCompany personCompany = personCompanyService.getModelBySourceUid( model.getAccount().getPersonUid() );
 		if ( personCompany != null )

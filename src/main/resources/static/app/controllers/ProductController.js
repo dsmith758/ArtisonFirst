@@ -6,5 +6,11 @@ app.controller('productController', [ '$scope', '$location', 'LoginService', fun
 	$scope.go = function(path) {
 		$location.path(path);
 	};
+	
+	$scope.goBack = function(path) {
+		$location.path('/main');
+	};
+	
+	
 
 } ]);

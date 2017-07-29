@@ -19,7 +19,7 @@ import com.walkersmithtech.artisonfirst.util.DateUtil;
 import com.walkersmithtech.artisonfirst.util.Encryptor;
 
 @Service
-public class UserAuthorizationServiceImpl
+public class AuthenticationServiceImpl
 {
 	@Autowired
 	private UserAccountRepository userRepo;
@@ -74,7 +74,7 @@ public class UserAuthorizationServiceImpl
 			{
 				if ( isMatchingSession( auth, session ) )
 				{
-					session = resetSession( session, user.getLoginName(), user.getPersonUid(), auth.getIpAddress() );
+					// session = resetSession( session, user.getLoginName(), user.getPersonUid(), auth.getIpAddress() );
 					account.setSessionId( session.getSessionId() );
 					account.setToken( session.getToken() );
 					return account;
@@ -151,7 +151,7 @@ public class UserAuthorizationServiceImpl
 		String personUid = contextArray[ 1 ];
 		String loginName = contextArray[ 0 ];
 
-		session = resetSession( session, personUid, loginName, ipAddress );
+		// session = resetSession( session, personUid, loginName, ipAddress );
 		account = buildUserProfile( loginName, session.getSessionId(), session.getToken() );
 		account.setAuthenticated( true );
 		return account;
@@ -203,11 +203,6 @@ public class UserAuthorizationServiceImpl
 
 	private UserSession resetSession( UserSession session, String userName, String personUid, String ipAddress )
 	{
-		if ( session.getNeverExpires() == 1 )
-		{
-			return session;
-		}
-
 		String salt = DateUtil.generateIV();
 		Date currentDate = DateUtil.getCurrentDate();
 

@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.walkersmithtech.artisonfirst.data.model.dto.AccountDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.BaseDto;
 import com.walkersmithtech.artisonfirst.service.ServiceException;
-import com.walkersmithtech.artisonfirst.service.impl.UserAuthorizationServiceImpl;
+import com.walkersmithtech.artisonfirst.service.impl.AuthenticationServiceImpl;
 
 public class BaseController
 {
 	@Autowired
-	private UserAuthorizationServiceImpl authorizationService;
+	private AuthenticationServiceImpl authorizationService;
 
 	protected BaseDto validateLogin( HttpServletRequest requestContext, BaseDto auth ) throws ServiceException
 	{

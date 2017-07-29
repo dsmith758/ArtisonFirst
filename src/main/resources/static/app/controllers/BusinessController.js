@@ -23,13 +23,14 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 		},
 		addressInfo : [
 			 {
-				addressName : "",
-				address1 : "",
-				address2 : "",
-				city : "",
-				state : "",
-				zip : "",
-				country : ""
+				 uid : "",
+				 addressName : "",
+				 address1 : "",
+				 address2 : "",
+				 city : "",
+				 state : "",
+				 zip : "",
+				 country : ""
 			}
 		]
 	};	
@@ -97,18 +98,23 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 			$scope.message = "Error saving logo";
 		});
 	};
-
-	$scope.removeAddressInfo = function(idx) {
-		$scope.registration.organization.addressInfo.splice(idx, 1);
+	
+	$scope.addAddressInfo = function() {
+		$scope.registration.addressInfo.push({
+				uid : "",
+				addressName : "",
+				address1 : "",
+				address2 : "",
+				city : "",
+				state : "",
+				zipCode : "",
+				country : ""
+			}
+		);
 	};
 
-	$scope.toggleAddressInfo = function(item) {
-		for (var address in $scope.registration.organization.addressInfo ) {
-			if (address.addressName == item.addressName) {
-				address.toggle = !address.toggle
-				return;
-			}
-		}
+	$scope.removeAddressInfo = function(idx) {
+		$scope.registration.addressInfo.splice(idx, 1);
 	};
 	
 	$scope.getBusiness();

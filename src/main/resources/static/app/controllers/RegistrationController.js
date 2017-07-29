@@ -24,23 +24,22 @@ app.controller('registrationController', [ '$rootScope', '$scope', '$location', 
 					}
 				]
 			},		
-			organization : {
-				company : {
-					companyName : "",
-					businessType : ""
-				},
-				addressInfo : [
-					 {
-							addressName : "",
-							address1 : "",
-							address2 : "",
-							city : "",
-							state : "",
-							zip : "",
-							country : ""
-					}
-				]
-			}
+			company : {
+				companyName : "",
+				businessType : ""
+			},
+			addressInfo : [
+				 {
+					 uid : "",
+					 addressName : "",
+					 address1 : "",
+					 address2 : "",
+					 city : "",
+					 state : "",
+					 zip : "",
+					 country : ""
+				}
+			]
 		};
 	
 	$scope.contactOptions = [ {
@@ -83,7 +82,8 @@ app.controller('registrationController', [ '$rootScope', '$scope', '$location', 
 	};
 
 	$scope.addAddressInfo = function() {
-		$scope.registration.organization.addressInfo.push({
+		$scope.registration.addressInfo.push({
+				uid : "",
 				addressName : "",
 				address1 : "",
 				address2 : "",
@@ -96,18 +96,9 @@ app.controller('registrationController', [ '$rootScope', '$scope', '$location', 
 	};
 
 	$scope.removeAddressInfo = function(idx) {
-		$scope.registration.organization.addressInfo.splice(idx, 1);
+		$scope.registration.addressInfo.splice(idx, 1);
 	};
-
-	$scope.toggleAddressInfo = function(item) {
-		for (var address in $scope.registration.organization.addressInfo ) {
-			if (address.addressName == item.addressName) {
-				address.toggle = !address.toggle
-				return;
-			}
-		}
-	};
-
+	
 	$scope.addContactInfo = function() {
 		$scope.registration.person.contactInfo.push({
 			contactType : "",

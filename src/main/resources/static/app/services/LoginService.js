@@ -12,15 +12,12 @@ app.factory('LoginService', function($http, $rootScope, $window) {
 		},
 
 		logout : function() {
-			if ($rootScope.userInfo != null) {
-				$rootScope.userInfo = null;
-				$http.post('/logout', {
-					account : {
-						sessionId : $rootScope.sessionId,
-						token : $rootScope.token
-					}
-				});
-			}
+			$http.post('/logout', {
+				account : {
+					sessionId : $rootScope.sessionId,
+					token : $rootScope.token
+				}
+			});
 			this.clearAuth();
 		},
 
@@ -74,7 +71,6 @@ app.factory('LoginService', function($http, $rootScope, $window) {
 
 		getPersonUid : function() {
 			return $rootScope.personUid;
-
 		},
 
 		getLoginName : function() {
@@ -87,7 +83,6 @@ app.factory('LoginService', function($http, $rootScope, $window) {
 
 		getDisplayName : function() {
 			return $rootScope.displayName;
-
 		}
 	}
 });

@@ -68,16 +68,13 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 		var promise = ProfileService.getProfile();
 
 		promise.then(function(results) {
-			if ( results.data.account.authenticated == true ) {
-				LoginService.setAuth(results.data);
-				$scope.registration = results.data;
-				$scope.message = "";
-			} else {
-				LoginService.clearAuth();
-				$scope.message = "Authentication lost";
-				$location.path('/login');
-			}
+			LoginService.setAuth(results.data);
+			$scope.registration = results.data;
+			$scope.message = "";
 		}, function(error) {
+			if(response.status === 401) {
+				$location.path( "/login" );
+			}
 			$scope.message = "Error retrieving profile";
 		});
 	};
@@ -86,16 +83,13 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 		var promise = ProfileService.updateProfile( $scope.registration );
 		
 		promise.then(function(results) {
-			if ( results.data.account.authenticated == true ) {
-				LoginService.setAuth(results.data);
-				$scope.registration = results.data;
-				$scope.message = "Profile updated";
-			} else {
-				LoginService.clearAuth();
-				$scope.message = "Authentication lost";
-				$location.path('/login');
-			}
+			LoginService.setAuth(results.data);
+			$scope.registration = results.data;
+			$scope.message = "Profile updated";
 		}, function(error) {
+			if(response.status === 401) {
+				$location.path( "/login" );
+			}
 			$scope.message = "Error saving profile";
 		});
 	};
@@ -104,16 +98,13 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 		var promise = ProfileService.saveProfileImage( fileToUpload[0] );
 		
 		promise.then(function(results) {
-			if ( results.data.account.authenticated == true ) {
-				LoginService.setAuth(results.data);
-				$scope.registration = results.data;
-				$scope.message = "Profile image updated";
-			} else {
-				LoginService.clearAuth();
-				$scope.message = "Authentication lost";
-				$location.path('/login');
-			}
+			LoginService.setAuth(results.data);
+			$scope.registration = results.data;
+			$scope.message = "Profile image updated";
 		}, function(error) {
+			 if(response.status === 401) {
+	                $location.path( "/login" );
+	             }
 			$scope.message = "Error saving profile image";
 		});
 	};

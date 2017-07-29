@@ -57,7 +57,7 @@ public class AuthenticationServiceImpl
 		account = createOrUpdateSession( auth, user );
 		return account;
 	}
-	
+
 	private AccountDto createOrUpdateSession( BaseDto auth, UserAccount user )
 	{
 		AccountDto account = auth.getAccount();
@@ -74,7 +74,8 @@ public class AuthenticationServiceImpl
 			{
 				if ( isMatchingSession( auth, session ) )
 				{
-					// session = resetSession( session, user.getLoginName(), user.getPersonUid(), auth.getIpAddress() );
+					// session = resetSession( session, user.getLoginName(),
+					// user.getPersonUid(), auth.getIpAddress() );
 					account.setSessionId( session.getSessionId() );
 					account.setToken( session.getToken() );
 					return account;
@@ -85,7 +86,7 @@ public class AuthenticationServiceImpl
 		account = createSession( account, ipAddress );
 		return account;
 	}
-	
+
 	private boolean isMatchingSession( BaseDto auth, UserSession session )
 	{
 		AccountDto account = auth.getAccount();
@@ -124,10 +125,16 @@ public class AuthenticationServiceImpl
 	{
 		AccountDto account = auth.getAccount();
 		account.setAuthenticated( false );
-		UserSession session = sessionRepo.findBySessionId( account.getSessionId() );
-		if ( session != null )
+		if ( account.getSessionId() != null && !account.getSessionId().isEmpty() )
 		{
-			sessionRepo.delete( session );
+			UserSession session = sessionRepo.findBySessionId( account.getSessionId() );
+			if ( session != null )
+			{
+				if ( session.getNeverExpires().intValue() == 0 )
+				{
+					sessionRepo.delete( session );
+				}
+			}
 		}
 		return account;
 	}

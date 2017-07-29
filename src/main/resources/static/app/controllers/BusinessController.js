@@ -47,18 +47,15 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 		var promise = BusinessService.updateBusiness( $scope.registration.company.uid, $scope.registration );
 		
 		promise.then(function(results) {
-			if ( results.data.account.authenticated == true ) {
-				LoginService.setAuth(results.data);
-				$scope.registration.account = results.data.account;
-				$scope.registration.company = results.data.company;
-				$scope.registration.addressInfo = results.data.addressInfo;
-				$scope.message = "Business Profile updated";
-			} else {
-				LoginService.clearAuth();
-				$scope.message = "Authentication lost";
-				$location.path('/login');
-			}
+			LoginService.setAuth(results.data);
+			$scope.registration.account = results.data.account;
+			$scope.registration.company = results.data.company;
+			$scope.registration.addressInfo = results.data.addressInfo;
+			$scope.message = "Business Profile updated";
 		}, function(error) {
+			if(response.status === 401) {
+				$location.path( "/login" );
+			}
 			$scope.message = "Error retrieving business profile";
 		});
 	};
@@ -67,16 +64,13 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 		var promise = BusinessService.getBusiness();
 
 		promise.then(function(results) {
-			if ( results.data.account.authenticated == true ) {
-				LoginService.setAuth(results.data);
-				$scope.registration = results.data;
-				$scope.message = "";
-			} else {
-				LoginService.clearAuth();
-				$scope.message = "Authentication lost";
-				$location.path('/login');
-			}
+			LoginService.setAuth(results.data);
+			$scope.registration = results.data;
+			$scope.message = "";
 		}, function(error) {
+			if(response.status === 401) {
+				$location.path( "/login" );
+			}
 			$scope.message = "Error retrieving business: ";
 		});
 	};
@@ -85,16 +79,13 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 		var promise = BusinessService.saveBusinessLogo( fileToUpload[0], $scope.registration.company.uid );
 		
 		promise.then(function(results) {
-			if ( results.data.account.authenticated == true ) {
-				LoginService.setAuth(results.data);
-				$scope.registration = results.data;
-				$scope.message = "Logo updated";
-			} else {
-				LoginService.clearAuth();
-				$scope.message = "Authentication lost";
-				$location.path('/login');
-			}
+			LoginService.setAuth(results.data);
+			$scope.registration = results.data;
+			$scope.message = "Logo updated";
 		}, function(error) {
+			if(response.status === 401) {
+				$location.path( "/login" );
+			}
 			$scope.message = "Error saving logo";
 		});
 	};

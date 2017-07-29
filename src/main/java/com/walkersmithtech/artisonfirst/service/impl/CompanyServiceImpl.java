@@ -13,7 +13,6 @@ import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.data.model.Company;
 import com.walkersmithtech.artisonfirst.data.model.Location;
 import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
-import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
 import com.walkersmithtech.artisonfirst.data.model.relation.CompanyLocation;
 import com.walkersmithtech.artisonfirst.data.model.relation.PersonCompany;
 import com.walkersmithtech.artisonfirst.service.BaseModelService;
@@ -33,8 +32,8 @@ public class CompanyServiceImpl extends BaseModelService<Company>
 	private PersonCompanyServiceImpl personCompanyService;
 	
 	@Autowired
-	private FileManagerSerivceImpl fileService;
-
+	private PersonImageServiceImpl imageService;
+	
 	public CompanyServiceImpl()
 	{
 		dataType = DataType.COMPANY;
@@ -104,6 +103,12 @@ public class CompanyServiceImpl extends BaseModelService<Company>
 		}
 		return updateModel( company );
 	}
+	
+	public void deleteCompany( String uid ) throws ServiceException
+	{
+		imageService.removeObjectImages( uid );
+		deleteModel( uid );
+	}
 
 	@Override
 	public Company createModel( Company model )
@@ -159,34 +164,6 @@ public class CompanyServiceImpl extends BaseModelService<Company>
 	{
 		List<Company> models = getByTypeAndData( IndexType.BUSINESS_TYPE, businessType );
 		return models;
-	}
-	
-	public ImageDto addAndSetCompanyLogo( ImageDto auth, String companyUid, byte[] file ) throws ServiceException
-	{
-		auth = addCompanyImage( auth, companyUid, file );
-		auth = setCompanyLogo( auth, companyUid, file );
-		return auth;
-	}
-	
-	public ImageDto addCompanyImage( ImageDto auth, String companyUid, byte[] file ) throws ServiceException
-	{
-		auth = ( ImageDto ) fileService.createFileRecord( file, auth );
-		auth = setCompanyLogo( auth, companyUid, file );
-		auth = (ImageDto) fileService.createFileRelation( companyUid, RelationshipRole.COMPANY_IMAGE.name(), auth );
-		return auth;
-	}
-	
-	public ImageDto setCompanyLogo( ImageDto auth, String companyUid, byte[] file ) throws ServiceException
-	{
-		auth = ( ImageDto ) fileService.createFileRecord( file, auth );
-		fileService.deleteFileRelationByObjectAndRole( companyUid, RelationshipRole.COMPANY_LOGO.name() );
-		auth = (ImageDto) fileService.createFileRelation( companyUid, RelationshipRole.COMPANY_LOGO.name(), auth );
-		return auth;
-	}
-
-	public void removeImage( String fileUid )
-	{
-		fileService.deleteFileRecord( fileUid );
 	}
 
 	private void validateCompany( Company company ) throws ServiceException

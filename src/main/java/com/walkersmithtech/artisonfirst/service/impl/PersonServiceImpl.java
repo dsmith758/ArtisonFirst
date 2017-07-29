@@ -45,7 +45,7 @@ public class PersonServiceImpl extends BaseModelService<Person>
 	
 	public void deletePerson( String uid ) throws ServiceException
 	{
-		imageService.removePersonImages( uid );
+		imageService.removeObjectImages( uid );
 		deleteModel( uid );
 	}
 

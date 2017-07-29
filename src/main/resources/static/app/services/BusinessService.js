@@ -11,8 +11,8 @@ app.factory('BusinessService', function($http, $rootScope, $window, $upload) {
 			return $http.get(path);
 		},
 		
-		saveBusinessLogo : function( fileToUpload ) {
-			var path = "/companies/" + $rootScope.personUid + "/logos" + $rootScope.authParam;
+		saveBusinessLogo : function( fileToUpload, companyUid ) {
+			var path = "/companies/" + companyUid + "/logos" + $rootScope.authParam;
 			return $upload.upload({
 			    url : path,
 			    file : fileToUpload,

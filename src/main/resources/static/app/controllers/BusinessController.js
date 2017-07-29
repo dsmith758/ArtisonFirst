@@ -81,7 +81,7 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 	};
 	
 	$scope.saveBusinessLogo = function( fileToUpload ) {
-		var promise = BusinessService.saveBusinessLogo( fileToUpload[0] );
+		var promise = BusinessService.saveBusinessLogo( fileToUpload[0], $scope.registration.company.uid );
 		
 		promise.then(function(results) {
 			if ( results.data.account.authenticated == true ) {

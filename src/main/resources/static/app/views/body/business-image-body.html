@@ -1,11 +1,13 @@
 <table class='form-table'>
 	<tbody>
 		<tr class='form-row'>
-			<td class='form-cell' align="center">
-				<img class="form-image" ng-src="{{ registration.company.logoUri }}"/><br> 
-				 <div>
-				 	Upload your business logo: <input type="file" name="file" onchange="angular.element(this).scope().saveBusinessLogo(this.files)"/>
-		      	</div>
+			<td class='form-cell' align="center"><img class="form-image" ng-src="{{ registration.company.logoUri }}" /><br>
+				<div class="form-label">
+					Add or update your company logo: 
+				</div>
+				<div class="form-label">
+					<input type="file" name="file" onchange="angular.element(this).scope().saveBusinessLogo(this.files)" />
+				</div>
 			</td>
 		</tr>
 	</tbody>

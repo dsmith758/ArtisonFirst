@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
+import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.FileDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.PersonDto;
 import com.walkersmithtech.artisonfirst.service.ServiceException;
-import com.walkersmithtech.artisonfirst.service.impl.CompanyServiceImpl;
+import com.walkersmithtech.artisonfirst.service.impl.CompanyImageServiceImpl;
 import com.walkersmithtech.artisonfirst.service.impl.FileManagerSerivceImpl;
 import com.walkersmithtech.artisonfirst.service.impl.PersonImageServiceImpl;
 
@@ -36,7 +37,7 @@ public class FileController extends BaseController
 	private PersonImageServiceImpl personImageService;
 
 	@Autowired
-	private CompanyServiceImpl companyService;
+	private CompanyImageServiceImpl companyImageService;
 
 	@RequestMapping( method = RequestMethod.POST, value = "/persons/{uid}/images", headers = ("content-type=multipart/*"))
 	public ResponseEntity<PersonDto> importPersonImage( HttpServletRequest requestContext, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token, @PathVariable String uid, @RequestParam( "file" ) MultipartFile file )
@@ -72,36 +73,37 @@ public class FileController extends BaseController
 		}
 	}
 
-	@RequestMapping( method = RequestMethod.POST, value = "/companies/{uid}/logos" )
-	public ResponseEntity<ImageDto> importCompanyLogo( HttpServletRequest requestContext, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token, @PathVariable String uid, @RequestParam( "file" ) MultipartFile file )
+	@RequestMapping( method = RequestMethod.POST, value = "/companies/{uid}/logos", headers = ("content-type=multipart/*"))
+	public ResponseEntity<CompanyDto> importCompanyLogo( HttpServletRequest requestContext, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token, @PathVariable String uid, @RequestParam( "file" ) MultipartFile file )
 	{
 		ImageDto auth = new ImageDto();
+		CompanyDto company = new CompanyDto();
 		if ( !file.isEmpty() )
 		{
 			try
 			{
 				auth = ( ImageDto ) validateSession( requestContext, auth, sessionId, token );
 				auth.setFileName( file.getOriginalFilename() );
-				auth = companyService.addAndSetCompanyLogo( auth, uid, file.getBytes() );
-				return new ResponseEntity<ImageDto>( auth, HttpStatus.OK );
+				company = companyImageService.addAndSetCompanyLogo( auth, uid, file.getBytes() );
+				return new ResponseEntity<CompanyDto>( company, HttpStatus.OK );
 			}
 			catch ( ServiceException ex )
 			{
-				auth = ( ImageDto ) setErrorCode( auth, ex );
-				return new ResponseEntity<ImageDto>( auth, ex.getHttpStatus() );
+				company = ( CompanyDto ) setErrorCode( company, ex );
+				return new ResponseEntity<CompanyDto>( company, ex.getHttpStatus() );
 			}
 			catch ( IOException e )
 			{
 				ServiceException ex = ErrorCode.SYSTEM_ERROR.exception;
 				ex.initCause( e );
-				auth = ( ImageDto ) setErrorCode( auth, ex );
-				return new ResponseEntity<ImageDto>( auth, ex.getHttpStatus() );
+				company = ( CompanyDto ) setErrorCode( company, ex );
+				return new ResponseEntity<CompanyDto>( company, ex.getHttpStatus() );
 			}
 		}
 		else
 		{
-			auth = ( ImageDto ) setErrorCode( auth, ErrorCode.FILE_MISSING.exception );
-			return new ResponseEntity<ImageDto>( auth, ErrorCode.FILE_MISSING.exception.getHttpStatus() );
+			company = ( CompanyDto ) setErrorCode( company, ErrorCode.FILE_MISSING.exception );
+			return new ResponseEntity<CompanyDto>( company, ErrorCode.FILE_MISSING.exception.getHttpStatus() );
 		}
 	}
 

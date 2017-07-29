@@ -3,6 +3,7 @@ package com.walkersmithtech.artisonfirst.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.data.entity.FileData;
 import com.walkersmithtech.artisonfirst.data.entity.FileRelationData;
 import com.walkersmithtech.artisonfirst.data.model.dto.FileDto;
@@ -64,6 +65,37 @@ public class FileManagerSerivceImpl extends BaseService
 	public void deleteFileRelationByObject( String objectUid )
 	{
 		relationRepo.deleteByObjectUid( objectUid );
+	}
+	
+	public FileDto getFileMetadata( String uid ) throws ServiceException
+	{
+		FileData file = dataRepo.findByUid( uid );
+		if ( file != null )
+		{
+			try
+			{
+				FileDto metadata = new FileDto();
+				metadata = ( FileDto ) JsonUtil.createModelFromJson( file.getData(), FileDto.class );
+				return metadata;
+			}
+			catch ( Exception e )
+			{
+				ServiceException ex = ErrorCode.SYSTEM_ERROR.exception;
+				ex.initCause( e );
+				throw ex;
+			}
+		}
+		throw ErrorCode.FILE_MISSING.exception;		
+	}
+	
+	public byte[] getFileData( String uid ) throws ServiceException
+	{
+		FileData file = dataRepo.findByUid( uid );
+		if ( file != null )
+		{
+			return file.getFile();
+		}
+		throw ErrorCode.FILE_MISSING.exception;
 	}
 
 

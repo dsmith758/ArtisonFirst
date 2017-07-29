@@ -18,7 +18,8 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 		company : {
 			uid : "",
 			companyName : "",
-			businessType : ""
+			businessType : "",
+			logoUri : ""
 		},
 		addressInfo : [
 			 {
@@ -59,7 +60,7 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 		}, function(error) {
 			$scope.message = "Error retrieving business profile";
 		});
-	}
+	};
 	
 	$scope.getBusiness = function() {
 		var promise = BusinessService.getBusiness();
@@ -77,7 +78,25 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 		}, function(error) {
 			$scope.message = "Error retrieving business: ";
 		});
-	}
+	};
+	
+	$scope.saveBusinessLogo = function( fileToUpload ) {
+		var promise = BusinessService.saveBusinessLogo( fileToUpload[0] );
+		
+		promise.then(function(results) {
+			if ( results.data.account.authenticated == true ) {
+				LoginService.setAuth(results.data);
+				$scope.registration = results.data;
+				$scope.message = "Logo updated";
+			} else {
+				LoginService.clearAuth();
+				$scope.message = "Authentication lost";
+				$location.path('/login');
+			}
+		}, function(error) {
+			$scope.message = "Error saving logo";
+		});
+	};
 
 	$scope.removeAddressInfo = function(idx) {
 		$scope.registration.organization.addressInfo.splice(idx, 1);

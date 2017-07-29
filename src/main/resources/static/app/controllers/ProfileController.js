@@ -5,6 +5,7 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 	$scope.subheader = 'Use the form below to manage your profile.';
 	$scope.userName = $rootScope.loginName;
 	$scope.displayName = $rootScope.displayName;
+	$scope.personUid = $rootScope.personUid;
 
 	$scope.registration = {
 	   account : {
@@ -62,7 +63,7 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 	$scope.goBack = function(path) {
 		$location.path('/main');
 	};
-
+	
 	$scope.getProfile = function() {
 		var promise = ProfileService.getProfile();
 
@@ -77,7 +78,7 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 				$location.path('/login');
 			}
 		}, function(error) {
-			$scope.message = "Error retrieving profile: " + error;
+			$scope.message = "Error retrieving profile";
 		});
 	};
 
@@ -95,7 +96,25 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 				$location.path('/login');
 			}
 		}, function(error) {
-			$scope.message = "Error saving profile: " + error;
+			$scope.message = "Error saving profile";
+		});
+	};
+	
+	$scope.saveProfileImage = function( fileToUpload ) {
+		var promise = ProfileService.saveProfileImage( fileToUpload[0] );
+		
+		promise.then(function(results) {
+			if ( results.data.account.authenticated == true ) {
+				LoginService.setAuth(results.data);
+				$scope.registration = results.data;
+				$scope.message = "Profile image updated";
+			} else {
+				LoginService.clearAuth();
+				$scope.message = "Authentication lost";
+				$location.path('/login');
+			}
+		}, function(error) {
+			$scope.message = "Error saving profile image";
 		});
 	};
 

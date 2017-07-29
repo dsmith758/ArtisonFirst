@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
@@ -61,7 +61,7 @@ public class CompanyController extends BaseController
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE, value = "/companies/{uid}" )
-	public ResponseEntity<CompanyDto> delete( HttpServletRequest requestContext, @PathVariable String uid, @RequestHeader( "session-id" ) String sessionId, @RequestHeader( "user-token" ) String token )
+	public ResponseEntity<CompanyDto> delete( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
 	{
 		CompanyDto auth = new CompanyDto();
 		try
@@ -78,7 +78,7 @@ public class CompanyController extends BaseController
 	}
 
 	@RequestMapping( method = RequestMethod.GET, value = "/companies/{uid}" )
-	public ResponseEntity<CompanyDto> getByUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestHeader( "session-id" ) String sessionId, @RequestHeader( "user-token" ) String token )
+	public ResponseEntity<CompanyDto> getByUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
 	{
 		CompanyDto auth = new CompanyDto();
 		try
@@ -96,7 +96,7 @@ public class CompanyController extends BaseController
 	}
 
 	@RequestMapping( method = RequestMethod.GET, value = "/persons/{uid}/companies" )
-	public ResponseEntity<CompanyDto> getCompanyByPersonUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestHeader( value = "session-id" ) String sessionId, @RequestHeader( value = "user-token" ) String token )
+	public ResponseEntity<CompanyDto> getCompanyByPersonUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
 	{
 		CompanyDto auth = new CompanyDto();
 		try

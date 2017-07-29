@@ -39,6 +39,10 @@ public class Company extends BaseModel
 
 	public String getLogoUri()
 	{
+		if ( logoUri == null )
+		{
+			return "image/system/blank-business-logo.png";
+		}
 		return logoUri;
 	}
 

@@ -1,19 +1,24 @@
-app.factory('ProfileService', function($http, $rootScope, $window) {
+app.factory('ProfileService', function($http, $rootScope, $window, $upload) {
 	return {
 		
 		updateProfile : function( userInfo ) {
-			return $http.put("/persons/" + $rootScope.personUid, userInfo );
+			var path = "/persons/" + $rootScope.personUid;
+			return $http.put( path, userInfo );
 		},
 
 		getProfile : function() {
-			var headers = { headers : {
-					'session-id' : $rootScope.sessionId,
-					'user-token' : $rootScope.token
-				}
-			}
-			var path = "/persons/" + $rootScope.personUid + "?session-id=" + $rootScope.sessionId + "&user-token=" + encodeURIComponent( $rootScope.token );
-			return $http.get(path, headers);
+			var path = "/persons/" + $rootScope.personUid + $rootScope.authParam;
+			return $http.get(path);
+		},
+		
+		saveProfileImage : function( fileToUpload ) {
+			var path = "/persons/" + $rootScope.personUid + "/images" + $rootScope.authParam;
+			return $upload.upload({
+			    url : path,
+			    file : fileToUpload,
+			    method : 'POST'
+			});
 		}
-
+		
 	}
 });

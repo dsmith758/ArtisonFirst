@@ -9,6 +9,8 @@ import com.walkersmithtech.artisonfirst.data.entity.FileData;
 
 public interface FileDataRepository extends JpaRepository<FileData, Integer>
 {
+	
+	public FileData findByUid( String uid );
 
 	@Modifying
 	@Transactional

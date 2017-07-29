@@ -1,6 +1,12 @@
-<tr class='form-row'>
-	<td class='form-cell' colspan="7">
-		<img class="form-image" ng-src="{{ userInfo.imageUri }}"/><br> 
-		<label class='form-label'>Profile Photo</label>
-	</td>
-</tr>
+<table class='form-table'>
+	<tbody>
+		<tr class='form-row'>
+			<td class='form-cell' align="center">
+				<img class="form-image" ng-src="{{ registration.person.imageUri }}"/><br> 
+				 <div>
+				 	Upload your image: <input type="file" name="file" onchange="angular.element(this).scope().saveProfileImage(this.files)"/>
+		      	</div>
+			</td>
+		</tr>
+	</tbody>
+</table>

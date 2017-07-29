@@ -1,4 +1,4 @@
-app.factory('BusinessService', function($http, $rootScope, $window) {
+app.factory('BusinessService', function($http, $rootScope, $window, $upload) {
 	return {
 
 		updateBusiness : function( companyUid, organization ) {
@@ -7,13 +7,17 @@ app.factory('BusinessService', function($http, $rootScope, $window) {
 		},
 
 		getBusiness : function() {
-				var headers = { headers : {
-					'session-id' : $rootScope.sessionId,
-					'user-token' : $rootScope.token
-				}
-			}
-			var path = "/persons/" + $rootScope.personUid + "/companies" + "?session-id=" + $rootScope.sessionId + "&user-token=" + encodeURIComponent( $rootScope.token );
-			return $http.get(path, headers);
+			var path = "/persons/" + $rootScope.personUid + "/companies" + $rootScope.authParam;
+			return $http.get(path);
+		},
+		
+		saveBusinessLogo : function( fileToUpload ) {
+			var path = "/companies/" + $rootScope.personUid + "/logos" + $rootScope.authParam;
+			return $upload.upload({
+			    url : path,
+			    file : fileToUpload,
+			    method : 'POST'
+			});
 		}
 	};
 });

@@ -9,7 +9,7 @@ import com.walkersmithtech.artisonfirst.data.model.dto.BaseDto;
 import com.walkersmithtech.artisonfirst.service.ServiceException;
 import com.walkersmithtech.artisonfirst.service.impl.AuthenticationServiceImpl;
 
-public class BaseController
+public abstract class BaseController
 {
 	@Autowired
 	private AuthenticationServiceImpl authorizationService;

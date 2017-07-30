@@ -11,13 +11,13 @@ import com.walkersmithtech.artisonfirst.constant.IndexType;
 import com.walkersmithtech.artisonfirst.data.dao.ObjectDataDao;
 import com.walkersmithtech.artisonfirst.data.entity.ObjectData;
 import com.walkersmithtech.artisonfirst.data.entity.ObjectDataIndex;
-import com.walkersmithtech.artisonfirst.data.model.BaseModel;
+import com.walkersmithtech.artisonfirst.data.model.BaseObject;
 import com.walkersmithtech.artisonfirst.data.repository.ObjectDataIndexRepository;
 import com.walkersmithtech.artisonfirst.data.repository.ObjectDataRepository;
 import com.walkersmithtech.artisonfirst.util.DateUtil;
 import com.walkersmithtech.artisonfirst.util.JsonUtil;
 
-public abstract class BaseModelService<T extends BaseModel>
+public abstract class BaseModelService<T extends BaseObject>
 {
 	@Autowired
 	protected ObjectDataRepository dataRepo;

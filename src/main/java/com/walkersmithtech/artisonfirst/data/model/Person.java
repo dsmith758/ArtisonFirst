@@ -8,7 +8,7 @@ import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.data.model.fragment.ContactInfo;
 
 @JsonInclude( Include.NON_EMPTY )
-public class Person extends BaseModel
+public class Person extends BaseObject
 {
 	private String firstName;
 	private String middleName;

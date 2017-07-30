@@ -63,7 +63,7 @@ public class PersonController extends BaseController
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE, value = "/persons/{uid}" )
-	public ResponseEntity<PersonDto> delete( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
+	public ResponseEntity<PersonDto> deletePerson( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
 	{
 		PersonDto auth = new PersonDto();
 		try

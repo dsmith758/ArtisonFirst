@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.walkersmithtech.artisonfirst.constant.DataType;
 
 @JsonInclude( Include.NON_EMPTY )
-public class Company extends BaseModel
+public class Company extends BaseObject
 {
 
 	private String companyName;

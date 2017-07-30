@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.walkersmithtech.artisonfirst.constant.DataType;
 
 @JsonInclude( Include.NON_EMPTY )
-public class Location extends BaseModel
+public class Location extends BaseObject
 {
 
 	private String addressName;

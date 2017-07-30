@@ -1,13 +1,13 @@
 package com.walkersmithtech.artisonfirst.data.model;
 
-public abstract class BaseModel
+public abstract class BaseObject
 {
 	protected String uid;
 	protected String type;
 
 	public abstract void initType();
 
-	public BaseModel()
+	public BaseObject()
 	{
 		initType();
 	}

@@ -2,7 +2,7 @@ package com.walkersmithtech.artisonfirst.data.model;
 
 import com.walkersmithtech.artisonfirst.constant.DataType;
 
-public class Team extends BaseModel
+public class Team extends BaseObject
 {
 	private String name;
 	

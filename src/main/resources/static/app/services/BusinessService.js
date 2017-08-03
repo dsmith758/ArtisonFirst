@@ -7,7 +7,11 @@ app.factory('BusinessService', function($http, $rootScope, $window, $upload) {
 		},
 
 		getBusiness : function() {
-			var path = "/persons/" + $rootScope.personUid + "/companies" + $rootScope.authParam;
+			if ( $rootScope.companyUid == null || $rootScope.companyUid == '' ) {
+				var path = "/persons/" + $rootScope.personUid + "/companies" + $rootScope.authParam;				
+				return $http.get(path);
+			}
+			var path = "/companies/" + $rootScope.companyUid + $rootScope.authParam;				
 			return $http.get(path);
 		},
 		

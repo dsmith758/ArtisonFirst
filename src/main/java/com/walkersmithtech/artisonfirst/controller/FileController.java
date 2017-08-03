@@ -17,27 +17,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.walkersmithtech.artisonfirst.component.ServiceException;
+import com.walkersmithtech.artisonfirst.component.service.CompanyImageService;
+import com.walkersmithtech.artisonfirst.component.service.FileManagerSerivce;
+import com.walkersmithtech.artisonfirst.component.service.PersonImageService;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.FileDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.PersonDto;
-import com.walkersmithtech.artisonfirst.service.ServiceException;
-import com.walkersmithtech.artisonfirst.service.impl.CompanyImageServiceImpl;
-import com.walkersmithtech.artisonfirst.service.impl.FileManagerSerivceImpl;
-import com.walkersmithtech.artisonfirst.service.impl.PersonImageServiceImpl;
 
 @Controller
 public class FileController extends BaseController
 {
 	@Autowired
-	private FileManagerSerivceImpl service;
+	private FileManagerSerivce service;
 
 	@Autowired
-	private PersonImageServiceImpl personImageService;
+	private PersonImageService personImageService;
 
 	@Autowired
-	private CompanyImageServiceImpl companyImageService;
+	private CompanyImageService companyImageService;
 
 	@RequestMapping( method = RequestMethod.POST, value = "/persons/{uid}/images", headers = ("content-type=multipart/*"))
 	public ResponseEntity<PersonDto> importPersonImage( HttpServletRequest requestContext, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token, @PathVariable String uid, @RequestParam( "file" ) MultipartFile file )

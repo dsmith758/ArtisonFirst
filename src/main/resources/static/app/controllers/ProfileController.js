@@ -8,14 +8,6 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 	$scope.personUid = $rootScope.personUid;
 
 	$scope.registration = {
-	   account : {
-	        personUid : "",
-	        loginName : "",
-	        displayName : "",
-	        sessionId : "",
-	        token : "",
-	        authenticated: false
-	    },
 	    person: {
 	        uid : "",
 	        type : "PERSON",

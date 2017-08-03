@@ -12,17 +12,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.walkersmithtech.artisonfirst.component.ServiceException;
+import com.walkersmithtech.artisonfirst.component.builder.CompanyBuilder;
+import com.walkersmithtech.artisonfirst.component.service.CompanyService;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
-import com.walkersmithtech.artisonfirst.data.model.Company;
 import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
-import com.walkersmithtech.artisonfirst.service.ServiceException;
-import com.walkersmithtech.artisonfirst.service.impl.CompanyServiceImpl;
 
 @RestController
 public class CompanyController extends BaseController
 {
 	@Autowired
-	private CompanyServiceImpl service;
+	private CompanyBuilder builder;
+	
+	@Autowired
+	private CompanyService service;
 
 	@RequestMapping( method = RequestMethod.POST, value = "/companies" )
 	public ResponseEntity<CompanyDto> create( HttpServletRequest requestContext, @RequestBody CompanyDto model )
@@ -30,7 +33,7 @@ public class CompanyController extends BaseController
 		try
 		{
 			model = ( CompanyDto ) validateSession( requestContext, model );
-			model = service.createOrganization( model );
+			model = builder.createOrganization( model );
 			return new ResponseEntity<CompanyDto>( model, HttpStatus.CREATED );
 		}
 		catch ( ServiceException ex )
@@ -48,7 +51,7 @@ public class CompanyController extends BaseController
 			if ( model.getCompany().getUid().equals( uid ) )
 			{
 				model = ( CompanyDto ) validateSession( requestContext, model );
-				model = service.updateOrganization( model );
+				model = builder.updateOrganization( model );
 				return new ResponseEntity<CompanyDto>( model, HttpStatus.CREATED );
 			}
 			throw ErrorCode.SYSTEM_BAD_REQUEST.exception;
@@ -84,8 +87,7 @@ public class CompanyController extends BaseController
 		try
 		{
 			auth = ( CompanyDto ) validateSession( requestContext, auth, sessionId, token );
-			Company company = service.getCompanyByUid( uid );
-			auth.setCompany( company );
+			auth = builder.getOrganizationByCompanyUid( uid, auth );
 			return new ResponseEntity<CompanyDto>( auth, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )
@@ -102,7 +104,7 @@ public class CompanyController extends BaseController
 		try
 		{
 			auth = ( CompanyDto ) validateSession( requestContext, auth, sessionId, token );
-			auth = service.getOrganizationByPersonUid( auth );
+			auth = builder.getOrganizationByPersonUid( auth.getAccount().getPersonUid(), auth );
 			return new ResponseEntity<CompanyDto>( auth, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )

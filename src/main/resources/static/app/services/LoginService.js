@@ -45,6 +45,7 @@ app.factory('LoginService', function($http, $rootScope, $window) {
 				$rootScope.displayName = results.account.displayName;
 				$rootScope.loginName = results.account.loginName;
 				$rootScope.personUid = results.account.personUid;
+				$rootScope.companyUid = results.account.companyUid;
 				$rootScope.authParam = "?session-id=" + $rootScope.sessionId + "&user-token=" + encodeURIComponent( $rootScope.token );
 			} else {
 				this.clearAuth();
@@ -58,6 +59,7 @@ app.factory('LoginService', function($http, $rootScope, $window) {
 			$rootScope.displayName = '';
 			$rootScope.loginName = '';
 			$rootScope.personUid = '';
+			$rootScope.companyUid = '';
 			$rootScope.authParam = '';
 		},
 

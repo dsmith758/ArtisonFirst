@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.walkersmithtech.artisonfirst.component.ServiceException;
+import com.walkersmithtech.artisonfirst.component.service.UserRegistrationService;
 import com.walkersmithtech.artisonfirst.data.model.dto.LoginDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.RegistrationDto;
-import com.walkersmithtech.artisonfirst.service.ServiceException;
-import com.walkersmithtech.artisonfirst.service.impl.UserRegistrationService;
 
 @RestController
 public class LoginController extends BaseController

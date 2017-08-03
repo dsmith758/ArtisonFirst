@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.walkersmithtech.artisonfirst.component.ServiceException;
+import com.walkersmithtech.artisonfirst.component.service.PersonService;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
-import com.walkersmithtech.artisonfirst.data.model.Person;
 import com.walkersmithtech.artisonfirst.data.model.dto.PersonDto;
-import com.walkersmithtech.artisonfirst.service.ServiceException;
-import com.walkersmithtech.artisonfirst.service.impl.PersonServiceImpl;
+import com.walkersmithtech.artisonfirst.data.model.object.Person;
 
 @RestController
 public class PersonController extends BaseController
 {
 	@Autowired
-	private PersonServiceImpl personService;
+	private PersonService personService;
 
 	@RequestMapping( method = RequestMethod.POST, value = "/persons" )
 	public ResponseEntity<PersonDto> createPerson( HttpServletRequest requestContext, @RequestBody PersonDto model )

@@ -2,7 +2,8 @@ package com.walkersmithtech.artisonfirst.data.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.walkersmithtech.artisonfirst.data.model.Person;
+import com.walkersmithtech.artisonfirst.data.model.BaseDto;
+import com.walkersmithtech.artisonfirst.data.model.object.Person;
 
 @JsonInclude( Include.NON_EMPTY )
 public class PersonDto extends BaseDto

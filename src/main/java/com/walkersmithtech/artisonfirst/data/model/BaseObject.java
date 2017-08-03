@@ -1,8 +1,7 @@
 package com.walkersmithtech.artisonfirst.data.model;
 
-public abstract class BaseObject
+public abstract class BaseObject extends BaseModel
 {
-	protected String uid;
 	protected String type;
 
 	public abstract void initType();
@@ -22,13 +21,4 @@ public abstract class BaseObject
 		this.type = type;
 	}
 
-	public String getUid()
-	{
-		return uid;
-	}
-
-	public void setUid( String uid )
-	{
-		this.uid = uid;
-	}
 }

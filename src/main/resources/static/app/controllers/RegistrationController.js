@@ -7,11 +7,6 @@ app.controller('registrationController', [ '$rootScope', '$scope', '$location', 
 	
 	// REGISTRATION
 	$scope.registration = {
-			account: {
-		        loginName: $rootScope.loginName,
-		        displayName : $rootScope.displayName,
-		        sessionId : $rootScope.sessionId
-		    },		
 			person : {
 				firstName : "",
 				middleName : "",

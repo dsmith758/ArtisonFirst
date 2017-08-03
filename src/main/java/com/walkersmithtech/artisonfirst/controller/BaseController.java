@@ -4,20 +4,20 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.walkersmithtech.artisonfirst.data.model.dto.AccountDto;
-import com.walkersmithtech.artisonfirst.data.model.dto.BaseDto;
-import com.walkersmithtech.artisonfirst.service.ServiceException;
-import com.walkersmithtech.artisonfirst.service.impl.AuthenticationServiceImpl;
+import com.walkersmithtech.artisonfirst.component.ServiceException;
+import com.walkersmithtech.artisonfirst.component.service.AuthenticationService;
+import com.walkersmithtech.artisonfirst.data.model.Account;
+import com.walkersmithtech.artisonfirst.data.model.BaseDto;
 
 public abstract class BaseController
 {
 	@Autowired
-	private AuthenticationServiceImpl authorizationService;
+	private AuthenticationService authorizationService;
 
 	protected BaseDto validateLogin( HttpServletRequest requestContext, BaseDto auth ) throws ServiceException
 	{
 		auth.setIpAddress( requestContext.getRemoteAddr() );
-		AccountDto account = authorizationService.login( auth );
+		Account account = authorizationService.login( auth );
 		auth.setAccount( account );
 		return auth;
 	}
@@ -30,7 +30,7 @@ public abstract class BaseController
 	
 	protected BaseDto validateSession( HttpServletRequest requestContext, BaseDto auth,  String sessionId, String token ) throws ServiceException
 	{
-		AccountDto account = new AccountDto();
+		Account account = new Account();
 		account.setSessionId( sessionId );
 		account.setToken( token );
 		auth.setAccount( account );
@@ -40,20 +40,20 @@ public abstract class BaseController
 
 	protected BaseDto validateSession( BaseDto auth ) throws ServiceException
 	{
-		AccountDto account = authorizationService.validateSession( auth );
+		Account account = authorizationService.validateSession( auth );
 		auth.setAccount( account );
 		return auth;
 	}
 
-	protected AccountDto getUserProfileFromSession( String sessionId ) throws ServiceException
+	protected Account getUserProfileFromSession( String sessionId ) throws ServiceException
 	{
-		AccountDto account = authorizationService.getProfileFromSession( sessionId );
+		Account account = authorizationService.getProfileFromSession( sessionId );
 		return account;
 	}
 
 	protected BaseDto invalidateSession( BaseDto auth ) throws ServiceException
 	{
-		AccountDto account = authorizationService.invalidateSession( auth );
+		Account account = authorizationService.invalidateSession( auth );
 		auth.setAccount( account );
 		return auth;
 	}

@@ -4,9 +4,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.walkersmithtech.artisonfirst.data.model.Company;
-import com.walkersmithtech.artisonfirst.data.model.Location;
-import com.walkersmithtech.artisonfirst.data.model.Person;
+import com.walkersmithtech.artisonfirst.data.model.BaseDto;
+import com.walkersmithtech.artisonfirst.data.model.object.Company;
+import com.walkersmithtech.artisonfirst.data.model.object.Location;
+import com.walkersmithtech.artisonfirst.data.model.object.Person;
 
 @JsonInclude( Include.NON_EMPTY )
 public class RegistrationDto extends BaseDto

@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.walkersmithtech.artisonfirst.data.model.Location;
-import com.walkersmithtech.artisonfirst.service.impl.LocationServiceImpl;
+import com.walkersmithtech.artisonfirst.component.service.LocationService;
+import com.walkersmithtech.artisonfirst.data.model.object.Location;
 
 @RestController
 public class LocationController
 {
 	
 	@Autowired
-	private LocationServiceImpl service;
+	private LocationService service;
 	
 	@RequestMapping( method = RequestMethod.POST, value = "/locations" )
 	public ResponseEntity< Location > create( @RequestBody Location model )

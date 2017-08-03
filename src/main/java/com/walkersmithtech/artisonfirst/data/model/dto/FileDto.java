@@ -1,5 +1,6 @@
 package com.walkersmithtech.artisonfirst.data.model.dto;
 
+import com.walkersmithtech.artisonfirst.data.model.BaseDto;
 import com.walkersmithtech.artisonfirst.util.MimeTypeConverter;
 
 public class FileDto extends BaseDto

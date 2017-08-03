@@ -10,11 +10,6 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 
 	// REGISTRATION
 	$scope.registration = {
-		account: {
-	        personUid: "",
-	        loginName: "",
-	        displayName: "",
-	    },
 		company : {
 			uid : "",
 			companyName : "",

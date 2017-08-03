@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.walkersmithtech.artisonfirst.data.model.Team;
-import com.walkersmithtech.artisonfirst.service.impl.TeamServiceImpl;
+import com.walkersmithtech.artisonfirst.component.service.TeamService;
+import com.walkersmithtech.artisonfirst.data.model.object.Team;
 
 @RestController
 public class TeamController
 {
 	@Autowired
-	private TeamServiceImpl service;
+	private TeamService service;
 
 	@RequestMapping( method = RequestMethod.POST, value = "/teams" )
 	public ResponseEntity< Team > create( @RequestBody Team model )

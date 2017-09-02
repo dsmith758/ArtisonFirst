@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.walkersmithtech.artisonfirst.component.service.TeamService;
+import com.walkersmithtech.artisonfirst.core.service.TeamService;
 import com.walkersmithtech.artisonfirst.data.model.object.Team;
 
 @RestController

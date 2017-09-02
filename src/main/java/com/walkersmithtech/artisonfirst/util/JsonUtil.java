@@ -24,14 +24,15 @@ public class JsonUtil
 		return json;
 	}
 
-	public static Object createModelFromJson( String json, Class<?> cl ) throws Exception
+	public static <T> T createModelFromJson( String json, Class<T> model ) throws Exception
 	{
 		try
 		{
-			return  mapper.readValue( json, cl );
+			return ( T ) mapper.readValue( json, model );
 		}
 		catch ( Exception e )
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}

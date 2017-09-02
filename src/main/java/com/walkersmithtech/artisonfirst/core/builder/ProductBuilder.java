@@ -1,4 +1,4 @@
-package com.walkersmithtech.artisonfirst.component.builder;
+package com.walkersmithtech.artisonfirst.core.builder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,12 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.BaseBuilder;
-import com.walkersmithtech.artisonfirst.component.ServiceException;
-import com.walkersmithtech.artisonfirst.component.service.CompanyProductService;
-import com.walkersmithtech.artisonfirst.component.service.CompanyService;
-import com.walkersmithtech.artisonfirst.component.service.ProductService;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
+import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
+import com.walkersmithtech.artisonfirst.core.BaseBuilder;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
+import com.walkersmithtech.artisonfirst.core.service.CompanyProductService;
+import com.walkersmithtech.artisonfirst.core.service.CompanyService;
+import com.walkersmithtech.artisonfirst.core.service.ProductService;
+import com.walkersmithtech.artisonfirst.data.entity.RoleData;
 import com.walkersmithtech.artisonfirst.data.model.dto.CompanyProductDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ProductDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
@@ -30,31 +32,31 @@ public class ProductBuilder extends BaseBuilder<ProductDto>
 	@Autowired
 	private CompanyProductService companyProductService;
 
+	public List<ProductDto> createProducts( List<ProductDto> models ) throws ServiceException
+	{
+		if ( models != null && models.size() > 0 )
+		{
+			for ( ProductDto model : models )
+			{
+				model = createProduct( model );
+			}
+		}
+		return models;
+	}
+
 	public ProductDto createProduct( ProductDto model ) throws ServiceException
 	{
-		Company company = companyService.getCompanyByUid( model.getCompany().getUid() );
-		Product product = productService.createProduct( model.getProduct() );
-		model.setProduct( product );
-		model.setCompany( company );
-		CompanyProduct profile = model.getProfile();
-		profile.setSourceUid( company.getUid() );
-		profile.setTargetUid( product.getUid() );
+		model = buildProductDto( model );
+		CompanyProduct profile = buildProfile( model );
 		profile = companyProductService.createModel( profile );
-		model.setProfile( profile );
 		return model;
 	}
 
 	public ProductDto updateProduct( ProductDto model ) throws ServiceException
 	{
-		Company company = companyService.getCompanyByUid( model.getCompany().getUid() );
-		Product product = productService.updateProduct( model.getProduct() );
-		model.setProduct( product );
-		model.setCompany( company );
-		CompanyProduct profile = model.getProfile();
-		profile.setSourceUid( company.getUid() );
-		profile.setTargetUid( product.getUid() );
+		model = buildProductDto( model );
+		CompanyProduct profile = buildProfile( model );
 		profile = companyProductService.updateModel( profile );
-		model.setProfile( profile );
 		return model;
 	}
 
@@ -83,18 +85,31 @@ public class ProductBuilder extends BaseBuilder<ProductDto>
 		List<CompanyProduct> profiles = companyProductService.getCompanyProductsByCompanyUid( companyUid );
 		if ( profiles != null && profiles.size() > 0 )
 		{
+			RoleData productRole;
 			for ( CompanyProduct profile : profiles )
 			{
-				model = new ProductDto();
-				product = productService.getProductByUid( profile.getTargetUid() );
-				if ( product != null )
+				productRole = profile.getCollaborator( RelationshipRole.PRODUCT.name() );
+				if ( productRole != null )
 				{
-					products.add( populateProductDto( product, company, profile, model ) );
+					model = new ProductDto();
+					product = productService.getProductByUid( productRole.getObjectUid() );
+					if ( product != null )
+					{
+						products.add( populateProductDto( product, company, profile, model ) );
+					}
 				}
 			}
 		}
 		auth.setProducts( products );
 		return auth;
+	}
+
+	private ProductDto buildProductDto( ProductDto model ) throws ServiceException
+	{
+		Company company = companyService.getCompanyByUid( model.getCompany().getUid() );
+		Product product = productService.saveProduct( model.getProduct() );
+		CompanyProduct profile = buildProfile( model );
+		return populateProductDto( product, company, profile, model );
 	}
 
 	private ProductDto buildProductDto( Product product, Company company, ProductDto model ) throws ServiceException
@@ -106,12 +121,22 @@ public class ProductBuilder extends BaseBuilder<ProductDto>
 		}
 		return populateProductDto( product, company, profile, model );
 	}
-	
+
+	private CompanyProduct buildProfile( ProductDto model )
+	{
+		Company company = model.getCompany();
+		Product product = model.getProduct();
+		
+		CompanyProduct profile = new CompanyProduct();
+		profile.addProduct( product );
+		profile.addProductOwner( company );
+		return profile;
+	}
+
 	private ProductDto populateProductDto( Product product, Company company, CompanyProduct profile, ProductDto model )
 	{
 		model.setProduct( product );
 		model.setCompany( company );
-		model.setProfile( profile );
 		return model;
 	}
 

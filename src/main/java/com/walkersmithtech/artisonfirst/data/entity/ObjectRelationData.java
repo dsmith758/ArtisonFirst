@@ -30,14 +30,8 @@ public class ObjectRelationData
 	@Column( name = "data", nullable = false )
 	private String data;
 
-	@Column( name = "role", nullable = false, length = 32 )
-	private String role;
-
-	@Column( name = "source_uid", nullable = false, length = 64 )
-	private String sourceUid;
-
-	@Column( name = "target_uid", nullable = false, length = 64 )
-	private String targetUid;
+	@Column( name = "type", nullable = false, length = 32 )
+	private String type;
 
 	@Temporal( TemporalType.TIMESTAMP )
 	@Column( name = "created_on", nullable = false )
@@ -77,34 +71,14 @@ public class ObjectRelationData
 		this.data = data;
 	}
 
-	public String getRole()
+	public String getType()
 	{
-		return role;
+		return type;
 	}
 
-	public void setRole( String role )
+	public void setType( String type )
 	{
-		this.role = role;
-	}
-
-	public String getSourceUid()
-	{
-		return sourceUid;
-	}
-
-	public void setSourceUid( String sourceUid )
-	{
-		this.sourceUid = sourceUid;
-	}
-
-	public String getTargetUid()
-	{
-		return targetUid;
-	}
-
-	public void setTargetUid( String targetUid )
-	{
-		this.targetUid = targetUid;
+		this.type = type;
 	}
 
 	public Date getCreatedOn()

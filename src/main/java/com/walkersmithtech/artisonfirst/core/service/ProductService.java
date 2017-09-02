@@ -1,12 +1,12 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.BaseObjectService;
-import com.walkersmithtech.artisonfirst.component.ServiceException;
 import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
+import com.walkersmithtech.artisonfirst.core.BaseObjectService;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.model.object.Product;
 
 @Service
@@ -21,16 +21,25 @@ public class ProductService extends BaseObjectService<Product>
 		dataType = DataType.PRODUCT;
 		modelClass = Product.class;
 	}
+	
+	public Product saveProduct( Product model ) throws ServiceException
+	{
+		if (model.getUid() == null )
+		{
+			return createProduct( model );
+		}
+		return updateProduct( model );
+	}
 
 	public Product createProduct( Product model ) throws ServiceException
 	{
-		validateModel( model );
+		validate( model );
 		return createModel( model );
 	}
 
 	public Product updateProduct( Product model ) throws ServiceException
 	{
-		validateModel( model );
+		validate( model );
 		Product match = getModelByUid( model.getUid() );
 		if ( match == null )
 		{
@@ -46,25 +55,9 @@ public class ProductService extends BaseObjectService<Product>
 	}
 
 	@Override
-	public Product createModel( Product model )
+	protected void createIndex( Product model )
 	{
-		if ( model != null )
-		{
-			model = createData( model );
-			createIndex( model );
-		}
-		return model;
-	}
-
-	@Override
-	public Product updateModel( Product model )
-	{
-		if ( model != null )
-		{
-			model = updateData( model );
-			createIndex( model );
-		}
-		return model;
+		indexRepo.deleteByUid( model.getUid() );
 	}
 
 	public Product getProductByUid( String uid ) throws ServiceException
@@ -77,12 +70,8 @@ public class ProductService extends BaseObjectService<Product>
 		return model;
 	}
 
-	private void createIndex( Product model )
-	{
-		indexRepo.deleteByUid( model.getUid() );
-	}
-
-	private void validateModel( Product model ) throws ServiceException
+	@Override
+	protected void validate( Product model ) throws ServiceException
 	{
 		if ( model == null )
 		{

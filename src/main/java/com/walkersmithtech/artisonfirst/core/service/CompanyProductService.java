@@ -1,13 +1,15 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.BaseRelationService;
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
-import com.walkersmithtech.artisonfirst.data.model.object.Company;
-import com.walkersmithtech.artisonfirst.data.model.object.Product;
+import com.walkersmithtech.artisonfirst.constant.RelationshipType;
+import com.walkersmithtech.artisonfirst.core.BaseRelationService;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
+import com.walkersmithtech.artisonfirst.data.model.fragment.ProductFieldDefinition;
 import com.walkersmithtech.artisonfirst.data.model.relation.CompanyProduct;
 
 @Service
@@ -16,52 +18,51 @@ public class CompanyProductService extends BaseRelationService<CompanyProduct>
 
 	public CompanyProductService()
 	{
-		roleType = RelationshipRole.COMPANY_PRODUCT.name();
-		relationClass = CompanyProduct.class;
-		sourceClass = Company.class;
-		targetClass = Product.class;
+		type = RelationshipType.COMPANY_PRODUCT;
+		modelClass = CompanyProduct.class;
 	}
-	
-	public void createCompanyProducts( List<Product> products, Company company )
+
+	@Override
+	protected void createIndex( CompanyProduct model )
 	{
-		if ( products != null && products.size() > 0 )
+		deleteIndex( model.getUid() );
+		List<ProductFieldDefinition> fields = model.getFields();
+		if ( fields != null && fields.size() > 0 )
 		{
-			CompanyProduct companyProduct;
-			for ( Product product : products )
+			for ( ProductFieldDefinition field : fields )
 			{
-				companyProduct = new CompanyProduct();
-				companyProduct.setSourceUid( company.getUid() );
-				companyProduct.setTargetUid( product.getUid() );
-				companyProduct = createModel( companyProduct );
+				if ( field.getValues() != null && field.getValues().size() > 0 )
+				{
+					for ( String value : field.getValues() )
+					{
+						saveIndexData( model.getUid(), field.getLabel().toUpperCase(), value );
+					}
+				}
 			}
 		}
 	}
 
-	@Override
-	public CompanyProduct createModel( CompanyProduct relation )
-	{
-		return saveRelationship( relation );
-	}
-
-	@Override
-	public CompanyProduct updateModel( CompanyProduct relation )
-	{
-		return saveRelationship( relation );
-	}
-
 	public List<CompanyProduct> getCompanyProductsByCompanyUid( String uid )
 	{
-		return getRelationsBySourceAndType( uid, RelationshipRole.COMPANY_PRODUCT );
+		return getRelationsBySourceAndType( uid, type, RelationshipRole.OWNER );
 	}
 
 	public List<CompanyProduct> getCompanyProductsByProductUid( String uid )
 	{
-		return getRelationsByTargetAndType( uid, RelationshipRole.COMPANY_PRODUCT );
+		return getRelationsBySourceAndType( uid, type, RelationshipRole.PRODUCT );
 	}
-	
+
 	public CompanyProduct getCompanyProductBySourceAndTarget( String sourceUid, String targetUid )
 	{
-		return getRelationsBySourceAndTargetAndType( sourceUid, targetUid, RelationshipRole.COMPANY_PRODUCT );
+		List<String> objectUids = new ArrayList<>();
+		objectUids.add( sourceUid );
+		objectUids.add( targetUid );
+		return getRelationsBySourceAndTargetAndType( objectUids, type );
+	}
+
+	@Override
+	protected void validate( CompanyProduct model ) throws ServiceException
+	{
 	}
 
 }

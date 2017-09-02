@@ -4,8 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.walkersmithtech.artisonfirst.component.ServiceException;
-import com.walkersmithtech.artisonfirst.component.service.AuthenticationService;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
+import com.walkersmithtech.artisonfirst.core.service.AuthenticationService;
 import com.walkersmithtech.artisonfirst.data.model.Account;
 import com.walkersmithtech.artisonfirst.data.model.BaseDto;
 

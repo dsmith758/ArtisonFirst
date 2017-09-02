@@ -16,6 +16,7 @@ flyway:
   
 artisonfirst:
   key: zxkBxQhpLhwYZex=
+  expiration: 900000
  
 server:
   port: 5000

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.walkersmithtech.artisonfirst.component.ServiceException;
-import com.walkersmithtech.artisonfirst.component.builder.ProductBuilder;
-import com.walkersmithtech.artisonfirst.component.service.ProductService;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
+import com.walkersmithtech.artisonfirst.core.builder.ProductBuilder;
+import com.walkersmithtech.artisonfirst.core.service.ProductService;
 import com.walkersmithtech.artisonfirst.data.model.dto.CompanyProductDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ProductDto;
 

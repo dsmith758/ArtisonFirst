@@ -1,11 +1,10 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.BaseService;
-import com.walkersmithtech.artisonfirst.component.ServiceException;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.entity.FileData;
 import com.walkersmithtech.artisonfirst.data.entity.FileRelationData;
 import com.walkersmithtech.artisonfirst.data.model.dto.FileDto;
@@ -15,7 +14,7 @@ import com.walkersmithtech.artisonfirst.util.DateUtil;
 import com.walkersmithtech.artisonfirst.util.JsonUtil;
 
 @Service
-public class FileManagerSerivce extends BaseService
+public class FileManagerSerivce
 {
 	@Autowired
 	private FileDataRepository dataRepo;

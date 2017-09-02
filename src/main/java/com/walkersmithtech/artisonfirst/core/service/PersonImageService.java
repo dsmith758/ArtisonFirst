@@ -1,12 +1,12 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.BaseFileService;
-import com.walkersmithtech.artisonfirst.component.ServiceException;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
-import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
+import com.walkersmithtech.artisonfirst.constant.RelationshipType;
+import com.walkersmithtech.artisonfirst.core.BaseFileService;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.PersonDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Person;
@@ -42,14 +42,14 @@ public class PersonImageService extends BaseFileService
 	{
 		auth = ( ImageDto ) fileService.createFileRecord( file, auth );
 		auth = setProfileImage( auth, personUid, file );
-		auth = ( ImageDto ) fileService.createFileRelation( personUid, RelationshipRole.PERSON_IMAGE.name(), auth );
+		auth = ( ImageDto ) fileService.createFileRelation( personUid, RelationshipType.PERSON_IMAGE.name(), auth );
 		return auth;
 	}
 
 	public ImageDto setProfileImage( ImageDto auth, String personUid, byte[] file ) throws ServiceException
 	{
-		unsetObjectImage( personUid, RelationshipRole.PROFILE_IMAGE );
-		auth = ( ImageDto ) fileService.createFileRelation( personUid, RelationshipRole.PROFILE_IMAGE.name(), auth );
+		unsetObjectImage( personUid, RelationshipType.PROFILE_IMAGE );
+		auth = ( ImageDto ) fileService.createFileRelation( personUid, RelationshipType.PROFILE_IMAGE.name(), auth );
 		return auth;
 	}
 

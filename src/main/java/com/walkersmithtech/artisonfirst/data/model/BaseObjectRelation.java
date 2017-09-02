@@ -1,31 +1,56 @@
 package com.walkersmithtech.artisonfirst.data.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.walkersmithtech.artisonfirst.data.entity.RoleData;
 
 @JsonInclude( Include.NON_EMPTY )
-public abstract class BaseObjectRelation extends BaseRelation
+public class BaseObjectRelation extends BaseRelation
 {
-	protected String sourceUid;
-	protected String targetUid;
+	protected List<RoleData> collaborators;
 
-	public String getSourceUid()
+	public List<RoleData> getCollaborators()
 	{
-		return sourceUid;
+		if ( collaborators == null )
+		{
+			collaborators = new ArrayList<>();
+		}
+		return collaborators;
 	}
 
-	public void setSourceUid( String sourceUid )
+	public void setCollaborators( List<RoleData> collaborators )
 	{
-		this.sourceUid = sourceUid;
+		this.collaborators = collaborators;
 	}
 
-	public String getTargetUid()
+	@JsonIgnore
+	public void addCollaborator( RoleData collaborator )
 	{
-		return targetUid;
+		getCollaborators();
+		if ( collaborator != null )
+		{
+			collaborators.add( collaborator );
+		}
 	}
 
-	public void setTargetUid( String targetUid )
+	@JsonIgnore
+	public RoleData getCollaborator( String roleType )
 	{
-		this.targetUid = targetUid;
+		if ( collaborators != null && collaborators.size() > 0 )
+		{
+			for ( RoleData collaborator : collaborators )
+			{
+				if ( collaborator.getRole().equals( roleType ) )
+				{
+					return collaborator;
+				}
+			}
+		}
+		return null;
 	}
+	
 }

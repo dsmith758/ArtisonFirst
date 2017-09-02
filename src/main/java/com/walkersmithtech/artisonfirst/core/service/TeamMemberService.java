@@ -1,11 +1,10 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.BaseRelationService;
-import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
-import com.walkersmithtech.artisonfirst.data.model.object.Person;
-import com.walkersmithtech.artisonfirst.data.model.object.Team;
+import com.walkersmithtech.artisonfirst.constant.RelationshipType;
+import com.walkersmithtech.artisonfirst.core.BaseRelationService;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.model.relation.TeamMember;
 
 @Service
@@ -13,10 +12,8 @@ public class TeamMemberService extends BaseRelationService<TeamMember>
 {
 	public TeamMemberService()
 	{
-		roleType = RelationshipRole.TEAM_MEMBER.name();
-		relationClass = TeamMember.class;
-		sourceClass = Team.class;
-		targetClass = Person.class;
+		type = RelationshipType.TEAM_MEMBER;
+		modelClass = TeamMember.class;
 	}
 
 	@Override
@@ -40,4 +37,17 @@ public class TeamMemberService extends BaseRelationService<TeamMember>
 		}
 		return relation;
 	}
+
+	@Override
+	protected void createIndex( TeamMember model )
+	{
+
+	}
+
+	@Override
+	protected void validate( TeamMember model ) throws ServiceException
+	{
+
+	}
+
 }

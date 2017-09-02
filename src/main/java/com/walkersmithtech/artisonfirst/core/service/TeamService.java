@@ -1,12 +1,13 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.BaseObjectService;
 import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.constant.IndexType;
+import com.walkersmithtech.artisonfirst.core.BaseObjectService;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.model.object.Team;
 
 @Service
@@ -41,7 +42,8 @@ public class TeamService  extends BaseObjectService<Team>
 		return model;
 	}
 	
-	private void createIndex( Team model )
+	@Override
+	protected void createIndex( Team model )
 	{
 		saveIndexData( model.getUid(), IndexType.TEAM_NAME, model.getName() );		
 	}
@@ -50,5 +52,11 @@ public class TeamService  extends BaseObjectService<Team>
 	{
 		List<Team> models = getByTypeAndData( IndexType.TEAM_NAME, name );
 		return models;
+	}
+	
+	@Override
+	protected void validate( Team model ) throws ServiceException
+	{
+		
 	}
 }

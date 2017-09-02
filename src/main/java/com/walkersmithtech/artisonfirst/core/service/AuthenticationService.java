@@ -1,4 +1,4 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
 import java.util.Date;
 import java.util.List;
@@ -7,17 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.ServiceException;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.entity.UserAccount;
 import com.walkersmithtech.artisonfirst.data.entity.UserSession;
 import com.walkersmithtech.artisonfirst.data.model.Account;
 import com.walkersmithtech.artisonfirst.data.model.BaseDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.AuthenticationDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
 import com.walkersmithtech.artisonfirst.data.repository.UserAccountRepository;
 import com.walkersmithtech.artisonfirst.data.repository.UserSessionRepository;
 import com.walkersmithtech.artisonfirst.util.DateUtil;
 import com.walkersmithtech.artisonfirst.util.Encryptor;
+import com.walkersmithtech.artisonfirst.util.JsonUtil;
 
 @Service
 public class AuthenticationService
@@ -27,12 +29,15 @@ public class AuthenticationService
 
 	@Autowired
 	private UserSessionRepository sessionRepo;
-	
+
 	@Autowired
 	private CompanyService companyService;
 
 	@Value( "${artisonfirst.key}" )
 	private String key;
+
+	@Value( "${artisonfirst.expiration}" )
+	private long expiration;
 
 	public Account login( BaseDto auth ) throws ServiceException
 	{
@@ -40,6 +45,7 @@ public class AuthenticationService
 		String loginName = account.getLoginName();
 		String password = account.getPassword();
 		String ipAddress = auth.getIpAddress();
+		String companyUid = auth.getAccount().getCompanyUid();
 
 		account.setAuthenticated( false );
 		if ( loginName == null || password == null || ipAddress == null )
@@ -57,10 +63,21 @@ public class AuthenticationService
 		{
 			throw ErrorCode.AUTH_INVALID_CREDENTIALS.exception;
 		}
-		
-		Company company = companyService.getCompanyByPersonUid( user.getPersonUid() );
 
-		account = createOrUpdateSession( auth, user, company );
+		Company company = null;
+		if ( companyUid == null )
+		{
+			company = companyService.getCompanyByPersonUid( user.getPersonUid() );
+		}
+		else
+		{
+			company = companyService.getCompanyByUid( companyUid );
+		}
+
+		if ( company != null )
+		{
+			account = createOrUpdateSession( auth, user, company );
+		}
 		return account;
 	}
 
@@ -79,13 +96,18 @@ public class AuthenticationService
 		{
 			for ( UserSession session : sessions )
 			{
-				if ( isMatchingSession( auth, session ) )
+				try
 				{
-					// session = resetSession( session, user.getLoginName(),
-					// user.getPersonUid(), auth.getIpAddress() );
-					account.setSessionId( session.getSessionId() );
-					account.setToken( session.getToken() );
-					return account;
+					if ( isMatchingSession( auth, session ) )
+					{
+						account.setSessionId( session.getSessionId() );
+						account.setToken( session.getToken() );
+						return account;
+					}
+				}
+				catch ( ServiceException e )
+				{
+					e.printStackTrace();
 				}
 			}
 		}
@@ -94,26 +116,53 @@ public class AuthenticationService
 		return account;
 	}
 
-	private boolean isMatchingSession( BaseDto auth, UserSession session )
+	private boolean isMatchingSession( BaseDto auth, UserSession session ) throws ServiceException
+	{
+		String salt = session.getSalt();
+		String token = session.getToken();
+		AuthenticationDto authObject = decryptToken( salt, token );
+		return matches( authObject, auth );
+	}
+
+	public Account validateSession( BaseDto auth ) throws ServiceException
 	{
 		Account account = auth.getAccount();
+		account.setAuthenticated( false );
+		UserSession session = checkAndRetrieveSession( account, auth.getIpAddress() );
+
 		String salt = session.getSalt();
-		String ipAddress = session.getIpAddress();
 		String token = session.getToken();
+		AuthenticationDto authObject = decryptToken( salt, token );
+		if ( !matches( authObject, auth ) )
+		{
+			return account;
+		}
 
-		if ( !ipAddress.equals( auth.getIpAddress() ) )
+		String loginName = authObject.getLoginName();
+		if ( session.getNeverExpires().intValue() == 0 )
+		{
+			// check expiration here...
+			String personUid = authObject.getPersonUid();
+			String ipAddress = authObject.getIpAddress();
+			session = initSession( session, personUid, loginName, ipAddress );
+		}
+		account = buildUserProfile( loginName, session.getSessionId(), session.getToken() );
+		account.setAuthenticated( true );
+		return account;
+	}
+
+	private boolean matches( AuthenticationDto authObject, BaseDto auth )
+	{
+		Account account = auth.getAccount();
+		String loginName = authObject.getLoginName();
+		String personUid = authObject.getPersonUid();
+		String sessionId = authObject.getSessionId();
+		String ipAddress = authObject.getIpAddress();
+
+		if ( !sessionId.equals( account.getSessionId() ) )
 		{
 			return false;
 		}
-
-		String[] contextArray = decryptToken( salt, token );
-		if ( contextArray == null )
-		{
-			return false;
-		}
-
-		String loginName = contextArray[ 0 ];
-		String personUid = contextArray[ 1 ];
 
 		if ( !loginName.equals( account.getLoginName() ) )
 		{
@@ -121,6 +170,11 @@ public class AuthenticationService
 		}
 
 		if ( !personUid.equals( account.getPersonUid() ) )
+		{
+			return false;
+		}
+
+		if ( !ipAddress.equals( auth.getIpAddress() ) )
 		{
 			return false;
 		}
@@ -146,43 +200,7 @@ public class AuthenticationService
 		return account;
 	}
 
-	public Account validateSession( BaseDto auth ) throws ServiceException
-	{
-		Account account = auth.getAccount();
-		account.setAuthenticated( false );
-		UserSession session = validateAndRetrieveSession( account, auth.getIpAddress() );
-
-		String salt = session.getSalt();
-		String ipAddress = session.getIpAddress();
-		String token = session.getToken();
-
-		String[] contextArray = decryptToken( salt, token );
-		if ( contextArray == null )
-		{
-			throw ErrorCode.AUTH_INVALID_SESSION.exception;
-		}
-
-		String personUid = contextArray[ 1 ];
-		String loginName = contextArray[ 0 ];
-
-		// session = resetSession( session, personUid, loginName, ipAddress );
-		account = buildUserProfile( loginName, session.getSessionId(), session.getToken() );
-		account.setAuthenticated( true );
-		return account;
-	}
-
-	private String[] decryptToken( String salt, String token )
-	{
-		String userContext = Encryptor.decrypt( key, salt, token );
-		String[] contextArray = userContext.split( "[|]" );
-		if ( contextArray.length < 4 )
-		{
-			return null;
-		}
-		return contextArray;
-	}
-
-	private UserSession validateAndRetrieveSession( Account account, String ipAddress ) throws ServiceException
+	private UserSession checkAndRetrieveSession( Account account, String ipAddress ) throws ServiceException
 	{
 		String sessionId = account.getSessionId();
 		if ( sessionId == null )
@@ -215,7 +233,7 @@ public class AuthenticationService
 		return session;
 	}
 
-	private UserSession resetSession( UserSession session, String userName, String personUid, String ipAddress )
+	private UserSession initSession( UserSession session, String userName, String personUid, String ipAddress )
 	{
 		String salt = DateUtil.generateIV();
 		Date currentDate = DateUtil.getCurrentDate();
@@ -298,9 +316,32 @@ public class AuthenticationService
 		return account;
 	}
 
-	private String createToken( String userName, String personUid, String sessionId, String salt, String ipAddress )
+	private AuthenticationDto decryptToken( String salt, String token ) throws ServiceException
 	{
-		String data = userName + "|" + personUid + "|" + sessionId + "|" + ipAddress;
+		try
+		{
+			String authData = Encryptor.decrypt( key, salt, token );
+			AuthenticationDto authObject = ( AuthenticationDto ) JsonUtil.createModelFromJson( authData, AuthenticationDto.class );
+			return authObject;
+		}
+		catch ( Exception ex )
+		{
+			ServiceException se = ErrorCode.SYSTEM_ERROR.exception;
+			se.initCause( ex );
+			throw se;
+		}
+	}
+
+	private String createToken( String loginName, String personUid, String sessionId, String salt, String ipAddress )
+	{
+		Date expireOn = new Date( System.currentTimeMillis() + expiration );
+		AuthenticationDto authObject = new AuthenticationDto();
+		authObject.setLoginName( loginName );
+		authObject.setPersonUid( personUid );
+		authObject.setSessionId( sessionId );
+		authObject.setIpAddress( ipAddress );
+		authObject.setExpiresOn( expireOn );
+		String data = JsonUtil.createJsonFromModel( authObject );
 		String token = Encryptor.encrypt( key, salt, data );
 		return token;
 	}

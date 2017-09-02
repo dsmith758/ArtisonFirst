@@ -1,6 +1,6 @@
 package com.walkersmithtech.artisonfirst.data.model;
 
-public abstract class BaseModel
+public class BaseModel
 {
 	protected Integer id;
 	protected String uid;

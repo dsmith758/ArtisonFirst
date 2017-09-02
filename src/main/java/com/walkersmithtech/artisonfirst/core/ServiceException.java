@@ -1,4 +1,4 @@
-package com.walkersmithtech.artisonfirst.component;
+package com.walkersmithtech.artisonfirst.core;
 
 import org.springframework.http.HttpStatus;
 

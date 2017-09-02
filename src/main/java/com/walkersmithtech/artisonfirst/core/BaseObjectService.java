@@ -1,4 +1,4 @@
-package com.walkersmithtech.artisonfirst.component;
+package com.walkersmithtech.artisonfirst.core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import com.walkersmithtech.artisonfirst.data.repository.ObjectDataRepository;
 import com.walkersmithtech.artisonfirst.util.DateUtil;
 import com.walkersmithtech.artisonfirst.util.JsonUtil;
 
-public abstract class BaseObjectService<T extends BaseObject>
+public abstract class BaseObjectService<T extends BaseObject> extends BaseService<T, ObjectData>
 {
 	@Autowired
 	protected ObjectDataRepository dataRepo;
@@ -26,25 +26,49 @@ public abstract class BaseObjectService<T extends BaseObject>
 	protected ObjectDataIndexRepository indexRepo;
 
 	@Autowired
-	protected BaseService baseService;
-
-	@Autowired
 	protected ObjectDataDao dao;
-
+	
 	protected DataType dataType;
 
 	protected Class<T> modelClass;
+	
+	@Override
+	public T createModel( T model )
+	{
+		if ( model != null )
+		{
+			model = createData( model );
+			createIndex( model );
+		}
+		return model;
+	}
 
-	public abstract T createModel( T model );
+	@Override
+	public T updateModel( T model )
+	{
+		if ( model != null )
+		{
+			model = updateData( model );
+			createIndex( model );
+		}
+		return model;
+	}
 
-	public abstract T updateModel( T model );
-
+	@Override
 	@Transactional
 	public boolean deleteModel( String objectUid )
 	{
-		return baseService.deleteObjectModel( objectUid );
+		return deleteObjectModel( objectUid );
 	}
 
+	@Override
+	public boolean deleteIndex( String objectUid )
+	{
+		deleteObjectIndexData( objectUid );
+		return true;
+	}
+
+	@Override
 	public T getModelByUid( String uid )
 	{
 		ObjectData entity = dataRepo.findByUid( uid );
@@ -68,11 +92,12 @@ public abstract class BaseObjectService<T extends BaseObject>
 		return convertEntitiesToModels( entities );
 	}
 
+	@Override
 	protected T createData( T model )
 	{
 		model.setUid( DateUtil.generateUuid() );
 		ObjectData entity = new ObjectData();
-		entity.setUid( model.getUid());
+		entity.setUid( model.getUid() );
 		entity.setCreatedOn( DateUtil.getCurrentDate() );
 		entity.setUpdatedOn( DateUtil.getCurrentDate() );
 		entity.setStatus( 1 );
@@ -83,6 +108,7 @@ public abstract class BaseObjectService<T extends BaseObject>
 		return model;
 	}
 
+	@Override
 	protected T updateData( T model )
 	{
 		ObjectData entity = dataRepo.findByUid( model.getUid() );
@@ -99,6 +125,7 @@ public abstract class BaseObjectService<T extends BaseObject>
 		return model;
 	}
 
+	@Override
 	protected void saveIndexData( String uid, IndexType type, String data )
 	{
 		if ( type != null && data != null && !data.isEmpty() )
@@ -111,6 +138,7 @@ public abstract class BaseObjectService<T extends BaseObject>
 		}
 	}
 
+	@Override
 	protected void updateIndexData( String objectUid, IndexType type, String data )
 	{
 		ObjectDataIndex index = indexRepo.findByUidAndType( objectUid, type.name );
@@ -140,12 +168,14 @@ public abstract class BaseObjectService<T extends BaseObject>
 		return convertEntitiesToModels( entities );
 	}
 
+	@Override
 	public List<T> getByFreeformSearch( String criteria )
 	{
 		List<ObjectData> entities = dataRepo.findByTypeAndDataAndStatus( dataType.type, criteria, 1 );
 		return convertEntitiesToModels( entities );
 	}
 
+	@Override
 	protected List<T> convertEntitiesToModels( List<ObjectData> entities )
 	{
 		List<T> models = new ArrayList<T>();
@@ -165,7 +195,7 @@ public abstract class BaseObjectService<T extends BaseObject>
 		{
 			String json = entity.getData();
 			Object model = JsonUtil.createModelFromJson( json, modelClass );
-			return (T) model;
+			return ( T ) model;
 		}
 		catch ( Exception e )
 		{

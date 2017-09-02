@@ -1,19 +1,19 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.ServiceException;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.entity.UserAccount;
 import com.walkersmithtech.artisonfirst.data.model.Account;
 import com.walkersmithtech.artisonfirst.data.model.dto.RegistrationDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
 import com.walkersmithtech.artisonfirst.data.model.object.Location;
 import com.walkersmithtech.artisonfirst.data.model.object.Person;
-import com.walkersmithtech.artisonfirst.data.model.relation.CompanyLocation;
 import com.walkersmithtech.artisonfirst.data.model.relation.PersonCompany;
 import com.walkersmithtech.artisonfirst.data.repository.UserAccountRepository;
 import com.walkersmithtech.artisonfirst.util.DateUtil;
@@ -138,12 +138,15 @@ public class UserRegistrationService
 
 	private RegistrationDto createCompany( RegistrationDto registration )
 	{
+		Person person = registration.getPerson();
 		Company company = registration.getCompany();
 		company = companyService.createModel( company );
+
 		PersonCompany personCompany = new PersonCompany();
-		personCompany.setSourceUid( registration.getPerson().getUid() );
-		personCompany.setTargetUid( company.getUid() );
+		personCompany.addOrganization( company );
+		personCompany.addPrinciple( person );
 		personCompany = personCompanyService.createModel( personCompany );
+
 		registration.setCompany( company );
 		registration = createCompanyAddresses( registration );
 		return registration;
@@ -153,36 +156,34 @@ public class UserRegistrationService
 	{
 		Company company = registration.getCompany();
 		List<Location> addresses = registration.getAddressInfo();
+		List<Location> locations = new ArrayList<>();
 		if ( addresses != null && addresses.size() > 0 )
 		{
-			CompanyLocation companyLocation;
 			for ( Location address : addresses )
 			{
 				if ( isValidAddress( address ) )
 				{
 					address = locationService.createModel( address );
-					companyLocation = new CompanyLocation();
-					companyLocation.setSourceUid( company.getUid() );
-					companyLocation.setTargetUid( address.getUid() );
-					companyLocationService.createModel( companyLocation );
+					locations.add( address );
 				}
 			}
+			companyLocationService.createCompanyLocations( locations, company );
 		}
 		return registration;
 	}
-	
+
 	private boolean isValidAddress( Location address )
 	{
 		if ( address.getAddress1() == null || address.getAddress1().isEmpty() )
 		{
 			return false;
 		}
-		
+
 		if ( address.getCity() == null || address.getCity().isEmpty() )
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 }

@@ -1,15 +1,15 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.BaseObjectService;
-import com.walkersmithtech.artisonfirst.component.ServiceException;
 import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.constant.IndexType;
+import com.walkersmithtech.artisonfirst.core.BaseObjectService;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.model.fragment.ContactInfo;
 import com.walkersmithtech.artisonfirst.data.model.object.Person;
 
@@ -28,13 +28,13 @@ public class PersonService extends BaseObjectService<Person>
 
 	public Person createPerson( Person person ) throws ServiceException
 	{
-		validateModel( person );
+		validate( person );
 		return createModel( person );
 	}
 
 	public Person updatePerson( Person person ) throws ServiceException
 	{
-		validateModel( person );
+		validate( person );
 		Person match = getModelByUid( person.getUid() );
 		if ( match == null )
 		{
@@ -50,28 +50,7 @@ public class PersonService extends BaseObjectService<Person>
 	}
 
 	@Override
-	public Person createModel( Person model )
-	{
-		if ( model != null )
-		{
-			model = createData( model );
-			createIndex( model );
-		}
-		return model;
-	}
-
-	@Override
-	public Person updateModel( Person model )
-	{
-		if ( model != null )
-		{
-			model = updateData( model );
-			createIndex( model );
-		}
-		return model;
-	}
-
-	private void createIndex( Person model )
+	protected void createIndex( Person model )
 	{
 		indexRepo.deleteByUid( model.getUid() );
 		saveIndexData( model.getUid(), IndexType.FIRSTNAME, model.getFirstName() );
@@ -110,7 +89,8 @@ public class PersonService extends BaseObjectService<Person>
 		return models;
 	}
 	
-	private void validateModel( Person person ) throws ServiceException
+	@Override
+	protected void validate( Person person ) throws ServiceException
 	{
 		if ( person == null )
 		{

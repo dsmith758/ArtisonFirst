@@ -1,4 +1,4 @@
-package com.walkersmithtech.artisonfirst.component;
+package com.walkersmithtech.artisonfirst.core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,15 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.walkersmithtech.artisonfirst.constant.IndexType;
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
+import com.walkersmithtech.artisonfirst.constant.RelationshipType;
 import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationData;
 import com.walkersmithtech.artisonfirst.data.entity.ObjectRelationDataIndex;
+import com.walkersmithtech.artisonfirst.data.entity.RoleData;
 import com.walkersmithtech.artisonfirst.data.model.BaseObjectRelation;
 import com.walkersmithtech.artisonfirst.data.repository.ObjectRelationDataIndexRepository;
 import com.walkersmithtech.artisonfirst.data.repository.ObjectRelationDataRepository;
 import com.walkersmithtech.artisonfirst.util.DateUtil;
 import com.walkersmithtech.artisonfirst.util.JsonUtil;
 
-public abstract class BaseRelationService<T extends BaseObjectRelation>
+public abstract class BaseRelationService<T extends BaseObjectRelation> extends BaseService<T, ObjectRelationData>
 {
 
 	@Autowired
@@ -24,24 +26,36 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 	@Autowired
 	protected ObjectRelationDataIndexRepository indexRepo;
 
-	@Autowired
-	private BaseService baseService;
+	protected RelationshipType type;
+	
+	protected Class<T> modelClass;
 
-	protected String roleType;
-	protected Class<?> relationClass;
-	protected Class<?> modelClass;
-	protected Class<?> sourceClass;
-	protected Class<?> targetClass;
+	@Override
+	public T createModel( T model )
+	{
+		model = saveRelationship( model );
+		createIndex( model );
+		return model;
+	}
 
-	public abstract T createModel( T relation );
+	@Override
+	public T updateModel( T model )
+	{
+		model = saveRelationship( model );
+		createIndex( model );
+		return model;
+	}
 
-	public abstract T updateModel( T relation );
-
-	public T saveRelationship( T relation )
+	private T saveRelationship( T relation )
 	{
 		if ( relation != null )
 		{
-			ObjectRelationData entity = dataRepo.findBySourceUidAndTargetUid( relation.getSourceUid(), relation.getTargetUid() );
+			ObjectRelationData entity = null;
+			List<ObjectRelationData> entities = getRelationsByCollaboratorsAndType( relation.getCollaborators(), type );
+			if ( entities != null && entities.size() > 0 )
+			{
+				entity = entities.get( 0 );
+			}
 			if ( entity == null )
 			{
 				relation = createData( relation );
@@ -54,30 +68,28 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 		return relation;
 	}
 
-	public boolean deleteModel( Integer id )
-	{
-		return baseService.deleteRelationModel( id );
-	}
-
+	@Override
 	public boolean deleteModel( String uid )
 	{
-		return baseService.deleteRelationModel( uid );
+		return deleteRelationModel( uid );
 	}
 
-	public boolean deleteModelsByUid( String uid )
-	{
-		return baseService.deleteRelationModelsByUid( uid );
-	}
-
+	@Override
 	protected void saveIndexData( String uid, IndexType type, String data )
+	{
+		saveIndexData( uid, type.name, data );
+	}
+
+	protected void saveIndexData( String uid, String type, String data )
 	{
 		ObjectRelationDataIndex index = new ObjectRelationDataIndex();
 		index.setUid( uid );
-		index.setType( type.name );
+		index.setType( type );
 		index.setData( data );
 		indexRepo.save( index );
 	}
 
+	@Override
 	protected void updateIndexData( String objectUid, IndexType type, String data )
 	{
 		ObjectRelationDataIndex index = indexRepo.findByUidAndType( objectUid, type.name );
@@ -89,32 +101,41 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 		indexRepo.save( index );
 	}
 
-	public List<T> getAllRelations()
+	@Override
+	public boolean deleteIndex( String uid )
 	{
-		List<ObjectRelationData> entities = dataRepo.findByRole( roleType );
+		deleteRelationIndexData( uid );
+		return true;
+	}
+
+	public List<T> getAllModels()
+	{
+		List<ObjectRelationData> entities = dataRepo.findByType( type.name() );
 		return convertEntitiesToModels( entities );
 	}
 
-	public T getRelationById( Integer id )
+	@Override
+	public T getModelByUid( String uid )
 	{
-		try
+		ObjectRelationData entity = dataRepo.findByUid( uid );
+		if ( entity != null )
 		{
-			ObjectRelationData entity = dataRepo.findOne( id );
-			if ( entity != null )
-			{
-				return convertEntityToModel( entity );
-			}
-		}
-		catch ( Exception e )
-		{
-			e.printStackTrace();
+			T model = convertEntityToModel( entity );
+			return model;
 		}
 		return null;
 	}
 
-	public List<T> getRelationsBySourceAndType( String uid, RelationshipRole role )
+	@Override
+	public List<T> getByFreeformSearch( String criteria )
 	{
-		List<ObjectRelationData> entities = dataRepo.findBySourceUidAndRole( uid, role.name() );
+		return null;
+	}
+
+	public List<T> getRelationsBySourceAndType( String uid, RelationshipType type, RelationshipRole role )
+	{
+
+		List<ObjectRelationData> entities = getRelationsByObjectUidAndRole( uid, type, role );
 		List<T> relations = new ArrayList<>();
 		if ( entities != null && entities.size() > 0 )
 		{
@@ -126,9 +147,9 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 		return relations;
 	}
 
-	public List<T> getRelationsByTargetAndType( String uid, RelationshipRole role )
+	public List<T> getRelationsByTargetAndType( String uid, RelationshipType type, RelationshipRole role )
 	{
-		List<ObjectRelationData> entities = dataRepo.findByTargetUidAndRole( uid, role.name() );
+		List<ObjectRelationData> entities = getRelationsByObjectUidAndRole( uid, type, role );
 		List<T> relations = new ArrayList<>();
 		if ( entities != null && entities.size() > 0 )
 		{
@@ -140,9 +161,14 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 		return relations;
 	}
 
-	public T getRelationsBySourceAndTargetAndType( String sourceUid, String targetUid, RelationshipRole role )
+	public T getRelationsBySourceAndTargetAndType( List<String> objectUid, RelationshipType type )
 	{
-		ObjectRelationData entity = dataRepo.findBySourceUidAndTargetUidAndRole( sourceUid, targetUid, role.name() );
+		ObjectRelationData entity = null;
+		List<ObjectRelationData> entities = getRelationsByObjectUidsAndType( objectUid, type );
+		if ( entities != null && entities.size() > 0 )
+		{
+			entity = entities.get( 0 );
+		}
 		if ( entity != null )
 		{
 			return convertEntityToModel( entity );
@@ -156,18 +182,17 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 		{
 			return null;
 		}
-		relation.setRole( roleType );
+		relation.setType( type.name() );
 		ObjectRelationData entity = new ObjectRelationData();
 		entity.setUid( DateUtil.generateUuid() );
-		entity.setSourceUid( relation.getSourceUid() );
-		entity.setTargetUid( relation.getTargetUid() );
 		entity.setCreatedOn( DateUtil.getCurrentDate() );
 		entity.setUpdatedOn( DateUtil.getCurrentDate() );
-		entity.setRole( relation.getRole() );
+		entity.setType( relation.getType() );
 		entity.setData( JsonUtil.createJsonFromModel( relation ) );
 		entity = dataRepo.save( entity );
 		relation.setId( entity.getId() );
 		relation.setUid( entity.getUid() );
+		relation = createRoles( relation );
 		return relation;
 	}
 
@@ -178,17 +203,36 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 			ObjectRelationData entity = dataRepo.findOne( relation.getId() );
 			if ( entity != null )
 			{
-				entity.setSourceUid( relation.getSourceUid() );
-				entity.setTargetUid( relation.getTargetUid() );
 				entity.setUpdatedOn( DateUtil.getCurrentDate() );
 				entity.setData( JsonUtil.createJsonFromModel( relation ) );
 				entity = dataRepo.save( entity );
+				relation = createRoles( relation );
 			}
 			else
 			{
 				relation = createData( relation );
 			}
 		}
+		return relation;
+	}
+
+	public T createRoles( T relation )
+	{
+		roleRepo.deleteByObjectRelationUid( relation.getUid() );
+		List<RoleData> roleData = new ArrayList<>();
+		List<RoleData> collaborators = relation.getCollaborators();
+		if ( collaborators != null && collaborators.size() > 0 )
+		{
+			for ( RoleData collaborator : collaborators )
+			{
+				collaborator.setId( null );
+				collaborator.setUid( DateUtil.generateUuid() );
+				collaborator.setObjectRelationUid( relation.getUid() );
+				collaborator = roleRepo.save( collaborator );
+				roleData.add( collaborator );
+			}
+		}
+		relation.setCollaborators( roleData );
 		return relation;
 	}
 
@@ -201,15 +245,18 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 		}
 		return models;
 	}
-
-	@SuppressWarnings( "unchecked" )
+	
+	@Override
 	protected T convertEntityToModel( ObjectRelationData entity )
 	{
 		try
 		{
 			String json = entity.getData();
-			Object model = JsonUtil.createModelFromJson( json, relationClass );
-			return ( T ) model;
+			T model = ( T ) JsonUtil.createModelFromJson( json, modelClass );
+			model.setUid( entity.getUid() );
+			model.setId( entity.getId() );
+			model = getRoles( model );
+			return model;
 		}
 		catch ( Exception e )
 		{
@@ -217,4 +264,16 @@ public abstract class BaseRelationService<T extends BaseObjectRelation>
 		}
 		return null;
 	}
+	
+	protected T getRoles( T relation )
+	{
+		if ( relation != null )
+		{
+			List<RoleData> collaborators = roleRepo.findByObjectRelationUid( relation.getUid() );
+			relation.setCollaborators( collaborators );
+			return relation;
+		}
+		return null;
+	}
+
 }

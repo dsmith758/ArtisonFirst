@@ -1,14 +1,14 @@
-package com.walkersmithtech.artisonfirst.component.service;
+package com.walkersmithtech.artisonfirst.core.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.walkersmithtech.artisonfirst.component.BaseObjectService;
-import com.walkersmithtech.artisonfirst.component.ServiceException;
 import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.constant.IndexType;
+import com.walkersmithtech.artisonfirst.core.BaseObjectService;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.model.object.Location;
 
 @Service
@@ -17,8 +17,8 @@ public class LocationService extends BaseObjectService<Location>
 
 	public LocationService()
 	{
-		dataType = DataType.LOCATION;
-		modelClass = Location.class;
+		this.dataType = DataType.LOCATION;
+		this.modelClass = Location.class;
 	}
 
 	public List<Location> createLocations( List<Location> locations ) throws ServiceException
@@ -35,7 +35,7 @@ public class LocationService extends BaseObjectService<Location>
 
 	public Location createLocation( Location location ) throws ServiceException
 	{
-		validateLocation( location );
+		validate( location );
 		return createModel( location );
 	}
 
@@ -60,7 +60,7 @@ public class LocationService extends BaseObjectService<Location>
 
 	public Location updateLocation( Location location ) throws ServiceException
 	{
-		validateLocation( location );
+		validate( location );
 		Location match = getModelByUid( location.getUid() );
 		if ( match == null )
 		{
@@ -70,28 +70,7 @@ public class LocationService extends BaseObjectService<Location>
 	}
 
 	@Override
-	public Location createModel( Location model )
-	{
-		if ( model != null )
-		{
-			model = createData( model );
-			createIndex( model );
-		}
-		return model;
-	}
-
-	@Override
-	public Location updateModel( Location model )
-	{
-		if ( model != null )
-		{
-			model = updateData( model );
-			createIndex( model );
-		}
-		return model;
-	}
-
-	private void createIndex( Location model )
+	protected void createIndex( Location model )
 	{
 		indexRepo.deleteByUid( model.getUid() );
 		saveIndexData( model.getUid(), IndexType.CITY, model.getCity() );
@@ -100,7 +79,8 @@ public class LocationService extends BaseObjectService<Location>
 		saveIndexData( model.getUid(), IndexType.COUNTRY, model.getCountry() );
 	}
 
-	private void validateLocation( Location location ) throws ServiceException
+	@Override
+	protected void validate( Location location ) throws ServiceException
 	{
 		if ( location == null )
 		{

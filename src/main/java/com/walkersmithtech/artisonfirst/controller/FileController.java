@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.walkersmithtech.artisonfirst.component.ServiceException;
-import com.walkersmithtech.artisonfirst.component.service.CompanyImageService;
-import com.walkersmithtech.artisonfirst.component.service.FileManagerSerivce;
-import com.walkersmithtech.artisonfirst.component.service.PersonImageService;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
+import com.walkersmithtech.artisonfirst.core.service.CompanyImageService;
+import com.walkersmithtech.artisonfirst.core.service.FileManagerSerivce;
+import com.walkersmithtech.artisonfirst.core.service.PersonImageService;
 import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.FileDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;

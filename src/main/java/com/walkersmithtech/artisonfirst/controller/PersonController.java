@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.walkersmithtech.artisonfirst.component.ServiceException;
-import com.walkersmithtech.artisonfirst.component.service.PersonService;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
+import com.walkersmithtech.artisonfirst.core.ServiceException;
+import com.walkersmithtech.artisonfirst.core.service.PersonService;
 import com.walkersmithtech.artisonfirst.data.model.dto.PersonDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Person;
 

@@ -29,6 +29,11 @@ public class CompanyLocation extends BaseObjectRelation
 		addCollaborator( role );
 	}
 	
+	public RoleData retrieveResident()
+	{
+		return getCollaborator( RelationshipRole.RESIDENT.name() );
+	}
+	
 	public void addLocation( Location address )
 	{
 		RoleData role = new RoleData();
@@ -38,4 +43,11 @@ public class CompanyLocation extends BaseObjectRelation
 		role.setRole( RelationshipRole.LOCATION.name() );
 		addCollaborator( role );
 	}
+	
+	public RoleData retrieveAddress()
+	{
+		return getCollaborator( RelationshipRole.LOCATION.name() );
+	}
+	
+
 }

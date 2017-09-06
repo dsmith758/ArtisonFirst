@@ -1,7 +1,10 @@
 package com.walkersmithtech.artisonfirst.data.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.walkersmithtech.artisonfirst.data.model.object.Company;
 
 @JsonInclude( Include.NON_EMPTY )
 public class Account
@@ -15,6 +18,7 @@ public class Account
 	private Boolean authenticated;
 	private String password;
 	private String confirmationCode;
+	private List<Company> companies;
 
 	public String getPersonUid()
 	{
@@ -104,6 +108,16 @@ public class Account
 	public void setCompanyUid( String companyUid )
 	{
 		this.companyUid = companyUid;
+	}
+
+	public List<Company> getCompanies()
+	{
+		return companies;
+	}
+
+	public void setCompanies( List<Company> companies )
+	{
+		this.companies = companies;
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.walkersmithtech.artisonfirst.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,103 +16,126 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
-import com.walkersmithtech.artisonfirst.core.builder.CompanyBuilder;
+import com.walkersmithtech.artisonfirst.core.builder.OrganizationBuilder;
 import com.walkersmithtech.artisonfirst.core.service.CompanyService;
-import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
+import com.walkersmithtech.artisonfirst.data.model.BaseList;
+import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
 
 @RestController
 public class CompanyController extends BaseController
 {
 	@Autowired
-	private CompanyBuilder builder;
+	private OrganizationBuilder builder;
 	
 	@Autowired
 	private CompanyService service;
 
 	@RequestMapping( method = RequestMethod.POST, value = "/companies" )
-	public ResponseEntity<CompanyDto> create( HttpServletRequest requestContext, @RequestBody CompanyDto model )
+	public ResponseEntity<OrganizationDto> create( HttpServletRequest requestContext, @RequestBody OrganizationDto model )
 	{
 		try
 		{
-			model = ( CompanyDto ) validateSession( requestContext, model );
+			model = ( OrganizationDto ) validateSession( requestContext, model );
 			model = builder.createOrganization( model );
-			return new ResponseEntity<CompanyDto>( model, HttpStatus.CREATED );
+			return new ResponseEntity<OrganizationDto>( model, HttpStatus.CREATED );
 		}
 		catch ( ServiceException ex )
 		{
-			model = ( CompanyDto ) setErrorCode( model, ex );
-			return new ResponseEntity<CompanyDto>( model, ex.getHttpStatus() );
+			model = ( OrganizationDto ) setErrorCode( model, ex );
+			return new ResponseEntity<OrganizationDto>( model, ex.getHttpStatus() );
 		}
 	}
 
 	@RequestMapping( method = RequestMethod.PUT, value = "/companies/{uid}" )
-	public ResponseEntity<CompanyDto> update( HttpServletRequest requestContext, @PathVariable String uid, @RequestBody CompanyDto model )
+	public ResponseEntity<OrganizationDto> update( HttpServletRequest requestContext, @PathVariable String uid, @RequestBody OrganizationDto model )
 	{
 		try
 		{
 			if ( model.getCompany().getUid().equals( uid ) )
 			{
-				model = ( CompanyDto ) validateSession( requestContext, model );
+				model = ( OrganizationDto ) validateSession( requestContext, model );
 				model = builder.updateOrganization( model );
-				return new ResponseEntity<CompanyDto>( model, HttpStatus.CREATED );
+				return new ResponseEntity<OrganizationDto>( model, HttpStatus.CREATED );
 			}
 			throw ErrorCode.SYSTEM_BAD_REQUEST.exception;
 		}
 		catch ( ServiceException ex )
 		{
-			model = ( CompanyDto ) setErrorCode( model, ex );
-			return new ResponseEntity<CompanyDto>( model, ex.getHttpStatus() );
+			model = ( OrganizationDto ) setErrorCode( model, ex );
+			return new ResponseEntity<OrganizationDto>( model, ex.getHttpStatus() );
 		}
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE, value = "/companies/{uid}" )
-	public ResponseEntity<CompanyDto> delete( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
+	public ResponseEntity<OrganizationDto> delete( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
 	{
-		CompanyDto auth = new CompanyDto();
+		OrganizationDto auth = new OrganizationDto();
 		try
 		{
-			auth = ( CompanyDto ) validateSession( requestContext, auth, sessionId, token );
+			auth = ( OrganizationDto ) validateSession( requestContext, auth, sessionId, token );
 			service.deleteModel( uid );
-			return new ResponseEntity<CompanyDto>( auth, HttpStatus.OK );
+			return new ResponseEntity<OrganizationDto>( auth, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )
 		{
-			auth = ( CompanyDto ) setErrorCode( auth, ex );
-			return new ResponseEntity<CompanyDto>( auth, ex.getHttpStatus() );
+			auth = ( OrganizationDto ) setErrorCode( auth, ex );
+			return new ResponseEntity<OrganizationDto>( auth, ex.getHttpStatus() );
 		}
 	}
 
 	@RequestMapping( method = RequestMethod.GET, value = "/companies/{uid}" )
-	public ResponseEntity<CompanyDto> getByUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
+	public ResponseEntity<OrganizationDto> getByUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
 	{
-		CompanyDto auth = new CompanyDto();
+		OrganizationDto auth = new OrganizationDto();
 		try
 		{
-			auth = ( CompanyDto ) validateSession( requestContext, auth, sessionId, token );
-			auth = builder.getOrganizationByCompanyUid( uid, auth );
-			return new ResponseEntity<CompanyDto>( auth, HttpStatus.OK );
+			auth = ( OrganizationDto ) validateSession( requestContext, auth, sessionId, token );
+			auth.getAccount().setCompanyUid( uid );
+			auth  = builder.getOrganizationByCompanyUid( auth );
+			return new ResponseEntity<OrganizationDto>( auth, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )
 		{
-			auth = ( CompanyDto ) setErrorCode( auth, ex );
-			return new ResponseEntity<CompanyDto>( auth, ex.getHttpStatus() );
+			auth = ( OrganizationDto ) setErrorCode( auth, ex );
+			return new ResponseEntity<OrganizationDto>( auth, ex.getHttpStatus() );
+		}
+	}
+	
+	@RequestMapping( method = RequestMethod.GET, value = "/persons/{uid}/companies" )
+	public ResponseEntity<BaseList<?>> getCompaniesByPersonUId( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
+	{
+		OrganizationDto auth = new OrganizationDto();
+		try
+		{
+			auth = ( OrganizationDto ) validateSession( requestContext, auth, sessionId, token );
+			List<OrganizationDto> orgs  = builder.getOrganizationsByPersonUid( auth );
+			BaseList<OrganizationDto> list = new BaseList<>();
+			list.setList( orgs );
+			list.setAccount( auth.getAccount() );
+			return new ResponseEntity<BaseList<?>>( list, HttpStatus.OK );
+		}
+		catch ( ServiceException ex )
+		{
+			BaseList<?> list = new BaseList<>();
+			list = ( BaseList<?> ) setErrorCode( list, ex );
+			return new ResponseEntity<BaseList<?>>( list, HttpStatus.OK );
 		}
 	}
 
-	@RequestMapping( method = RequestMethod.GET, value = "/persons/{uid}/companies" )
-	public ResponseEntity<CompanyDto> getCompanyByPersonUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
+	@RequestMapping( method = RequestMethod.GET, value = "/persons/{uid}/default-company" )
+	public ResponseEntity<OrganizationDto> getDetaultCompanyByPersonUid( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
 	{
-		CompanyDto auth = new CompanyDto();
+		OrganizationDto auth = new OrganizationDto();
 		try
 		{
-			auth = ( CompanyDto ) validateSession( requestContext, auth, sessionId, token );
-			auth = builder.getOrganizationByPersonUid( auth.getAccount().getPersonUid(), auth );
-			return new ResponseEntity<CompanyDto>( auth, HttpStatus.OK );
+			auth = ( OrganizationDto ) validateSession( requestContext, auth, sessionId, token );
+			auth = builder.getDefaultOrganizationByPersonUid( auth );
+			return new ResponseEntity<OrganizationDto>( auth, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )
 		{
-			auth = ( CompanyDto ) setErrorCode( auth, ex );
-			return new ResponseEntity<CompanyDto>( auth, ex.getHttpStatus() );
+			auth = ( OrganizationDto ) setErrorCode( auth, ex );
+			return new ResponseEntity<OrganizationDto>( auth, ex.getHttpStatus() );
 		}
 	}
 

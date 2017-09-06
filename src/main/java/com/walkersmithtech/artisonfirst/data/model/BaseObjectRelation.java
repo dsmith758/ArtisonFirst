@@ -40,7 +40,8 @@ public class BaseObjectRelation extends BaseRelation
 	@JsonIgnore
 	public RoleData getCollaborator( String roleType )
 	{
-		if ( collaborators != null && collaborators.size() > 0 )
+		getCollaborators();
+		if ( collaborators.size() > 0 )
 		{
 			for ( RoleData collaborator : collaborators )
 			{
@@ -51,6 +52,24 @@ public class BaseObjectRelation extends BaseRelation
 			}
 		}
 		return null;
+	}
+	
+	@JsonIgnore
+	public List<RoleData> getCollaborators( String roleType )
+	{
+		getCollaborators();
+		List<RoleData> c = new ArrayList<>();
+		if ( collaborators.size() > 0 )
+		{
+			for ( RoleData collaborator : collaborators )
+			{
+				if ( collaborator.getRole().equals( roleType ) )
+				{
+					c.add( collaborator );
+				}
+			}
+		}
+		return c;
 	}
 	
 }

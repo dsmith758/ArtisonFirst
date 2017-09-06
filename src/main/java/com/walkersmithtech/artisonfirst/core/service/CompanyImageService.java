@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.constant.RelationshipType;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
-import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
 
@@ -19,14 +19,14 @@ public class CompanyImageService
 	@Autowired
 	private CompanyService companyService;
 
-	public CompanyDto addAndSetCompanyLogo( ImageDto auth, String companyUid, byte[] file ) throws ServiceException
+	public OrganizationDto addAndSetCompanyLogo( ImageDto auth, String companyUid, byte[] file ) throws ServiceException
 	{
 		Company company = companyService.getCompanyByUid( companyUid );
 		if ( company != null )
 		{
 			auth = addCompanyImage( auth, companyUid, file );
 			auth = setCompanyLogo( auth, companyUid, file );
-			CompanyDto dto = new CompanyDto();
+			OrganizationDto dto = new OrganizationDto();
 			company.setLogoUri( "/images/" + auth.getUid() );
 			companyService.updateCompany( company );
 			dto.setAccount( auth.getAccount() );

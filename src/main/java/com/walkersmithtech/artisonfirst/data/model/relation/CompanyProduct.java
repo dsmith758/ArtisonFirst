@@ -30,7 +30,7 @@ public class CompanyProduct extends BaseObjectRelation
 		this.fields = fields;
 	}
 	
-	public void addProductOwner( Company owner )
+	public void addOwner( Company owner )
 	{
 		RoleData role = new RoleData();
 		role.setObject( owner );
@@ -38,6 +38,11 @@ public class CompanyProduct extends BaseObjectRelation
 		role.setObjectType( ObjectType.COMPANY.name() );
 		role.setRole( RelationshipRole.OWNER.name() );
 		addCollaborator( role );
+	}
+	
+	public RoleData retrieveOwner()
+	{
+		return getCollaborator( RelationshipRole.OWNER.name() );
 	}
 	
 	public void addProduct( Product product )
@@ -49,4 +54,11 @@ public class CompanyProduct extends BaseObjectRelation
 		role.setRole( RelationshipRole.PRODUCT.name() );
 		addCollaborator( role );
 	}
+	
+	public RoleData retrieveProduct()
+	{
+		return getCollaborator( RelationshipRole.PRODUCT.name() );
+	}
+	
+
 }

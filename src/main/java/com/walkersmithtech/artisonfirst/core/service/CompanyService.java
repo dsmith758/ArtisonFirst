@@ -1,5 +1,6 @@
 package com.walkersmithtech.artisonfirst.core.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import com.walkersmithtech.artisonfirst.core.BaseObjectService;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.entity.RoleData;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
-import com.walkersmithtech.artisonfirst.data.model.relation.PersonCompany;
+import com.walkersmithtech.artisonfirst.data.model.relation.OrganizationPrincipal;
 
 @Service
 public class CompanyService extends BaseObjectService<Company>
@@ -84,17 +85,47 @@ public class CompanyService extends BaseObjectService<Company>
 		return models;
 	}
 
-	public Company getCompanyByPersonUid( String personUid ) throws ServiceException
+	public Company getDefaultCompanyByPersonUid( String personUid ) throws ServiceException
 	{
-		PersonCompany personCompany = personCompanyService.getModelByPersonUid( personUid );
-		if ( personCompany != null )
+		List<OrganizationPrincipal> principals = personCompanyService.getRelationsByPrinciple( personUid );
+		if ( principals != null && principals.size() > 0 )
 		{
-			RoleData companyRole = personCompany.getCollaborator( RelationshipRole.PRINCIPLE.name() );
-			if ( companyRole != null )
+			RoleData role;
+			Company company;
+			for ( OrganizationPrincipal principal : principals )
 			{
-				Company company = getCompanyByUid( companyRole.getObjectUid() );
-				return company;
+				if ( principal.getIsDefault() )
+				{
+					role = principal.getCollaborator( RelationshipRole.ORGANIZATION.name() );
+					if ( role != null )
+					{
+						company = getCompanyByUid( role.getObjectUid() );
+						return company;
+					}
+				}
 			}
+		}
+		throw ErrorCode.COMPANY_NOT_FOUND.exception;
+	}
+
+	public List<Company> getCompaniesByPersonUid( String personUid ) throws ServiceException
+	{
+		List<OrganizationPrincipal> principals = personCompanyService.getRelationsByPrinciple( personUid );
+		if ( principals != null && principals.size() > 0 )
+		{
+			List<Company> companies = new ArrayList<>();
+			RoleData role;
+			Company company;
+			for ( OrganizationPrincipal principal : principals )
+			{
+				role = principal.getCollaborator( RelationshipRole.ORGANIZATION.name() );
+				if ( role != null )
+				{
+					company = getCompanyByUid( role.getObjectUid() );
+					companies.add( company );
+				}
+			}
+			return companies;
 		}
 		throw ErrorCode.COMPANY_NOT_FOUND.exception;
 	}

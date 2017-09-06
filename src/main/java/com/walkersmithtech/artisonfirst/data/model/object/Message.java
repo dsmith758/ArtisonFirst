@@ -1,31 +1,43 @@
 package com.walkersmithtech.artisonfirst.data.model.object;
 
+import java.util.Date;
+
 import com.walkersmithtech.artisonfirst.data.model.BaseObject;
 
 public class Message extends BaseObject
 {
-	private String title;
-	private String message;
+	private String subject;
+	private String body;
+	private Date sentOn;
 
-
-	public String getTitle()
+	public String getSubject()
 	{
-		return title;
+		return subject;
 	}
 
-	public void setTitle( String title )
+	public void setSubject( String subject )
 	{
-		this.title = title;
+		this.subject = subject;
 	}
 
-	public String getMessage()
+	public String getBody()
 	{
-		return message;
+		return body;
 	}
 
-	public void setMessage( String message )
+	public void setBody( String body )
 	{
-		this.message = message;
+		this.body = body;
 	}
-	
+
+	public Date getSentOn()
+	{
+		return sentOn;
+	}
+
+	public void setSentOn( Date sentOn )
+	{
+		this.sentOn = sentOn;
+	}
+
 }

@@ -6,6 +6,12 @@ import com.walkersmithtech.artisonfirst.core.ServiceException;
 
 public enum ErrorCode
 {
+	
+	// ADDRESS
+	ADDRESS_NOT_FOUND( new ServiceException( "ADDRESS_01", "Address record not found.", HttpStatus.NOT_FOUND ) ),
+	ADDRESS_MISSING_COMPANY( new ServiceException( "ADDRESS_02", "Address is missing company.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	ADDRESS_MISSING_LOCATION( new ServiceException( "ADDRESS_03", "Address is missing location.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	ADDRESS_MISSING_PERSON( new ServiceException( "ADDRESS_04", "Address is missing person.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 
 	// AUTHORIZATION ERRORS
 	AUTH_INVALID_CREDENTIALS( new ServiceException( "AUTH_01", "Authorization failed due to invalid user login credentials.", HttpStatus.UNAUTHORIZED ) ),
@@ -18,6 +24,7 @@ public enum ErrorCode
 	COMPANY_RECORD_NULL( new ServiceException( "COMPANY_03", "The provided record is null.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	COMPANY_NAME_MISSING( new ServiceException( "COMPANY_04", "Coampany name is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	COMPANY_ALREADY_EXISTS( new ServiceException( "COMPANY_05", "Company record already exists.", HttpStatus.BAD_REQUEST ) ),
+	COMPANY_DEFAULT_NOT_FOUND( new ServiceException( "COMPANY_06", "Default company not found.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	
 	// FIELD ERRORS
 	FIELD_NOT_FOUND( new ServiceException( "FIELD_01", "Field record not found.", HttpStatus.NOT_FOUND ) ),
@@ -25,7 +32,6 @@ public enum ErrorCode
 	FIELD_RECORD_NULL( new ServiceException( "FIELD_03", "The provided record is null.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	FIELD_LABEL_MISSING( new ServiceException( "FIELD_04", "Field label is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	FIELD_ALREADY_EXISTS( new ServiceException( "FIELD_05", "Field record already exists.", HttpStatus.BAD_REQUEST ) ),
-	
 
 	// FILE MANAGEMENT ERRORS
 	FILE_MISSING( new ServiceException( "FILE_01", "File was not included in the upload.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
@@ -38,7 +44,18 @@ public enum ErrorCode
 	LOCATION_ADDRESS_MISSING( new ServiceException( "LOCATION_05", "Street address is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	LOCATION_CITY_MISSING( new ServiceException( "LOCATION_06", "City is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	LOCATION_ALREADY_EXISTS( new ServiceException( "LOCATION_07", "Location record already exists.", HttpStatus.BAD_REQUEST ) ),
-
+	
+	// MESSAGE ERRORS
+	MESSAGE_NOT_FOUND( new ServiceException( "MESSAGE_01", "Message record not found.", HttpStatus.NOT_FOUND ) ),
+	MESSAGE_MISSING_SENDER( new ServiceException( "MESSAGE_02", "Message missing sender.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	MESSAGE_MISSING_RECIPIENT( new ServiceException( "MESSAGE_03", "Message missing recipient.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	MESSAGE_NO_MESSAGE( new ServiceException( "MESSAGE_04", "Relationship doesn't have a message.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	
+	// ORGANIZATION
+	ORGANIZATION_NOT_FOUND( new ServiceException( "ORGRANIZATION_01", "Organization record not found.", HttpStatus.NOT_FOUND ) ),
+	ORGRANIZATION_MISSING_COMPANY( new ServiceException( "ORGRANIZATION_02", "Organization is missing company.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	ORGRANIZATION_MISSING_PERSON( new ServiceException( "ORGRANIZATION_03", "Organization is missing person.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	
 	// PERSON PROFILE ERRORS
 	PERSON_NOT_FOUND( new ServiceException( "PERSON_01", "Person record not found.", HttpStatus.NOT_FOUND ) ),
 	PERSON_MISSING_ID( new ServiceException( "PERSON_02", "Person ID is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
@@ -53,6 +70,8 @@ public enum ErrorCode
 	PRODUCT_RECORD_NULL( new ServiceException( "PRODUCT_03", "The provided record is null.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	PRODUCT_DESCRIPTION_MISSING( new ServiceException( "PRODUCT_04", "Product description is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	PRODUCT_COMPANY_MISMATCH( new ServiceException( "PRODUCT_05", "The company doesn't have access to this product.", HttpStatus.NOT_FOUND ) ),
+	PRODUCT_OWNER_MISSING( new ServiceException( "PRODUCT_06", "The product does not have an owner.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	PRODUCT_MISSING( new ServiceException( "PRODUCT_07", "The product object is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 
 	// REGISTRATION ERRORS
 	REGISTRATION_MISSING( new ServiceException( "REG_01", "User registration is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),

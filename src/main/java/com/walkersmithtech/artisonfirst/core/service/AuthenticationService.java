@@ -54,6 +54,22 @@ public class AuthenticationService
 		}
 
 		UserAccount user = userRepo.findByLoginName( loginName );
+		validateUserAccount( user, password );
+
+		String personUid = user.getPersonUid();
+		List<Company> companies = companyService.getCompaniesByPersonUid( personUid );
+		account.setCompanies( companies );
+
+		Company company = buildUserCompany( personUid, companyUid );
+		if ( company != null )
+		{
+			account = createOrUpdateSession( auth, user, company );
+		}
+		return account;
+	}
+
+	private void validateUserAccount( UserAccount user, String password ) throws ServiceException
+	{
 		if ( user == null )
 		{
 			throw ErrorCode.AUTH_INVALID_CREDENTIALS.exception;
@@ -63,22 +79,20 @@ public class AuthenticationService
 		{
 			throw ErrorCode.AUTH_INVALID_CREDENTIALS.exception;
 		}
+	}
 
+	private Company buildUserCompany( String personUid, String companyUid ) throws ServiceException
+	{
 		Company company = null;
 		if ( companyUid == null )
 		{
-			company = companyService.getCompanyByPersonUid( user.getPersonUid() );
+			company = companyService.getDefaultCompanyByPersonUid( personUid );
 		}
 		else
 		{
 			company = companyService.getCompanyByUid( companyUid );
 		}
-
-		if ( company != null )
-		{
-			account = createOrUpdateSession( auth, user, company );
-		}
-		return account;
+		return company;
 	}
 
 	private Account createOrUpdateSession( BaseDto auth, UserAccount user, Company company )
@@ -96,19 +110,9 @@ public class AuthenticationService
 		{
 			for ( UserSession session : sessions )
 			{
-				try
-				{
-					if ( isMatchingSession( auth, session ) )
-					{
-						account.setSessionId( session.getSessionId() );
-						account.setToken( session.getToken() );
-						return account;
-					}
-				}
-				catch ( ServiceException e )
-				{
-					e.printStackTrace();
-				}
+				account.setSessionId( session.getSessionId() );
+				account.setToken( session.getToken() );
+				return account;
 			}
 		}
 
@@ -116,70 +120,26 @@ public class AuthenticationService
 		return account;
 	}
 
-	private boolean isMatchingSession( BaseDto auth, UserSession session ) throws ServiceException
-	{
-		String salt = session.getSalt();
-		String token = session.getToken();
-		AuthenticationDto authObject = decryptToken( salt, token );
-		return matches( authObject, auth );
-	}
-
 	public Account validateSession( BaseDto auth ) throws ServiceException
 	{
 		Account account = auth.getAccount();
 		account.setAuthenticated( false );
 		UserSession session = checkAndRetrieveSession( account, auth.getIpAddress() );
-
 		String salt = session.getSalt();
 		String token = session.getToken();
 		AuthenticationDto authObject = decryptToken( salt, token );
-		if ( !matches( authObject, auth ) )
-		{
-			return account;
-		}
 
 		String loginName = authObject.getLoginName();
 		if ( session.getNeverExpires().intValue() == 0 )
 		{
-			// check expiration here...
 			String personUid = authObject.getPersonUid();
 			String ipAddress = authObject.getIpAddress();
 			session = initSession( session, personUid, loginName, ipAddress );
 		}
+
 		account = buildUserProfile( loginName, session.getSessionId(), session.getToken() );
 		account.setAuthenticated( true );
 		return account;
-	}
-
-	private boolean matches( AuthenticationDto authObject, BaseDto auth )
-	{
-		Account account = auth.getAccount();
-		String loginName = authObject.getLoginName();
-		String personUid = authObject.getPersonUid();
-		String sessionId = authObject.getSessionId();
-		String ipAddress = authObject.getIpAddress();
-
-		if ( !sessionId.equals( account.getSessionId() ) )
-		{
-			return false;
-		}
-
-		if ( !loginName.equals( account.getLoginName() ) )
-		{
-			return false;
-		}
-
-		if ( !personUid.equals( account.getPersonUid() ) )
-		{
-			return false;
-		}
-
-		if ( !ipAddress.equals( auth.getIpAddress() ) )
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 	public Account invalidateSession( BaseDto auth ) throws ServiceException
@@ -208,12 +168,6 @@ public class AuthenticationService
 			throw ErrorCode.AUTH_INVALID_SESSION.exception;
 		}
 
-		String token = account.getToken();
-		if ( token == null )
-		{
-			return null;
-		}
-
 		UserSession session = sessionRepo.findBySessionId( sessionId );
 		if ( session == null )
 		{
@@ -225,25 +179,13 @@ public class AuthenticationService
 			throw ErrorCode.AUTH_INVALID_SESSION.exception;
 		}
 
-		if ( !token.equals( session.getToken() ) )
-		{
-			throw ErrorCode.AUTH_INVALID_SESSION.exception;
-		}
-
 		return session;
 	}
 
 	private UserSession initSession( UserSession session, String userName, String personUid, String ipAddress )
 	{
-		String salt = DateUtil.generateIV();
 		Date currentDate = DateUtil.getCurrentDate();
-
-		String sessionId = session.getSessionId();
-		String token = createToken( userName, personUid, sessionId, salt, ipAddress );
-
 		session.setLastTouchedOn( currentDate );
-		session.setToken( token );
-		session.setSalt( salt );
 		session = sessionRepo.save( session );
 		return session;
 	}

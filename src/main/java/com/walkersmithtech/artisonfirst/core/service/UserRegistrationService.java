@@ -14,7 +14,7 @@ import com.walkersmithtech.artisonfirst.data.model.dto.RegistrationDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
 import com.walkersmithtech.artisonfirst.data.model.object.Location;
 import com.walkersmithtech.artisonfirst.data.model.object.Person;
-import com.walkersmithtech.artisonfirst.data.model.relation.PersonCompany;
+import com.walkersmithtech.artisonfirst.data.model.relation.OrganizationPrincipal;
 import com.walkersmithtech.artisonfirst.data.repository.UserAccountRepository;
 import com.walkersmithtech.artisonfirst.util.DateUtil;
 
@@ -142,9 +142,10 @@ public class UserRegistrationService
 		Company company = registration.getCompany();
 		company = companyService.createModel( company );
 
-		PersonCompany personCompany = new PersonCompany();
+		OrganizationPrincipal personCompany = new OrganizationPrincipal();
 		personCompany.addOrganization( company );
-		personCompany.addPrinciple( person );
+		personCompany.addPrincipal( person );
+		personCompany.setIsDefault( true );
 		personCompany = personCompanyService.createModel( personCompany );
 
 		registration.setCompany( company );

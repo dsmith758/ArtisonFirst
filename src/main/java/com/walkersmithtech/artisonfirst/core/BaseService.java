@@ -150,7 +150,7 @@ public abstract class BaseService<T, O>
 		return entities;
 	}
 
-	public List<ObjectRelationData> getRelationsByCollaboratorsAndType( List<RoleData> collaborators, RelationshipType type )
+	public List<ObjectRelationData> getRelationsByRoleDataAndType( List<RoleData> collaborators, RelationshipType type )
 	{
 		List<ObjectRelationData> entities = dataDao.findObjectRelationByCollaboratorsAndType( collaborators, type );
 		return entities;

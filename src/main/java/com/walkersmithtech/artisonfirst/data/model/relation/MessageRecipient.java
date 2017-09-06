@@ -8,13 +8,16 @@ import com.walkersmithtech.artisonfirst.data.model.BaseObjectRelation;
 import com.walkersmithtech.artisonfirst.data.model.object.Message;
 import com.walkersmithtech.artisonfirst.data.model.object.Person;
 
-public class MessagePerson extends BaseObjectRelation
+public class MessageRecipient extends BaseObjectRelation
 {
-	public MessagePerson()
-	{
-		this.type = RelationshipType.MESSAGE_PERSON.name();
-	}
 	
+	private boolean opened = false;
+	
+	public MessageRecipient()
+	{
+		this.type = RelationshipType.MESSAGE_RECIPIENT.name();
+	}
+
 	public void addMessage( Message message )
 	{
 		RoleData role = new RoleData();
@@ -25,24 +28,33 @@ public class MessagePerson extends BaseObjectRelation
 		addCollaborator( role );
 	}
 	
-	public void addSender( Person sender )
+	public RoleData retrieveMessage()
+	{
+		return getCollaborator( RelationshipRole.MESSAGE.name() );
+	}
+
+	public void addRecipient( Person sender )
 	{
 		RoleData role = new RoleData();
 		role.setObject( sender );
 		role.setObjectUid( sender.getUid() );
 		role.setObjectType( ObjectType.PERSON.name() );
-		role.setRole( RelationshipRole.SENDER.name() );
-		addCollaborator( role );
-	}
-	
-	public void addRecipient( Person recipient )
-	{
-		RoleData role = new RoleData();
-		role.setObject( recipient );
-		role.setObjectUid( recipient.getUid() );
-		role.setObjectType( ObjectType.PERSON.name() );
 		role.setRole( RelationshipRole.RECIPIENT.name() );
 		addCollaborator( role );
 	}
 
+	public RoleData retrieveRecipient()
+	{
+		return getCollaborator( RelationshipRole.RECIPIENT.name() );
+	}
+
+	public boolean getIsOpened()
+	{
+		return opened;
+	}
+
+	public void setIsOpened( boolean opened )
+	{
+		this.opened = opened;
+	}
 }

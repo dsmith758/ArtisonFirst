@@ -11,13 +11,16 @@ import com.walkersmithtech.artisonfirst.data.model.object.Company;
 import com.walkersmithtech.artisonfirst.data.model.object.Person;
 
 @JsonInclude( Include.NON_EMPTY )
-public class PersonCompany extends BaseObjectRelation
+public class OrganizationPrincipal extends BaseObjectRelation
 {
-	public PersonCompany()
+	private String authorization;
+	private boolean isDefault = false;
+
+	public OrganizationPrincipal()
 	{
 		this.type = RelationshipType.PERSON_COMPANY.name();
 	}
-	
+
 	public void addOrganization( Company organization )
 	{
 		RoleData role = new RoleData();
@@ -27,14 +30,45 @@ public class PersonCompany extends BaseObjectRelation
 		role.setRole( RelationshipRole.ORGANIZATION.name() );
 		addCollaborator( role );
 	}
-	
-	public void addPrinciple( Person principle )
+
+	public RoleData retrieveOrganization()
+	{
+		return getCollaborator( RelationshipRole.ORGANIZATION.name() );
+	}
+
+	public void addPrincipal( Person principal )
 	{
 		RoleData role = new RoleData();
-		role.setObject( principle );
-		role.setObjectUid( principle.getUid() );
+		role.setObject( principal );
+		role.setObjectUid( principal.getUid() );
 		role.setObjectType( ObjectType.PERSON.name() );
-		role.setRole( RelationshipRole.PRINCIPLE.name() );
+		role.setRole( RelationshipRole.PRINCIPAL.name() );
 		addCollaborator( role );
 	}
+
+	public RoleData retrievePrincipal()
+	{
+		return getCollaborator( RelationshipRole.PRINCIPAL.name() );
+	}
+
+	public String getAuthorization()
+	{
+		return authorization;
+	}
+
+	public void setAuthorization( String authorization )
+	{
+		this.authorization = authorization;
+	}
+
+	public boolean getIsDefault()
+	{
+		return isDefault;
+	}
+
+	public void setIsDefault( boolean isDefault )
+	{
+		this.isDefault = isDefault;
+	}
+
 }

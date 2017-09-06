@@ -62,16 +62,31 @@ public class ProductBuilder extends BaseBuilder<ProductDto>
 
 	public ProductDto getProductByUid( String productUid, ProductDto model ) throws ServiceException
 	{
-		Company company = companyService.getCompanyByPersonUid( model.getAccount().getPersonUid() );
+		Company company = getPersonCompany( model );
 		Product product = productService.getProductByUid( productUid );
 		return buildProductDto( product, company, model );
 	}
 
 	public ProductDto getCompanyProduct( String productUid, String companyUid, ProductDto model ) throws ServiceException
 	{
-		Company company = companyService.getCompanyByPersonUid( companyUid );
+		Company company = getPersonCompany( model );
 		Product product = productService.getProductByUid( productUid );
 		return buildProductDto( product, company, model );
+	}
+	
+	private Company getPersonCompany( ProductDto model ) throws ServiceException
+	{
+		String companyUid = model.getAccount().getCompanyUid();
+		Company company = null;
+		if ( companyUid == null )
+		{
+			company = companyService.getDefaultCompanyByPersonUid( model.getAccount().getPersonUid() );
+		}
+		else
+		{
+			company = companyService.getCompanyByUid( companyUid );
+		}
+		return company;
 	}
 
 	public CompanyProductDto getCompanyProducts( String companyUid, CompanyProductDto auth ) throws ServiceException
@@ -82,7 +97,7 @@ public class ProductBuilder extends BaseBuilder<ProductDto>
 		ProductDto model;
 		auth.setCompany( company );
 
-		List<CompanyProduct> profiles = companyProductService.getCompanyProductsByCompanyUid( companyUid );
+		List<CompanyProduct> profiles = companyProductService.getRelationsByOwner( companyUid );
 		if ( profiles != null && profiles.size() > 0 )
 		{
 			RoleData productRole;
@@ -114,7 +129,7 @@ public class ProductBuilder extends BaseBuilder<ProductDto>
 
 	private ProductDto buildProductDto( Product product, Company company, ProductDto model ) throws ServiceException
 	{
-		CompanyProduct profile = companyProductService.getCompanyProductBySourceAndTarget( company.getUid(), product.getUid() );
+		CompanyProduct profile = companyProductService.getRelationsByCompanyAndProduct( company.getUid(), product.getUid() );
 		if ( profile == null )
 		{
 			throw ErrorCode.PRODUCT_COMPANY_MISMATCH.exception;
@@ -129,7 +144,7 @@ public class ProductBuilder extends BaseBuilder<ProductDto>
 		
 		CompanyProduct profile = new CompanyProduct();
 		profile.addProduct( product );
-		profile.addProductOwner( company );
+		profile.addOwner( company );
 		return profile;
 	}
 

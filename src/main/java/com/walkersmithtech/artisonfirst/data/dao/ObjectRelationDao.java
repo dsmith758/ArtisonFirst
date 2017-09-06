@@ -89,11 +89,9 @@ public class ObjectRelationDao extends BaseDao
 				}
 				builder.append( "	rd" ).append( line ).append( ".object_uid = ? " );
 			}
-			
-			objectUids.add( type.name() );
 
 			@SuppressWarnings( { "unchecked", "rawtypes" } )
-			List<ObjectRelationData> results = ( List<ObjectRelationData> ) jdbc.query( builder.toString(), new BeanPropertyRowMapper( ObjectRelationData.class ), objectUids );
+			List<ObjectRelationData> results = ( List<ObjectRelationData> ) jdbc.query( builder.toString(), new BeanPropertyRowMapper( ObjectRelationData.class ), type, objectUids );
 			return results;
 		}
 		return null;

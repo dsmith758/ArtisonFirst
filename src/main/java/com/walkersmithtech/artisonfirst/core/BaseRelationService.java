@@ -51,7 +51,7 @@ public abstract class BaseRelationService<T extends BaseObjectRelation> extends 
 		if ( relation != null )
 		{
 			ObjectRelationData entity = null;
-			List<ObjectRelationData> entities = getRelationsByCollaboratorsAndType( relation.getCollaborators(), type );
+			List<ObjectRelationData> entities = getRelationsByRoleDataAndType( relation.getCollaborators(), type );
 			if ( entities != null && entities.size() > 0 )
 			{
 				entity = entities.get( 0 );
@@ -132,7 +132,7 @@ public abstract class BaseRelationService<T extends BaseObjectRelation> extends 
 		return null;
 	}
 
-	public List<T> getRelationsBySourceAndType( String uid, RelationshipType type, RelationshipRole role )
+	public List<T> getRelatonsByCollaboratorAndTypeAndRole( String uid, RelationshipType type, RelationshipRole role )
 	{
 
 		List<ObjectRelationData> entities = getRelationsByObjectUidAndRole( uid, type, role );
@@ -147,21 +147,7 @@ public abstract class BaseRelationService<T extends BaseObjectRelation> extends 
 		return relations;
 	}
 
-	public List<T> getRelationsByTargetAndType( String uid, RelationshipType type, RelationshipRole role )
-	{
-		List<ObjectRelationData> entities = getRelationsByObjectUidAndRole( uid, type, role );
-		List<T> relations = new ArrayList<>();
-		if ( entities != null && entities.size() > 0 )
-		{
-			for ( ObjectRelationData entity : entities )
-			{
-				relations.add( convertEntityToModel( entity ) );
-			}
-		}
-		return relations;
-	}
-
-	public T getRelationsBySourceAndTargetAndType( List<String> objectUid, RelationshipType type )
+	public T getRelationsByCollaboratorsAndType( List<String> objectUid, RelationshipType type )
 	{
 		ObjectRelationData entity = null;
 		List<ObjectRelationData> entities = getRelationsByObjectUidsAndType( objectUid, type );

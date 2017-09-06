@@ -22,7 +22,7 @@ import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.core.service.CompanyImageService;
 import com.walkersmithtech.artisonfirst.core.service.FileManagerSerivce;
 import com.walkersmithtech.artisonfirst.core.service.PersonImageService;
-import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.FileDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.PersonDto;
@@ -74,10 +74,10 @@ public class FileController extends BaseController
 	}
 
 	@RequestMapping( method = RequestMethod.POST, value = "/companies/{uid}/logos", headers = ("content-type=multipart/*"))
-	public ResponseEntity<CompanyDto> importCompanyLogo( HttpServletRequest requestContext, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token, @PathVariable String uid, @RequestParam( "file" ) MultipartFile file )
+	public ResponseEntity<OrganizationDto> importCompanyLogo( HttpServletRequest requestContext, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token, @PathVariable String uid, @RequestParam( "file" ) MultipartFile file )
 	{
 		ImageDto auth = new ImageDto();
-		CompanyDto company = new CompanyDto();
+		OrganizationDto company = new OrganizationDto();
 		if ( !file.isEmpty() )
 		{
 			try
@@ -85,25 +85,25 @@ public class FileController extends BaseController
 				auth = ( ImageDto ) validateSession( requestContext, auth, sessionId, token );
 				auth.setFileName( file.getOriginalFilename() );
 				company = companyImageService.addAndSetCompanyLogo( auth, uid, file.getBytes() );
-				return new ResponseEntity<CompanyDto>( company, HttpStatus.OK );
+				return new ResponseEntity<OrganizationDto>( company, HttpStatus.OK );
 			}
 			catch ( ServiceException ex )
 			{
-				company = ( CompanyDto ) setErrorCode( company, ex );
-				return new ResponseEntity<CompanyDto>( company, ex.getHttpStatus() );
+				company = ( OrganizationDto ) setErrorCode( company, ex );
+				return new ResponseEntity<OrganizationDto>( company, ex.getHttpStatus() );
 			}
 			catch ( IOException e )
 			{
 				ServiceException ex = ErrorCode.SYSTEM_ERROR.exception;
 				ex.initCause( e );
-				company = ( CompanyDto ) setErrorCode( company, ex );
-				return new ResponseEntity<CompanyDto>( company, ex.getHttpStatus() );
+				company = ( OrganizationDto ) setErrorCode( company, ex );
+				return new ResponseEntity<OrganizationDto>( company, ex.getHttpStatus() );
 			}
 		}
 		else
 		{
-			company = ( CompanyDto ) setErrorCode( company, ErrorCode.FILE_MISSING.exception );
-			return new ResponseEntity<CompanyDto>( company, ErrorCode.FILE_MISSING.exception.getHttpStatus() );
+			company = ( OrganizationDto ) setErrorCode( company, ErrorCode.FILE_MISSING.exception );
+			return new ResponseEntity<OrganizationDto>( company, ErrorCode.FILE_MISSING.exception.getHttpStatus() );
 		}
 	}
 

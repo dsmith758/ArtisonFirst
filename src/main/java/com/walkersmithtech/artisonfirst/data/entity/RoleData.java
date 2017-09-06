@@ -9,6 +9,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.walkersmithtech.artisonfirst.data.model.BaseObject;
 
 @Entity
@@ -36,6 +37,7 @@ public class RoleData
 	private String objectType;
 
 	@Transient
+	@JsonIgnore
 	private BaseObject object;
 
 	public Integer getId()

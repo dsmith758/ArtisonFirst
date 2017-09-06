@@ -13,14 +13,15 @@ import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.core.service.CompanyLocationService;
 import com.walkersmithtech.artisonfirst.core.service.CompanyService;
 import com.walkersmithtech.artisonfirst.core.service.LocationService;
+import com.walkersmithtech.artisonfirst.core.service.PersonCompanyService;
 import com.walkersmithtech.artisonfirst.data.entity.RoleData;
-import com.walkersmithtech.artisonfirst.data.model.dto.CompanyDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
 import com.walkersmithtech.artisonfirst.data.model.object.Location;
 import com.walkersmithtech.artisonfirst.data.model.relation.CompanyLocation;
 
 @Service
-public class CompanyBuilder extends BaseBuilder<CompanyDto>
+public class OrganizationBuilder extends BaseBuilder<OrganizationDto>
 {
 	@Autowired
 	private CompanyService companyService;
@@ -30,8 +31,11 @@ public class CompanyBuilder extends BaseBuilder<CompanyDto>
 
 	@Autowired
 	private CompanyLocationService companyLocationService;
+	
+	@Autowired
+	private PersonCompanyService personCompanyService;
 
-	public CompanyDto createOrganization( CompanyDto model ) throws ServiceException
+	public OrganizationDto createOrganization( OrganizationDto model ) throws ServiceException
 	{
 		Company company = companyService.createCompany( model.getCompany() );
 		model.setCompany( company );
@@ -41,7 +45,7 @@ public class CompanyBuilder extends BaseBuilder<CompanyDto>
 		return model;
 	}
 
-	public CompanyDto updateOrganization( CompanyDto model ) throws ServiceException
+	public OrganizationDto updateOrganization( OrganizationDto model ) throws ServiceException
 	{
 		Company company = companyService.updateCompany( model.getCompany() );
 		model.setCompany( company );
@@ -51,33 +55,52 @@ public class CompanyBuilder extends BaseBuilder<CompanyDto>
 		companyLocationService.createCompanyLocations( locations, company );
 		return model;
 	}
-
-	public CompanyDto getOrganizationByPersonUid( String personUid, CompanyDto model ) throws ServiceException
+	
+	public List<OrganizationDto> getOrganizationsByPersonUid( OrganizationDto model ) throws ServiceException
 	{
-		Company company = companyService.getCompanyByPersonUid( personUid );
+		String personUid = model.getAccount().getPersonUid();
+		List<Company> companies = companyService.getCompaniesByPersonUid( personUid );
+		List<OrganizationDto> organizations = new ArrayList<>();
+		OrganizationDto org;
+		if ( companies != null && companies.size() > 0 )
+		{
+			for ( Company company : companies )
+			{
+				org = new OrganizationDto();
+				organizations.add( buildCompanyDto( company, org ) );
+			}
+		}
+		return organizations;
+	}
+
+	public OrganizationDto getDefaultOrganizationByPersonUid( OrganizationDto model ) throws ServiceException
+	{
+		String personUid = model.getAccount().getPersonUid();
+		Company company = companyService.getDefaultCompanyByPersonUid( personUid );
 		return buildCompanyDto( company, model );
 	}
 
-	public CompanyDto getOrganizationByCompanyUid( String uid, CompanyDto model ) throws ServiceException
+	public OrganizationDto getOrganizationByCompanyUid( OrganizationDto model ) throws ServiceException
 	{
-		Company company = companyService.getCompanyByUid( uid );
+		String companyUid = model.getAccount().getCompanyUid();
+		Company company = companyService.getCompanyByUid( companyUid );
 		return buildCompanyDto( company, model );
 	}
-
-	private CompanyDto buildCompanyDto( Company company, CompanyDto model ) throws ServiceException
+	
+	private OrganizationDto buildCompanyDto( Company company, OrganizationDto model ) throws ServiceException
 	{
 		if ( company != null )
 		{
 			model.setCompany( company );
-			model.setAddressInfo( getCompanyLocationsByCompanyUid( company.getUid() ) );
-			model.getAccount().setCompanyUid( company.getUid() );
+			model.setAddressInfo( buildCompanyAddresses( company.getUid() ) );
+			model.setPrincipals( personCompanyService.getRelationsByOrganization( company.getUid() ) );
 		}
 		return model;
 	}
-
-	public List<Location> getCompanyLocationsByCompanyUid( String companyUid ) throws ServiceException
+	
+	private List<Location> buildCompanyAddresses( String companyUid ) throws ServiceException
 	{
-		List<CompanyLocation> addresses = companyLocationService.getCompanyLocationsByCompanyUid( companyUid );
+		List<CompanyLocation> addresses = companyLocationService.getRelationsByCompany( companyUid );
 		Location location;
 		List<Location> addressInfo = new ArrayList<>();
 		if ( addresses != null && addresses.size() > 0 )
@@ -85,7 +108,7 @@ public class CompanyBuilder extends BaseBuilder<CompanyDto>
 			RoleData roleData;
 			for ( CompanyLocation address : addresses )
 			{
-				roleData = address.getCollaborator( RelationshipRole.RESIDENT.name() );
+				roleData = address.getCollaborator( RelationshipRole.LOCATION.name() );
 				if ( roleData != null )
 				{
 					location = locationService.getModelByUid( roleData.getObjectUid() );
@@ -98,5 +121,6 @@ public class CompanyBuilder extends BaseBuilder<CompanyDto>
 		}
 		return addressInfo;
 	}
+
 
 }

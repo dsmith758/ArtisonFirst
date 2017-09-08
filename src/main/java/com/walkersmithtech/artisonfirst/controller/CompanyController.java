@@ -1,7 +1,5 @@
 package com.walkersmithtech.artisonfirst.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +16,8 @@ import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.core.builder.OrganizationBuilder;
 import com.walkersmithtech.artisonfirst.core.service.CompanyService;
-import com.walkersmithtech.artisonfirst.data.model.BaseList;
 import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.PrincipalOrganizationsDto;
 
 @RestController
 public class CompanyController extends BaseController
@@ -102,23 +100,20 @@ public class CompanyController extends BaseController
 	}
 	
 	@RequestMapping( method = RequestMethod.GET, value = "/persons/{uid}/companies" )
-	public ResponseEntity<BaseList<?>> getCompaniesByPersonUId( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
+	public ResponseEntity<PrincipalOrganizationsDto> getCompaniesByPersonUId( HttpServletRequest requestContext, @PathVariable String uid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
 	{
 		OrganizationDto auth = new OrganizationDto();
 		try
 		{
 			auth = ( OrganizationDto ) validateSession( requestContext, auth, sessionId, token );
-			List<OrganizationDto> orgs  = builder.getOrganizationsByPersonUid( auth );
-			BaseList<OrganizationDto> list = new BaseList<>();
-			list.setList( orgs );
-			list.setAccount( auth.getAccount() );
-			return new ResponseEntity<BaseList<?>>( list, HttpStatus.OK );
+			PrincipalOrganizationsDto organizations  = builder.getOrganizationsByPersonUid( auth );
+			return new ResponseEntity<PrincipalOrganizationsDto>( organizations, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )
 		{
-			BaseList<?> list = new BaseList<>();
-			list = ( BaseList<?> ) setErrorCode( list, ex );
-			return new ResponseEntity<BaseList<?>>( list, HttpStatus.OK );
+			PrincipalOrganizationsDto list = new PrincipalOrganizationsDto();
+			list = ( PrincipalOrganizationsDto ) setErrorCode( list, ex );
+			return new ResponseEntity<PrincipalOrganizationsDto>( list, HttpStatus.OK );
 		}
 	}
 

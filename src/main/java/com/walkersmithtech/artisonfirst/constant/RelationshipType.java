@@ -23,6 +23,7 @@ public enum RelationshipType
 	PERSON_COMPANY(  Person.class, Company.class ), 
 	PROFILE_IMAGE(  Person.class, File.class ), 
 	PRODUCT_COMPONENT( Product.class, Product.class ),
+	PRODUCT_IMAGE( Product.class, File.class ), 
 	TEAM_MEMBER( Team.class, Person.class ),
 	;
 

@@ -3,9 +3,9 @@ package com.walkersmithtech.artisonfirst.data.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseList<T> extends BaseDto
+public abstract class BaseList<T> extends BaseDto
 {
-	private List<T> list;
+	protected List<T> list;
 
 	public List<T> getList()
 	{

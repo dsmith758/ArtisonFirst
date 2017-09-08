@@ -1,9 +1,12 @@
 app.factory('BusinessService', function($http, $rootScope, $window, $upload) {
 	return {
 
+		createBusiness : function( organization ) {
+			return $http.put("/companies/", organization );
+		},
+		
 		updateBusiness : function( companyUid, organization ) {
 			return $http.put("/companies/" + companyUid, organization );
-
 		},
 
 		getBusiness : function() {
@@ -23,5 +26,6 @@ app.factory('BusinessService', function($http, $rootScope, $window, $upload) {
 			    method : 'POST'
 			});
 		}
+		
 	};
 });

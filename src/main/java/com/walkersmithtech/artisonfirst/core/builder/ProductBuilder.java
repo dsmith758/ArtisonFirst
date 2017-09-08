@@ -60,8 +60,9 @@ public class ProductBuilder extends BaseBuilder<ProductDto>
 		return model;
 	}
 
-	public ProductDto getProductByUid( String productUid, ProductDto model ) throws ServiceException
+	public ProductDto getProductByUid( ProductDto model ) throws ServiceException
 	{
+		String productUid = model.getProduct().getUid();
 		Company company = getPersonCompany( model );
 		Product product = productService.getProductByUid( productUid );
 		return buildProductDto( product, company, model );

@@ -2,16 +2,16 @@ package com.walkersmithtech.artisonfirst.data.model.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.walkersmithtech.artisonfirst.data.model.BaseDto;
+import com.walkersmithtech.artisonfirst.data.model.BaseList;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
 
 @JsonInclude( Include.NON_EMPTY )
-public class CompanyProductDto extends BaseDto
+public class CompanyProductDto extends BaseList<ProductDto>
 {
 	private Company company;
-	private List<ProductDto> products;
 
 	public Company getCompany()
 	{
@@ -23,13 +23,15 @@ public class CompanyProductDto extends BaseDto
 		this.company = company;
 	}
 
+	@JsonIgnore
 	public List<ProductDto> getProducts()
 	{
-		return products;
+		return list;
 	}
 
+	@JsonIgnore
 	public void setProducts( List<ProductDto> products )
 	{
-		this.products = products;
+		this.list = products;
 	}
 }

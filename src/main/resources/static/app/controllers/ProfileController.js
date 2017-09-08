@@ -7,7 +7,12 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 	$scope.displayName = $rootScope.displayName;
 	$scope.personUid = $rootScope.personUid;
 
+	// PROFILE DATA
 	$scope.registration = {
+		account : {
+			sessionId : $rootScope.sessionId,
+			token : $rootScope.token
+		},
 	    person: {
 	        uid : "",
 	        type : "PERSON",
@@ -18,8 +23,8 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 	        imageUri : "",
 	        contactInfo : [
 	            {
-	                contactType: "",
-	                value: ""
+	                contactType : "",
+	                value : ""
 	            }	        
 	       ]
 	    }
@@ -61,7 +66,8 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 
 		promise.then(function(results) {
 			LoginService.setAuth(results.data);
-			$scope.registration = results.data;
+			$scope.registration.account = results.data.account;
+			$scope.registration.person = results.data.person;
 			$scope.message = "";
 		}, function(error) {
 			if(response.status === 401) {
@@ -76,7 +82,8 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 		
 		promise.then(function(results) {
 			LoginService.setAuth(results.data);
-			$scope.registration = results.data;
+			$scope.registration.account = results.data.account;
+			$scope.registration.person = results.data.person;
 			$scope.message = "Profile updated";
 		}, function(error) {
 			if(response.status === 401) {
@@ -91,7 +98,8 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 		
 		promise.then(function(results) {
 			LoginService.setAuth(results.data);
-			$scope.registration = results.data;
+			$scope.registration.account = results.data.account;
+			$scope.registration.person = results.data.person;
 			$scope.message = "Profile image updated";
 		}, function(error) {
 			 if(response.status === 401) {

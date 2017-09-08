@@ -83,7 +83,8 @@ public class ProductController extends BaseController
 		try
 		{
 			auth = ( ProductDto ) validateSession( requestContext, auth, sessionId, token );
-			auth = builder.getProductByUid( uid, auth );
+			auth.getProduct().setUid( uid );
+			auth = builder.getProductByUid( auth );
 			return new ResponseEntity<ProductDto>( auth, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )

@@ -16,6 +16,7 @@ import com.walkersmithtech.artisonfirst.core.service.LocationService;
 import com.walkersmithtech.artisonfirst.core.service.PersonCompanyService;
 import com.walkersmithtech.artisonfirst.data.entity.RoleData;
 import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.PrincipalOrganizationsDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
 import com.walkersmithtech.artisonfirst.data.model.object.Location;
 import com.walkersmithtech.artisonfirst.data.model.relation.CompanyLocation;
@@ -56,11 +57,12 @@ public class OrganizationBuilder extends BaseBuilder<OrganizationDto>
 		return model;
 	}
 	
-	public List<OrganizationDto> getOrganizationsByPersonUid( OrganizationDto model ) throws ServiceException
+	public PrincipalOrganizationsDto getOrganizationsByPersonUid( OrganizationDto model ) throws ServiceException
 	{
 		String personUid = model.getAccount().getPersonUid();
 		List<Company> companies = companyService.getCompaniesByPersonUid( personUid );
 		List<OrganizationDto> organizations = new ArrayList<>();
+		PrincipalOrganizationsDto dto = new PrincipalOrganizationsDto();
 		OrganizationDto org;
 		if ( companies != null && companies.size() > 0 )
 		{
@@ -70,7 +72,9 @@ public class OrganizationBuilder extends BaseBuilder<OrganizationDto>
 				organizations.add( buildCompanyDto( company, org ) );
 			}
 		}
-		return organizations;
+		dto.setOrganizations( organizations );
+		dto.setAccount( model.getAccount() );
+		return dto;
 	}
 
 	public OrganizationDto getDefaultOrganizationByPersonUid( OrganizationDto model ) throws ServiceException

@@ -8,10 +8,15 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 	$scope.userName = $rootScope.loginName;
 	$scope.displayName = $rootScope.displayName;
 
-	// REGISTRATION
+	// BUISNESS DATA
 	$scope.registration = {
+		account : {
+			sessionId : $rootScope.sessionId,
+			token : $rootScope.token
+		},
 		company : {
 			uid : "",
+			type : "COMPANY",
 			companyName : "",
 			businessType : "",
 			logoUri : ""
@@ -38,6 +43,23 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 		$location.path('/main');
 	};
 
+	$scope.createBusiness = function() {
+		var promise = BusinessService.createBusiness( $scope.registration );
+		
+		promise.then(function(results) {
+			LoginService.setAuth(results.data);
+			$scope.registration.account = results.data.account;
+			$scope.registration.company = results.data.company;
+			$scope.registration.addressInfo = results.data.addressInfo;
+			$scope.message = "Business Profile created";
+		}, function(error) {
+			if(response.status === 401) {
+				$location.path( "/login" );
+			}
+			$scope.message = "Error retrieving business profile";
+		});
+	};
+
 	$scope.saveBusiness = function() {
 		var promise = BusinessService.updateBusiness( $scope.registration.company.uid, $scope.registration );
 		
@@ -60,7 +82,9 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 
 		promise.then(function(results) {
 			LoginService.setAuth(results.data);
-			$scope.registration = results.data;
+			$scope.registration.account = results.data.account;
+			$scope.registration.company = results.data.company;
+			$scope.registration.addressInfo = results.data.addressInfo;
 			$scope.message = "";
 		}, function(error) {
 			if(response.status === 401) {

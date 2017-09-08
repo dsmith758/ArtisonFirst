@@ -22,10 +22,12 @@ import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.core.service.CompanyImageService;
 import com.walkersmithtech.artisonfirst.core.service.FileManagerSerivce;
 import com.walkersmithtech.artisonfirst.core.service.PersonImageService;
-import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
+import com.walkersmithtech.artisonfirst.core.service.ProductImageService;
 import com.walkersmithtech.artisonfirst.data.model.dto.FileDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ImageDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.PersonDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.ProductDto;
 
 @Controller
 public class FileController extends BaseController
@@ -38,6 +40,9 @@ public class FileController extends BaseController
 
 	@Autowired
 	private CompanyImageService companyImageService;
+	
+	@Autowired
+	private ProductImageService productImageService;
 
 	@RequestMapping( method = RequestMethod.POST, value = "/persons/{uid}/images", headers = ("content-type=multipart/*"))
 	public ResponseEntity<PersonDto> importPersonImage( HttpServletRequest requestContext, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token, @PathVariable String uid, @RequestParam( "file" ) MultipartFile file )
@@ -104,6 +109,40 @@ public class FileController extends BaseController
 		{
 			company = ( OrganizationDto ) setErrorCode( company, ErrorCode.FILE_MISSING.exception );
 			return new ResponseEntity<OrganizationDto>( company, ErrorCode.FILE_MISSING.exception.getHttpStatus() );
+		}
+	}
+	
+	@RequestMapping( method = RequestMethod.POST, value = "/products/{uid}/images", headers = ("content-type=multipart/*"))
+	public ResponseEntity<ProductDto> importProductImage( HttpServletRequest requestContext, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token, @PathVariable String uid, @RequestParam( "file" ) MultipartFile file )
+	{
+		ImageDto auth = new ImageDto();
+		ProductDto product = new ProductDto();
+		if ( !file.isEmpty() )
+		{
+			try
+			{
+				auth = ( ImageDto ) validateSession( requestContext, auth, sessionId, token );
+				auth.setFileName( file.getOriginalFilename() );
+				product = productImageService.addAndSetProductLogo( auth, uid, file.getBytes() );
+				return new ResponseEntity<ProductDto>( product, HttpStatus.OK );
+			}
+			catch ( ServiceException ex )
+			{
+				product = ( ProductDto ) setErrorCode( product, ex );
+				return new ResponseEntity<ProductDto>( product, ex.getHttpStatus() );
+			}
+			catch ( IOException e )
+			{
+				ServiceException ex = ErrorCode.SYSTEM_ERROR.exception;
+				ex.initCause( e );
+				product = ( ProductDto ) setErrorCode( product, ex );
+				return new ResponseEntity<ProductDto>( product, ex.getHttpStatus() );
+			}
+		}
+		else
+		{
+			product = ( ProductDto ) setErrorCode( product, ErrorCode.FILE_MISSING.exception );
+			return new ResponseEntity<ProductDto>( product, ErrorCode.FILE_MISSING.exception.getHttpStatus() );
 		}
 	}
 

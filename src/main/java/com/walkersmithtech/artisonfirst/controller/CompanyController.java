@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.core.builder.OrganizationBuilder;
-import com.walkersmithtech.artisonfirst.core.service.CompanyService;
 import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.PrincipalOrganizationsDto;
 
@@ -25,9 +24,6 @@ public class CompanyController extends BaseController
 	@Autowired
 	private OrganizationBuilder builder;
 	
-	@Autowired
-	private CompanyService service;
-
 	@RequestMapping( method = RequestMethod.POST, value = "/companies" )
 	public ResponseEntity<OrganizationDto> create( HttpServletRequest requestContext, @RequestBody OrganizationDto model )
 	{
@@ -71,7 +67,7 @@ public class CompanyController extends BaseController
 		try
 		{
 			auth = ( OrganizationDto ) validateSession( requestContext, auth, sessionId, token );
-			service.deleteModel( uid );
+			builder.deleteOrganization( uid );
 			return new ResponseEntity<OrganizationDto>( auth, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )

@@ -11,7 +11,7 @@ app.factory('BusinessService', function($http, $rootScope, $window, $upload) {
 
 		getBusiness : function() {
 			if ( $rootScope.companyUid == null || $rootScope.companyUid == '' ) {
-				var path = "/persons/" + $rootScope.personUid + "/companies" + $rootScope.authParam;				
+				var path = "/persons/" + $rootScope.personUid + "/default-company" + $rootScope.authParam;				
 				return $http.get(path);
 			}
 			var path = "/companies/" + $rootScope.companyUid + $rootScope.authParam;				

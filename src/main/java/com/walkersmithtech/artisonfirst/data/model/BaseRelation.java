@@ -18,8 +18,8 @@ public class BaseRelation extends BaseModel
 		if ( relationship != null )
 		{
 			this.type = relationship.name();
+			this.relationship = relationship;
 		}
-		this.relationship = relationship;
 	}
 
 	public String getType()

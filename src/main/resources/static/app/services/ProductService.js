@@ -1,4 +1,4 @@
-app.factory('ProductService', function($http, $rootScope, $window) {
+app.factory('ProductService', function($http, $rootScope, $window, $upload) {
 	return {
 		
 		createProduct : function( product ) {
@@ -6,11 +6,11 @@ app.factory('ProductService', function($http, $rootScope, $window) {
 		},
 		
 		updateProduct : function( productUid, product ) {
-			return $http.put("/product/" + productUid, product );
+			return $http.put("/products/" + productUid, product );
 		},
 
 		getProduct : function( productUid ) {
-			var path = "/product/" + productUid + $rootScope.authParam;				
+			var path = "/products/" + productUid + $rootScope.authParam;				
 			return $http.get(path);
 		},
 		

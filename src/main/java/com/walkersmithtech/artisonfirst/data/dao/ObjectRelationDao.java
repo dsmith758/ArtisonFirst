@@ -65,6 +65,7 @@ public class ObjectRelationDao extends BaseDao
 	{
 		if ( objectUids != null && objectUids.size() > 0 )
 		{
+			List<String> values = new ArrayList<>();
 			StringBuilder builder = new StringBuilder();
 			builder.append( "SELECT " );
 			builder.append( "	relation.* " );
@@ -79,6 +80,7 @@ public class ObjectRelationDao extends BaseDao
 			builder.append( "WHERE " );
 			builder.append( "	relation.type = ? " );
 			builder.append( "AND " );
+			values.add( type.name() );
 
 			boolean firstPass = true;
 			for ( int line = 0; line < objectUids.size(); line++ )
@@ -88,10 +90,13 @@ public class ObjectRelationDao extends BaseDao
 					builder.append( "AND " );
 				}
 				builder.append( "	rd" ).append( line ).append( ".object_uid = ? " );
+				values.add( objectUids.get( line ) );
+				firstPass = false;
 			}
-
+			
+			System.out.println( builder.toString() );
 			@SuppressWarnings( { "unchecked", "rawtypes" } )
-			List<ObjectRelationData> results = ( List<ObjectRelationData> ) jdbc.query( builder.toString(), new BeanPropertyRowMapper( ObjectRelationData.class ), type, objectUids );
+			List<ObjectRelationData> results = ( List<ObjectRelationData> ) jdbc.query( builder.toString(), new BeanPropertyRowMapper( ObjectRelationData.class ), values.toArray() );
 			return results;
 		}
 		return null;

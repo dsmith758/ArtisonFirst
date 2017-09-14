@@ -1,7 +1,8 @@
-app.controller('productController', [ '$scope', '$location', 'LoginService', 'ProductService', function($scope, $location, LoginService. ProductService ) {
-
+app.controller('productController', [ '$rootScope', '$scope', '$location', 'LoginService', 'ProductService', function($rootScope, $scope, $location, LoginService, ProductService ) {
+	
 	$scope.message = "";
 	$scope.userName = LoginService.getUserName();
+	$scope.showList = true;
 	
 	// PRODUCT DATA
 	$scope.registration = {
@@ -25,12 +26,18 @@ app.controller('productController', [ '$scope', '$location', 'LoginService', 'Pr
 		}
 	};
 	
+	$scope.list = [];
+	
 	$scope.go = function(path) {
 		$location.path(path);
 	};
 	
 	$scope.goBack = function(path) {
 		$location.path('/main');
+	};
+	
+	$scope.toggleList = function() {
+		$scope.showList = !$scope.showList;
 	};
 	
 	$scope.createProduct = function() {
@@ -85,7 +92,7 @@ app.controller('productController', [ '$scope', '$location', 'LoginService', 'Pr
 	};
 	
 	$scope.saveProductImage = function( fileToUpload ) {
-		var promise = BusinessService.saveProductImage( fileToUpload[0], $scope.registration.product.uid );
+		var promise = ProductService.saveProductImage( fileToUpload[0], $scope.registration.product.uid );
 		
 		promise.then(function(results) {
 			LoginService.setAuth(results.data);
@@ -98,4 +105,5 @@ app.controller('productController', [ '$scope', '$location', 'LoginService', 'Pr
 			$scope.message = "Error saving product image";
 		});
 	};
+	
 } ]);

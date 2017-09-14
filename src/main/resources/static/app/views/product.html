@@ -3,11 +3,18 @@
 		<ng-include src="'app/views/templates/identifier.html'"/>
 		<ng-include src="'app/views/templates/header.html'"/>
 		<div id="option-group" class="group">
-			<ng-include src="'app/views/body/product-body.html'"/>
+			<div ng-show="showList"><ng-include src="'app/views/body/product-list.html'"/></div>
+			<div ng-hide="showList"><ng-include src="'app/views/body/product-body.html'"/></div>
 		</div>
 		<div class="action-btn-div">
-			<input type="button" class="action-btn" value="SUBMIT"  ng-click="saveProduct()"/>
-			<input type="button" class="action-btn" value="CANCEL"  ng-click="go('/main')"/>
+			<div ng-show="showList">
+				<input type="button" class="action-btn" value="ADD PRODUCT"  ng-click="toggleList()"/>
+				<input type="button" class="action-btn" value="RETURN"  ng-click="go('/main')"/>
+			</div>
+			<div ng-hide="showList">
+				<input type="button" class="action-btn" value="SAVE"  ng-click="createProduct()"/>
+				<input type="button" class="action-btn" value="CANCEL"  ng-click="toggleList()"/>
+			</div>
 		</div>
 	</div>
 </section>

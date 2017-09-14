@@ -16,7 +16,7 @@ public class CompanyLocation extends BaseObjectRelation
 
 	public CompanyLocation()
 	{
-		this.type = RelationshipType.COMPANY_LOCATION.name();
+		setRelationship( RelationshipType.COMPANY_LOCATION );
 	}
 	
 	public void addResident( Company owner )
@@ -39,14 +39,14 @@ public class CompanyLocation extends BaseObjectRelation
 		RoleData role = new RoleData();
 		role.setObject( address );
 		role.setObjectUid( address.getUid() );
-		role.setObjectType( ObjectType.PRODUCT.name() );
-		role.setRole( RelationshipRole.LOCATION.name() );
+		role.setObjectType( ObjectType.LOCATION.name() );
+		role.setRole( RelationshipRole.ADDRESS.name() );
 		addCollaborator( role );
 	}
 	
 	public RoleData retrieveAddress()
 	{
-		return getCollaborator( RelationshipRole.LOCATION.name() );
+		return getCollaborator( RelationshipRole.ADDRESS.name() );
 	}
 	
 

@@ -27,7 +27,7 @@ public abstract class BaseRelationService<T extends BaseObjectRelation> extends 
 	protected ObjectRelationDataIndexRepository indexRepo;
 
 	protected RelationshipType type;
-	
+
 	protected Class<T> modelClass;
 
 	@Override
@@ -50,11 +50,19 @@ public abstract class BaseRelationService<T extends BaseObjectRelation> extends 
 	{
 		if ( relation != null )
 		{
-			ObjectRelationData entity = null;
-			List<ObjectRelationData> entities = getRelationsByRoleDataAndType( relation.getCollaborators(), type );
-			if ( entities != null && entities.size() > 0 )
+			T entity = null;
+			if ( relation.getUid() != null )
 			{
-				entity = entities.get( 0 );
+				entity = getModelByUid( relation.getUid() );
+			}
+			if ( entity == null )
+			{
+				List<ObjectRelationData> objects = getRelationsByRoleDataAndType( relation.getCollaborators(), type );
+				if ( objects != null && objects.size() > 0 )
+				{
+					ObjectRelationData object = objects.get( 0 );
+					entity = convertEntityToModel( object );
+				}
 			}
 			if ( entity == null )
 			{
@@ -231,7 +239,7 @@ public abstract class BaseRelationService<T extends BaseObjectRelation> extends 
 		}
 		return models;
 	}
-	
+
 	@Override
 	protected T convertEntityToModel( ObjectRelationData entity )
 	{
@@ -250,7 +258,7 @@ public abstract class BaseRelationService<T extends BaseObjectRelation> extends 
 		}
 		return null;
 	}
-	
+
 	protected T getRoles( T relation )
 	{
 		if ( relation != null )

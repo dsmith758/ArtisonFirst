@@ -42,7 +42,7 @@ public class UserRegistrationService
 
 	public RegistrationDto registerUser( RegistrationDto registration ) throws ServiceException
 	{
-		validateRegistration( registration );
+		validate( registration );
 
 		Person person = createPerson( registration.getPerson() );
 		registration.setPerson( person );
@@ -54,7 +54,7 @@ public class UserRegistrationService
 		return registration;
 	}
 
-	private void validateRegistration( RegistrationDto registration ) throws ServiceException
+	private void validate( RegistrationDto registration ) throws ServiceException
 	{
 		if ( registration == null )
 		{
@@ -136,7 +136,7 @@ public class UserRegistrationService
 		return account;
 	}
 
-	private RegistrationDto createCompany( RegistrationDto registration )
+	private RegistrationDto createCompany( RegistrationDto registration ) throws ServiceException
 	{
 		Person person = registration.getPerson();
 		Company company = registration.getCompany();
@@ -153,7 +153,7 @@ public class UserRegistrationService
 		return registration;
 	}
 
-	private RegistrationDto createCompanyAddresses( RegistrationDto registration )
+	private RegistrationDto createCompanyAddresses( RegistrationDto registration ) throws ServiceException
 	{
 		Company company = registration.getCompany();
 		List<Location> addresses = registration.getAddressInfo();
@@ -168,7 +168,7 @@ public class UserRegistrationService
 					locations.add( address );
 				}
 			}
-			companyLocationService.createCompanyLocations( locations, company );
+			companyLocationService.createOrUpdateCompanyLocations( locations, company );
 		}
 		return registration;
 	}

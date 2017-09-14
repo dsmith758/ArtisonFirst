@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
-import com.walkersmithtech.artisonfirst.constant.RelationshipType;
 import com.walkersmithtech.artisonfirst.core.BaseBuilder;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.core.service.CompanyLocationService;
@@ -39,22 +38,17 @@ public class OrganizationBuilder extends BaseBuilder<OrganizationDto>
 	public OrganizationDto createOrganization( OrganizationDto model ) throws ServiceException
 	{
 		Company company = companyService.createCompany( model.getCompany() );
-		model.setCompany( company );
 		List<Location> locations = locationService.createLocations( model.getAddressInfo() );
-		model.setAddressInfo( locations );
-		companyLocationService.createCompanyLocations( locations, company );
-		return model;
+		companyLocationService.createOrUpdateCompanyLocations( locations, company );
+		return buildCompanyDto( company, model );
 	}
 
 	public OrganizationDto updateOrganization( OrganizationDto model ) throws ServiceException
 	{
 		Company company = companyService.updateCompany( model.getCompany() );
-		model.setCompany( company );
 		List<Location> locations = locationService.updateLocations( model.getAddressInfo() );
-		model.setAddressInfo( locations );
-		companyService.deleteRelationsByObjecteUidAndType( company.getUid(), RelationshipType.COMPANY_LOCATION );
-		companyLocationService.createCompanyLocations( locations, company );
-		return model;
+		companyLocationService.createOrUpdateCompanyLocations( locations, company );
+		return buildCompanyDto( company, model );
 	}
 	
 	public PrincipalOrganizationsDto getOrganizationsByPersonUid( OrganizationDto model ) throws ServiceException
@@ -91,10 +85,18 @@ public class OrganizationBuilder extends BaseBuilder<OrganizationDto>
 		return buildCompanyDto( company, model );
 	}
 	
+	public boolean deleteOrganization( String uid )
+	{
+		// we want to delete the organization, but not the company...
+		companyService.deleteModel( uid );
+		return true;
+	}
+	
 	private OrganizationDto buildCompanyDto( Company company, OrganizationDto model ) throws ServiceException
 	{
 		if ( company != null )
 		{
+			model.getAccount().setCompanyUid( company.getUid() );
 			model.setCompany( company );
 			model.setAddressInfo( buildCompanyAddresses( company.getUid() ) );
 			model.setPrincipals( personCompanyService.getRelationsByOrganization( company.getUid() ) );
@@ -112,7 +114,7 @@ public class OrganizationBuilder extends BaseBuilder<OrganizationDto>
 			RoleData roleData;
 			for ( CompanyLocation address : addresses )
 			{
-				roleData = address.getCollaborator( RelationshipRole.LOCATION.name() );
+				roleData = address.getCollaborator( RelationshipRole.ADDRESS.name() );
 				if ( roleData != null )
 				{
 					location = locationService.getModelByUid( roleData.getObjectUid() );

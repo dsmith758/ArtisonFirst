@@ -2,9 +2,9 @@ package com.walkersmithtech.artisonfirst.constant;
 
 public enum RelationshipRole
 {
+	ADDRESS,
 	AUTHOR,
 	CONTACT,
-	LOCATION,
 	MEMBER,
 	MESSAGE,
 	ORGANIZATION,

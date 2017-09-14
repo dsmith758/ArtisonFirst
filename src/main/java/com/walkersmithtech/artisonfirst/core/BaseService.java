@@ -93,7 +93,7 @@ public abstract class BaseService<T, O>
 		return true;
 	}
 
-	public boolean deleteRelationsByObjecteUidAndType( String uid, RelationshipType type )
+	public boolean deleteRelationsByObjectUidAndType( String uid, RelationshipType type )
 	{
 		List<ObjectRelationData> relations = getRelationsByObjectUidAndType( uid, type );
 		deleteRelations( relations );

@@ -7,9 +7,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.walkersmithtech.artisonfirst.data.model.BaseList;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
+import com.walkersmithtech.artisonfirst.data.model.object.Product;
 
 @JsonInclude( Include.NON_EMPTY )
-public class CompanyProductDto extends BaseList<ProductDto>
+public class CompanyProductsDto extends BaseList<Product>
 {
 	private Company company;
 
@@ -24,13 +25,13 @@ public class CompanyProductDto extends BaseList<ProductDto>
 	}
 
 	@JsonIgnore
-	public List<ProductDto> getProducts()
+	public List<Product> getProducts()
 	{
 		return list;
 	}
 
 	@JsonIgnore
-	public void setProducts( List<ProductDto> products )
+	public void setProducts( List<Product> products )
 	{
 		this.list = products;
 	}

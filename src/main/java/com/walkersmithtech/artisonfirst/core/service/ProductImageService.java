@@ -35,8 +35,7 @@ public class ProductImageService
 
 			ProductDto dto = new ProductDto();
 			dto.setAccount( auth.getAccount() );
-			dto.setProduct( product );
-			dto = productBuilder.getProductByUid( dto );
+			dto = productBuilder.getProductByUid( dto, productUid );
 			return dto;
 		}
 		throw ErrorCode.PRODUCT_NOT_FOUND.exception;

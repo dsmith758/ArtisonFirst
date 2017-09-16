@@ -10,13 +10,9 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 			sessionId : $rootScope.sessionId,
 			token : $rootScope.token
 		},
-		product : {
-			uid : "",
-			type : "PRODUCT",
-			name : "",
-			description : "",
-			imageUri : ""
-		},
+	    list : [
+	    ],
+	    product : {},
 		company : {
 			uid : "",
 			type : "COMPANY",
@@ -24,6 +20,15 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 			businessType : "",
 			logoUri : ""
 		}
+	};
+	
+	$scope.product = {
+            uid : "",
+            type : "PRODUCT",
+            name : "",
+            description : "",
+            imageUri : "",
+            status : ""
 	};
 	
 	$scope.list = [];
@@ -38,15 +43,45 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 	
 	$scope.toggleList = function() {
 		$scope.showList = !$scope.showList;
+		if ( $scope.showList ) {
+			$scope.getProducts();
+		}
 	};
 	
+	$scope.editProduct = function( item ) {
+		$scope.getProduct( $scope.registration.list[item].uid );
+		$scope.toggleList();
+	};
+	
+	$scope.newProduct = function() {
+		$scope.product = {
+	            uid : "",
+	            type : "PRODUCT",
+	            name : "",
+	            description : "",
+	            imageUri : "",
+	            status : ""
+		};
+		$scope.toggleList();
+	};
+	
+	$scope.saveProduct = function() {
+		if ( $scope.product.uid != '' ) {
+			$scope.updateProduct();
+		}
+		else {
+			$scope.createProduct();
+		}
+	}
+	
 	$scope.createProduct = function() {
+		$scope.registration.product = $scope.product;
 		var promise = ProductService.createProduct( $scope.registration );
 		
 		promise.then(function(results) {
 			LoginService.setAuth(results.data);
 			$scope.registration.account = results.data.account;
-			$scope.registration.company = results.data.product;
+			$scope.product = results.data.product;
 			$scope.registration.company = results.data.company;
 			$scope.message = "Product created";
 		}, function(error) {
@@ -57,13 +92,14 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 		});
 	};
 
-	$scope.saveProduct = function() {
-		var promise = ProductService.updateProduct( $scope.registration.product.uid, $scope.registration );
+	$scope.updateProduct = function() {
+		$scope.registration.product = $scope.product;
+		var promise = ProductService.updateProduct( $scope.product.uid, $scope.registration );
 		
 		promise.then(function(results) {
 			LoginService.setAuth(results.data);
 			$scope.registration.account = results.data.account;
-			$scope.registration.company = results.data.product;
+			$scope.product = results.data.product;
 			$scope.registration.company = results.data.company;
 			$scope.message = "Product updated";
 		}, function(error) {
@@ -80,7 +116,24 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 		promise.then(function(results) {
 			LoginService.setAuth(results.data);
 			$scope.registration.account = results.data.account;
-			$scope.registration.company = results.data.product;
+			$scope.product = results.data.product;
+			$scope.registration.company = results.data.company;
+			$scope.message = "";
+		}, function(error) {
+			if(response.status === 401) {
+				$location.path( "/login" );
+			}
+			$scope.message = "Error retrieving product. ";
+		});
+	};
+	
+	$scope.getProducts = function( ) {
+		var promise = ProductService.getProducts( $rootScope.companyUid );
+
+		promise.then(function(results) {
+			LoginService.setAuth(results.data);
+			$scope.registration.account = results.data.account;
+			$scope.registration.list = results.data.list;
 			$scope.registration.company = results.data.company;
 			$scope.message = "";
 		}, function(error) {
@@ -105,5 +158,7 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 			$scope.message = "Error saving product image";
 		});
 	};
+	
+	$scope.getProducts();
 	
 } ]);

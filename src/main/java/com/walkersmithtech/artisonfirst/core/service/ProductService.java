@@ -1,10 +1,14 @@
 package com.walkersmithtech.artisonfirst.core.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.constant.ErrorCode;
+import com.walkersmithtech.artisonfirst.constant.IndexType;
+import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.core.BaseObjectService;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.model.object.Product;
@@ -58,6 +62,7 @@ public class ProductService extends BaseObjectService<Product>
 	protected void createIndex( Product model )
 	{
 		indexRepo.deleteByUid( model.getUid() );
+		saveIndexData( model.getUid(), IndexType.PRODUCT_NAME, model.getName() );
 	}
 
 	public Product getProductByUid( String uid ) throws ServiceException
@@ -68,6 +73,17 @@ public class ProductService extends BaseObjectService<Product>
 			throw ErrorCode.PRODUCT_NOT_FOUND.exception;
 		}
 		return model;
+	}
+	
+	public List<Product> getProductsByOwnerAndName( String companyUid, String name ) throws ServiceException
+	{
+		return getProductsByOwnerAndIndex( companyUid, IndexType.PRODUCT_NAME, name );
+	}
+	
+	private List<Product> getProductsByOwnerAndIndex( String sourceUid, IndexType type, String value ) throws ServiceException
+	{
+		List<Product> products = getModelsByIndexAndRoles( sourceUid, RelationshipRole.OWNER, RelationshipRole.PRODUCT, type, value );
+		return products;
 	}
 
 	@Override

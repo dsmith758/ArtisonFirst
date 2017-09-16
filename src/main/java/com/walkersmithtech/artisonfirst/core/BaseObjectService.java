@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.constant.IndexType;
+import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.data.dao.ObjectDataDao;
 import com.walkersmithtech.artisonfirst.data.entity.ObjectData;
 import com.walkersmithtech.artisonfirst.data.entity.ObjectDataIndex;
@@ -78,6 +79,13 @@ public abstract class BaseObjectService<T extends BaseObject> extends BaseServic
 			return model;
 		}
 		return null;
+	}
+	
+	public List<T> getModelsByIndexAndRoles( String sourceObjectUid, RelationshipRole sourceRole, RelationshipRole targetRole, IndexType type, String data )
+	{
+		List<ObjectData> entities = dao.findObjectByIndexAndRoles( sourceObjectUid, sourceRole.name(), targetRole.name(), type.name(), data );
+		return convertEntitiesToModels( entities );
+		
 	}
 
 	public List<T> getModelsByFreeformSearch( String criteria )
@@ -153,18 +161,6 @@ public abstract class BaseObjectService<T extends BaseObject> extends BaseServic
 	protected List<T> getByTypeAndData( IndexType type, String data )
 	{
 		List<ObjectData> entities = dao.findObjectByIndex( type.name, data );
-		return convertEntitiesToModels( entities );
-	}
-
-	protected List<T> getBySourceRelation( String sourceUid )
-	{
-		List<ObjectData> entities = dao.findObjectBySourceRelation( sourceUid );
-		return convertEntitiesToModels( entities );
-	}
-
-	protected List<T> getByTargetRelation( String targetUid )
-	{
-		List<ObjectData> entities = dao.findObjectByTargetRelation( targetUid );
 		return convertEntitiesToModels( entities );
 	}
 

@@ -1,11 +1,19 @@
-<form>
-	<table class='form-table' style="widows: 100%;">
-		<tbody>
-			<tr>
-				<td>
-					placeholder for a product record
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</form>
+
+<table class='form-table' style="widows: 100%;">
+	<tbody>
+	
+		<tr class='form-row-group'>
+			<td class='form-cell'>
+				<input type="text" placeholder="Name of Product" ng-model="product.name" class="form-input"/><br> 
+				<label class='form-label'>Name</label>
+			</td>
+		</tr>
+		<tr class='form-row-group'>
+			<td class='form-cell'>
+				<textarea placeholder="Product Description" ng-model="product.description" class="form-input"></textarea><br> 
+				<label class='form-label'>Description</label>
+			</td>
+		</tr>
+		
+	</tbody>
+</table>

@@ -39,6 +39,10 @@ public class Product extends BaseObject
 
 	public String getImageUri()
 	{
+		if ( imageUri == null )
+		{
+			return "image/system/product.png";
+		}
 		return imageUri;
 	}
 

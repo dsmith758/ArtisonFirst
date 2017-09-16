@@ -130,6 +130,7 @@ public class AuthenticationService
 		AuthenticationDto authObject = decryptToken( salt, token );
 
 		String loginName = authObject.getLoginName();
+		String companyUid = auth.getAccount().getCompanyUid();
 		if ( session.getNeverExpires().intValue() == 0 )
 		{
 			String personUid = authObject.getPersonUid();
@@ -137,7 +138,7 @@ public class AuthenticationService
 			session = initSession( session, personUid, loginName, ipAddress );
 		}
 
-		account = buildUserProfile( loginName, session.getSessionId(), session.getToken() );
+		account = buildUserProfile( loginName, companyUid, session.getSessionId(), session.getToken() );
 		account.setAuthenticated( true );
 		return account;
 	}
@@ -212,27 +213,37 @@ public class AuthenticationService
 			return null;
 		}
 
-		Account account = buildUserProfile( contextArray[ 0 ], sessionId, token );
+		Account account = buildUserProfile( contextArray[ 0 ], null, sessionId, token );
 		account.setAuthenticated( true );
 		return account;
 	}
 
-	private Account buildUserProfile( String loginName, String sessionId, String token ) throws ServiceException
+	private Account buildUserProfile( String loginName, String companyUid, String sessionId, String token ) throws ServiceException
 	{
 		UserAccount user = userRepo.findByLoginName( loginName );
 		if ( user == null )
 		{
 			throw ErrorCode.AUTH_INVALID_CREDENTIALS.exception;
 		}
+		
+		Company company = null;
+		if ( companyUid == null )
+		{
+			company = companyService.getDefaultCompanyByPersonUid( user.getPersonUid() );
+			if ( company != null )
+			{
+				companyUid = company.getUid();
+			}
+		}
 
 		Account account = new Account();
 		account.setDisplayName( user.getDisplayName() );
 		account.setLoginName( user.getLoginName() );
 		account.setPersonUid( user.getPersonUid() );
+		account.setCompanyUid( companyUid );
 		account.setSessionId( sessionId );
 		account.setToken( token );
 		return account;
-
 	}
 
 	private Account createSession( Account account, String ipAddress )

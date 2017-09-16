@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.core.builder.ProductBuilder;
 import com.walkersmithtech.artisonfirst.core.service.ProductService;
-import com.walkersmithtech.artisonfirst.data.model.dto.CompanyProductDto;
+import com.walkersmithtech.artisonfirst.data.model.dto.CompanyProductsDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.ProductDto;
 
 @RestController
@@ -83,8 +83,7 @@ public class ProductController extends BaseController
 		try
 		{
 			auth = ( ProductDto ) validateSession( requestContext, auth, sessionId, token );
-			auth.getProduct().setUid( uid );
-			auth = builder.getProductByUid( auth );
+			auth = builder.getProductByUid( auth, uid );
 			return new ResponseEntity<ProductDto>( auth, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )
@@ -112,19 +111,19 @@ public class ProductController extends BaseController
 	}
 
 	@RequestMapping( method = RequestMethod.GET, value = "/companies/{companyUid}/products" )
-	public ResponseEntity<CompanyProductDto> getCompanyProducts( HttpServletRequest requestContext, @PathVariable String companyUid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
+	public ResponseEntity<CompanyProductsDto> getCompanyProducts( HttpServletRequest requestContext, @PathVariable String companyUid, @RequestParam( "session-id" ) String sessionId, @RequestParam( "user-token" ) String token )
 	{
-		CompanyProductDto auth = new CompanyProductDto();
+		CompanyProductsDto auth = new CompanyProductsDto();
 		try
 		{
-			auth = ( CompanyProductDto ) validateSession( requestContext, auth, sessionId, token );
+			auth = ( CompanyProductsDto ) validateSession( requestContext, auth, sessionId, token );
 			auth = builder.getCompanyProducts( companyUid, auth );
-			return new ResponseEntity<CompanyProductDto>( auth, HttpStatus.OK );
+			return new ResponseEntity<CompanyProductsDto>( auth, HttpStatus.OK );
 		}
 		catch ( ServiceException ex )
 		{
-			auth = ( CompanyProductDto ) setErrorCode( auth, ex );
-			return new ResponseEntity<CompanyProductDto>( auth, ex.getHttpStatus() );
+			auth = ( CompanyProductsDto ) setErrorCode( auth, ex );
+			return new ResponseEntity<CompanyProductsDto>( auth, ex.getHttpStatus() );
 		}
 	}
 

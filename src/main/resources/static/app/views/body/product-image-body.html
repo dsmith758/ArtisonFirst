@@ -1,0 +1,14 @@
+<table class='form-table'>
+	<tbody>
+		<tr class='form-row'>
+			<td class='form-cell' align="center"><img class="form-image" ng-src="{{ product.imageUri }}" /><br>
+				<div class="form-label">
+					Add or update your product image: 
+				</div>
+				<div class="form-label">
+					<input type="file" name="file" onchange="angular.element(this).scope().saveProductImage(this.files)" />
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>

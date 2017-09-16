@@ -73,3 +73,24 @@
 	font-weight: bold;
 	cursor: pointer;
 }
+
+.item-title {
+	font-family: sans-serif;
+	color: #022b3e;
+	font-size: 15px;
+	font-weight: bold;
+	text-align: left;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.item-text {
+	font-family: sans-serif;
+	color: #202020;
+	font-size: 12px;
+	font-weight: normal;
+	text-align: left;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+

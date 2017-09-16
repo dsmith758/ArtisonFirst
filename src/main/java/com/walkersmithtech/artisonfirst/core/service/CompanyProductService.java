@@ -12,6 +12,8 @@ import com.walkersmithtech.artisonfirst.constant.RelationshipType;
 import com.walkersmithtech.artisonfirst.core.BaseRelationService;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
 import com.walkersmithtech.artisonfirst.data.entity.RoleData;
+import com.walkersmithtech.artisonfirst.data.model.object.Company;
+import com.walkersmithtech.artisonfirst.data.model.object.Product;
 import com.walkersmithtech.artisonfirst.data.model.relation.CompanyProduct;
 
 @Service
@@ -24,28 +26,53 @@ public class CompanyProductService extends BaseRelationService<CompanyProduct>
 		modelClass = CompanyProduct.class;
 	}
 	
-	public CompanyProduct createProductOwner( CompanyProduct productOwner ) throws ServiceException
+	public void createOrUpdateCompanyProducts( List<Product> products, Company company ) throws ServiceException
 	{
-		validate( productOwner );
-		RoleData owner = productOwner.retrieveProduct();
-		RoleData product = productOwner.retrieveProduct();
+		if ( products != null && products.size() > 0 )
+		{
+			CompanyProduct companyProduct;
+			for ( Product product : products )
+			{
+				companyProduct = new CompanyProduct();
+				companyProduct.addProduct( product );
+				companyProduct.addOwner( company );
+				companyProduct = createOrUpdateCompanyProduct( companyProduct );
+			}
+		}
+	}
+
+	public CompanyProduct createOrUpdateCompanyProduct( CompanyProduct companyProduct ) throws ServiceException
+	{
+		validate( companyProduct );
+		RoleData product = companyProduct.retrieveProduct();
+		RoleData owner = companyProduct.retrieveOwner();
 		CompanyProduct match = getRelationsByCompanyAndProduct( owner.getObjectUid(), product.getObjectUid() );
 		if ( match != null )
 		{
-			updateProductOwner( productOwner );
+			companyProduct.setUid( match.getUid() );
+			companyProduct.setId( match.getId() );
+			companyProduct = updateCompanyProduct( companyProduct );
 		}
-		productOwner = createModel( productOwner );
-		return productOwner;
-	}
-	
-	public CompanyProduct updateProductOwner( CompanyProduct productOwner ) throws ServiceException
-	{
-		validate( productOwner );
-		productOwner = updateModel( productOwner );
-		return productOwner;
+		else
+		{
+			companyProduct = createCompanyProduct( companyProduct );
+		}
+		return companyProduct;
 	}
 
-	public List<CompanyProduct> getRelationsByOwner( String ownerUid )
+	private CompanyProduct createCompanyProduct( CompanyProduct companyProduct ) throws ServiceException
+	{
+		companyProduct = createModel( companyProduct );
+		return companyProduct;
+	}
+
+	private CompanyProduct updateCompanyProduct( CompanyProduct companyProduct ) throws ServiceException
+	{
+		companyProduct = updateModel( companyProduct );
+		return companyProduct;
+	}
+
+	public List<CompanyProduct> getRelationsByCompany( String ownerUid )
 	{
 		return getRelatonsByCollaboratorAndTypeAndRole( ownerUid, type, RelationshipRole.OWNER );
 	}

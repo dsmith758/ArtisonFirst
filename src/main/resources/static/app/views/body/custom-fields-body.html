@@ -1,0 +1,27 @@
+<div class="group-header">
+	Custom Fields:
+</div>
+<div class="sub-group">
+	<table class='form-table' style="windows: 100%;">
+		<tbody>
+			<tr class='form-row-group' ng-repeat="field in fields">
+				<td class='form-cell'>
+					<input type="text" placeholder="Field Label" ng-model="field.field.label" class="form-input"/><br> 
+					<label class='form-label'>Label</label>
+				</td>
+				
+				<td class='form-cell'>
+					<input type="text" placeholder="Field Value" ng-model="field.value" class="form-input"/><br> 
+					<label class='form-label'>Value</label>
+				</td>
+				
+				<td class='form-button' >
+					<a ng-click="removeField($index)"><img src="image/system/trash.png" width="30" style="cursor: pointer;"></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="group-link-div">
+		<a ng-click="addField()" class="form-anchor">Add Custom Field</a>
+	</div>
+</div>

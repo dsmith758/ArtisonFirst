@@ -1,4 +1,8 @@
 
+<div class="group-header">
+	Item Profile:
+</div>
+
 <table class='form-table' style="widows: 100%;">
 	<tbody>
 	
@@ -8,6 +12,14 @@
 				<label class='form-label'>Name</label>
 			</td>
 		</tr>
+		
+		<tr class='form-row-group'>
+			<td class='form-cell'>
+				<input type="text" placeholder="Unique Product ID" ng-model="product.itemNumber" class="form-input"/><br> 
+				<label class='form-label'>Item NUmber</label>
+			</td>
+		</tr>
+		
 		<tr class='form-row-group'>
 			<td class='form-cell'>
 				<textarea placeholder="Product Description" ng-model="product.description" class="form-input"></textarea><br> 
@@ -17,3 +29,4 @@
 		
 	</tbody>
 </table>
+

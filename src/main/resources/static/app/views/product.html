@@ -4,8 +4,9 @@
 		<ng-include src="'app/views/templates/header.html'"/>
 		<div id="option-group" class="group">
 			<div ng-show="showList"><ng-include src="'app/views/body/product-list.html'"/></div>
-			<div ng-hide="showList"><ng-include src="'app/views/body/product-image-body.html'"/></div>
+			<div ng-show="showImageControl"><ng-include src="'app/views/body/product-image-body.html'"/></div>
 			<div ng-hide="showList"><ng-include src="'app/views/body/product-body.html'"/></div>
+			<div ng-hide="showList"><ng-include src="'app/views/body/custom-fields-body.html'"/></div>
 		</div>
 		<div class="action-btn-div">
 			<div ng-show="showList">

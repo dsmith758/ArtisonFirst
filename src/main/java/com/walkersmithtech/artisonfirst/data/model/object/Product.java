@@ -1,12 +1,17 @@
 package com.walkersmithtech.artisonfirst.data.model.object;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.walkersmithtech.artisonfirst.constant.DataType;
 import com.walkersmithtech.artisonfirst.data.model.BaseObject;
 
 public class Product extends BaseObject
 {
 	private String name;
+	private String itemNumber;
 	private String description;
+	private List<FieldValue> fields;
 	private String imageUri;
 	private Boolean verified;
 	private String status;
@@ -69,6 +74,39 @@ public class Product extends BaseObject
 	public void setStatus( String status )
 	{
 		this.status = status;
+	}
+
+	public List<FieldValue> getFields()
+	{
+		if ( fields == null )
+		{
+			fields = new ArrayList<>();
+		}
+		return fields;
+	}
+
+	public void setFields( List<FieldValue> fields )
+	{
+		this.fields = fields;
+	}
+
+	public void addField( FieldValue field )
+	{
+		getFields();
+		if ( field != null )
+		{
+			fields.add( field );
+		}
+	}
+
+	public String getItemNumber()
+	{
+		return itemNumber;
+	}
+
+	public void setItemNumber( String itemNumber )
+	{
+		this.itemNumber = itemNumber;
 	}
 
 }

@@ -123,7 +123,7 @@ public class FileController extends BaseController
 			{
 				auth = ( ImageDto ) validateSession( requestContext, auth, sessionId, token );
 				auth.setFileName( file.getOriginalFilename() );
-				product = productImageService.addAndSetProductLogo( auth, uid, file.getBytes() );
+				product = productImageService.addAndSetProductImage( auth, uid, file.getBytes() );
 				return new ResponseEntity<ProductDto>( product, HttpStatus.OK );
 			}
 			catch ( ServiceException ex )

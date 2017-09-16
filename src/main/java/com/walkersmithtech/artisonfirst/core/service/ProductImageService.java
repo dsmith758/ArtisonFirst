@@ -23,7 +23,7 @@ public class ProductImageService
 	@Autowired
 	private ProductBuilder productBuilder;
 	
-	public ProductDto addAndSetProductLogo( ImageDto auth, String productUid, byte[] file ) throws ServiceException
+	public ProductDto addAndSetProductImage( ImageDto auth, String productUid, byte[] file ) throws ServiceException
 	{
 		Product product = productService.getProductByUid( productUid );
 		if ( product != null )

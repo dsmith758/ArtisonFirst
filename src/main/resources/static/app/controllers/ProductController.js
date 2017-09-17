@@ -42,6 +42,8 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 		},
 		value : ""
 	}];
+    
+    
 	
 	$scope.go = function(path) {
 		$location.path(path);
@@ -136,6 +138,31 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 				$location.path( "/login" );
 			}
 			$scope.message = "Error updating product.";
+		});
+	};
+	
+	$scope.confirmDelete = function( item ) {;
+		var msg = "Click OK to confirm the deletion of: \n'" + $scope.registration.list[item].name + "'?"
+		if ( confirm( msg ) ) {
+			$scope.deleteProduct( item );
+		}
+
+	};
+ 
+	$scope.deleteProduct = function( item ) {
+		var promise = ProductService.deleteProduct( $scope.registration.list[item].uid );
+
+		promise.then(function(results) {
+			LoginService.setAuth(results.data);
+			$scope.registration.account = results.data.account;
+			$scope.registration.company = results.data.company;
+			$scope.message = "";
+			$scope.getProducts();
+		}, function(error) {
+			if(response.status === 401) {
+				$location.path( "/login" );
+			}
+			$scope.message = "Error retrieving product. ";
 		});
 	};
 	

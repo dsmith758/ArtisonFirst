@@ -147,6 +147,19 @@ public abstract class BaseObjectService<T extends BaseObject> extends BaseServic
 	}
 
 	@Override
+	protected void saveCustomFieldIndexData( String uid, String fieldName, String value )
+	{
+		if ( fieldName != null && !fieldName.isEmpty() && value != null && !value.isEmpty() )
+		{
+			ObjectDataIndex index = new ObjectDataIndex();
+			index.setUid( uid );
+			index.setType( fieldName );
+			index.setData( value );
+			indexRepo.save( index );
+		}
+	}
+
+	@Override
 	protected void updateIndexData( String objectUid, IndexType type, String data )
 	{
 		ObjectDataIndex index = indexRepo.findByUidAndType( objectUid, type.name );

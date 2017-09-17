@@ -11,12 +11,12 @@
 						<td width="50"><img class="form-image" ng-src="{{ product.imageUri }}" /></td>
 						<td class='form-cell'>
 							<span class="item-title">{{product.name}}</span><br>
-							<span class="item-text"><b>Item #:</b> {{product.itemNumber}}</span>
-							<span class="item-text">{{product.description}}</span>
+							<span class="item-text"><b>Item #:</b> {{product.itemNumber}}</span><br>
+							<span class="item-text"><b>Description:</b> {{product.description}}</span>
 						</td>
 						<td width="30">
 							<a ng-click="editProduct($index)"><img src="image/system/edit.png" width="30" style="cursor: pointer;"></a><br>
-							<a ng-click="deleteProduct($index)"><img src="image/system/trash.png" width="30" style="cursor: pointer;"></a>
+							<a ng-click="confirmDelete($index)"><img src="image/system/trash.png" width="30" style="cursor: pointer;"></a>
 						</td>
 					</tr>				
 				</table>

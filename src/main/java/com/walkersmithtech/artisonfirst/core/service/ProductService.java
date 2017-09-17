@@ -11,6 +11,7 @@ import com.walkersmithtech.artisonfirst.constant.IndexType;
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.core.BaseObjectService;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
+import com.walkersmithtech.artisonfirst.data.model.object.FieldValue;
 import com.walkersmithtech.artisonfirst.data.model.object.Product;
 
 @Service
@@ -25,10 +26,10 @@ public class ProductService extends BaseObjectService<Product>
 		dataType = DataType.PRODUCT;
 		modelClass = Product.class;
 	}
-	
+
 	public Product saveProduct( Product model ) throws ServiceException
 	{
-		if (model.getUid() == null )
+		if ( model.getUid() == null )
 		{
 			return createProduct( model );
 		}
@@ -63,6 +64,17 @@ public class ProductService extends BaseObjectService<Product>
 	{
 		indexRepo.deleteByUid( model.getUid() );
 		saveIndexData( model.getUid(), IndexType.PRODUCT_NAME, model.getName() );
+		saveIndexData( model.getUid(), IndexType.PRODUCT_ITEM_NUMBER, model.getName() );
+		if ( model.getFields() != null && model.getFields().size() > 0 )
+		{
+			for ( FieldValue field : model.getFields() )
+			{
+				if ( field.getField().getLabel() != null && !field.getField().getLabel().isEmpty() )
+				{
+					saveCustomFieldIndexData( model.getUid(), field.getField().getLabel().toUpperCase(), field.getValue() );
+				}
+			}
+		}
 	}
 
 	public Product getProductByUid( String uid ) throws ServiceException
@@ -74,12 +86,17 @@ public class ProductService extends BaseObjectService<Product>
 		}
 		return model;
 	}
-	
+
 	public List<Product> getProductsByOwnerAndName( String companyUid, String name ) throws ServiceException
 	{
 		return getProductsByOwnerAndIndex( companyUid, IndexType.PRODUCT_NAME, name );
 	}
-	
+
+	public List<Product> getProductsByOwnerAndItemNumber( String companyUid, String itemNumber ) throws ServiceException
+	{
+		return getProductsByOwnerAndIndex( companyUid, IndexType.PRODUCT_ITEM_NUMBER, itemNumber );
+	}
+
 	private List<Product> getProductsByOwnerAndIndex( String sourceUid, IndexType type, String value ) throws ServiceException
 	{
 		List<Product> products = getModelsByIndexAndRoles( sourceUid, RelationshipRole.OWNER, RelationshipRole.PRODUCT, type, value );

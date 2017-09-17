@@ -46,6 +46,8 @@ public abstract class BaseService<T, O>
 	
 	protected abstract void createIndex( T model );
 	
+	protected abstract void saveCustomFieldIndexData( String uid, String fieldName, String value );
+	
 	public abstract boolean deleteModel( String objectUid );
 	
 	public abstract boolean deleteIndex( String objectUid );
@@ -78,6 +80,7 @@ public abstract class BaseService<T, O>
 		}
 		deleteObjectIndexData( objectUid );
 		deleteRelationsByObjectUid( objectUid );
+		objectDataRepo.deleteByUid( objectUid );
 		return true;
 	}
 

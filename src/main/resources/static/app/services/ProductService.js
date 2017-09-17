@@ -8,6 +8,11 @@ app.factory('ProductService', function($http, $rootScope, $window, $upload) {
 		updateProduct : function( productUid, product ) {
 			return $http.put("/products/" + productUid, product );
 		},
+		
+		deleteProduct : function( productUid ) {
+			var path = "/products/" + productUid + $rootScope.authParam;				
+			return $http.delete(path);
+		},
 
 		getProduct : function( productUid ) {
 			var path = "/products/" + productUid + $rootScope.authParam;				

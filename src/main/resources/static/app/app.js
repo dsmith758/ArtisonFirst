@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('ArtisonFirst.artison', [ 'ngRoute', 'ngFileUpload', 'angularFileUpload' ]);
+var app = angular.module('ArtisonFirst.artison', [ 'ngRoute', 'ngFileUpload', 'angularFileUpload', 'ui.bootstrap' ]);
 
 app.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider

@@ -96,6 +96,21 @@ public abstract class BaseRelationService<T extends BaseObjectRelation> extends 
 		index.setData( data );
 		indexRepo.save( index );
 	}
+	
+	@Override
+	protected void saveCustomFieldIndexData( String uid, String fieldName, String value )
+	{
+		if ( fieldName != null && !fieldName.isEmpty() && value != null && !value.isEmpty() )
+		{
+			ObjectRelationDataIndex index = new ObjectRelationDataIndex();
+			index.setUid( uid );
+			index.setType( fieldName );
+			index.setData( value );
+			indexRepo.save( index );
+		}
+	}
+
+
 
 	@Override
 	protected void updateIndexData( String objectUid, IndexType type, String data )

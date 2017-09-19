@@ -1,8 +1,8 @@
-app.controller('landingController', [ '$rootScope', '$scope', '$location', 'LoginService', function($rootScope, $scope, $location, LoginService) {
+app.controller('inventoryController', [ '$rootScope', '$scope', '$location', 'LoginService', function($rootScope, $scope, $location, LoginService) {
 
 	$scope.message = '';
-	$scope.header = 'What next?';
-	$scope.subheader = 'SELECT WHAT YOU WOULD LIKE TO DO.';
+	$scope.header = 'Manage Inventory';
+	$scope.subheader = 'MANAGE SUPPLIES AND PRODUCTS';
 	$scope.loginName = $rootScope.loginName;
 	$scope.displayName = $rootScope.displayName;
 

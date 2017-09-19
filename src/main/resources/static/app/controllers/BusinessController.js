@@ -36,11 +36,11 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 	};	
 	
 	$scope.go = function(path) {
-		$location.path(path);
+		LoginService.go( path );
 	};
 	
 	$scope.goBack = function(path) {
-		$location.path('/main');
+		LoginService.back();
 	};
 
 	$scope.createBusiness = function() {

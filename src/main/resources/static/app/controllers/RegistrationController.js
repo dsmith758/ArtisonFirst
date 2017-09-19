@@ -65,7 +65,7 @@ app.controller('registrationController', [ '$rootScope', '$scope', '$location', 
 		var promise = RegistrationService.create( $scope.registration );
 		
 		promise.then(function(results) {
-			$location.path('/registered');
+			$location.path('/login');
 		}, function(error) {
 			$location.path('/register');
 		})

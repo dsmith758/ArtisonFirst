@@ -1,6 +1,33 @@
-app.factory('LoginService', function($http, $rootScope, $window) {
+app.factory('LoginService', function($http, $rootScope, $window, $location) {
 
+	var history = [];
+	var current = '';
+	
 	return {
+		
+		back : function() {
+	        if ( history.length > 0 ) {
+	        	current = history[ history.length - 1 ];
+	        	history.splice( history.length -1 );
+	        }
+	        if ( current == '' ) {
+	        	current = '/main';
+	        }
+	        $location.path( current );
+		},
+	
+		go : function( location ) {
+			if ( current != '' ) {
+				history.push( current );				
+			}
+			current = location;
+			$location.path( location );
+		},
+		
+		clearHistory : function() {
+			history = [];
+			current = '';
+		},
 
 		login : function(loginName, password) {
 			return $http.post('/login', {
@@ -61,6 +88,7 @@ app.factory('LoginService', function($http, $rootScope, $window) {
 			$rootScope.personUid = '';
 			$rootScope.companyUid = '';
 			$rootScope.authParam = '';
+			this.clearHistory();
 		},
 
 		getAuth : function() {

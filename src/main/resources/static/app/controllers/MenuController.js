@@ -6,7 +6,7 @@ app.controller('menuController', [ '$rootScope', '$scope', '$location', 'LoginSe
 
 	$scope.go = function(path) {
 		$scope.closeMenu();
-		$location.path(path);
+		LoginService.go(path);
 	};
 
 	$scope.toggleMenuBtn = function() {

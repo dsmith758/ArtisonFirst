@@ -13,9 +13,10 @@ app.controller('loginController', [ '$rootScope', '$scope', '$location', 'LoginS
 
 			if (results.data.account.authenticated == true ) {
 				LoginService.setAuth(results.data );
-				$location.path('/main');
+				LoginService.clearHistory();
+				LoginService.go( '/main' );
 			} else {
-				LoginService.setAuth(null);
+				LoginService.clearAuth();
 				$location.path('/login');
 			}
 		}, function(error) {
@@ -24,7 +25,11 @@ app.controller('loginController', [ '$rootScope', '$scope', '$location', 'LoginS
 	}
 
 	$scope.go = function(path) {
-		$location.path(path);
+		LoginService.go( path );
+	};
+	
+	$scope.goBack = function(path) {
+		LoginService.back();
 	};
 	
 	$scope.setMessage = function( msg ) {

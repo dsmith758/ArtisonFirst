@@ -1,0 +1,9 @@
+<section id="content">
+	<div class="container" ng-controller="inventoryController">
+		<ng-include src="'app/views/templates/identifier.html'"/>
+		<ng-include src="'app/views/templates/header.html'"/>
+		<div id="option-group" class="group">
+			<div ng-show="showList"><ng-include src="'app/views/body/inventory-menu.html'"/></div>
+		</div>
+	</div>
+</section>

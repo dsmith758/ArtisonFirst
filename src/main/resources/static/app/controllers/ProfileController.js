@@ -1,4 +1,4 @@
-app.controller('profileController', [ '$rootScope', '$scope', '$location', 'ProfileService', 'LoginService', function($rootScope, $scope, $location, ProfileService, LoginService ) {
+app.controller('profileController', [ '$rootScope', '$scope', '$location', '$anchorScroll', 'ProfileService', 'LoginService', function($rootScope, $scope, $location, $anchorScroll, ProfileService, LoginService ) {
 
 	$scope.message = '';
 	$scope.header = 'User Profile';
@@ -85,6 +85,8 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 			$scope.registration.account = results.data.account;
 			$scope.registration.person = results.data.person;
 			$scope.message = "Profile updated";
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			if(response.status === 401) {
 				$location.path( "/login" );
@@ -101,6 +103,8 @@ app.controller('profileController', [ '$rootScope', '$scope', '$location', 'Prof
 			$scope.registration.account = results.data.account;
 			$scope.registration.person = results.data.person;
 			$scope.message = "Profile image updated";
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			 if(response.status === 401) {
 	                $location.path( "/login" );

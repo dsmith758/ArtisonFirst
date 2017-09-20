@@ -21,6 +21,7 @@ public enum RelationshipType
 	PERSON_LOCATION(  Person.class, Location.class ), 
 	PERSON_IMAGE( Person.class, File.class ), 
 	PERSON_COMPANY(  Person.class, Company.class ), 
+	PERSON_CONTACT( Person.class, Person.class ),
 	PROFILE_IMAGE(  Person.class, File.class ), 
 	PRODUCT_COMPONENT( Product.class, Product.class ),
 	PRODUCT_IMAGE( Product.class, File.class ), 

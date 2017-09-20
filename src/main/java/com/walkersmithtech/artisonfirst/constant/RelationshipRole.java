@@ -9,6 +9,7 @@ public enum RelationshipRole
 	MESSAGE,
 	ORGANIZATION,
 	OWNER,
+	PERSON,
 	PRINCIPAL,
 	PRODUCT,
 	RECIPIENT,

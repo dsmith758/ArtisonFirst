@@ -26,6 +26,17 @@ public enum ErrorCode
 	COMPANY_ALREADY_EXISTS( new ServiceException( "COMPANY_05", "Company record already exists.", HttpStatus.BAD_REQUEST ) ),
 	COMPANY_DEFAULT_NOT_FOUND( new ServiceException( "COMPANY_06", "Default company not found.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	
+	// CONTACTS
+	CONTACT_NOT_FOUND( new ServiceException( "CONTACT_01", "Contact record not found.", HttpStatus.NOT_FOUND ) ),
+	CONTACT_MISSING_ID( new ServiceException( "CONTACT_02", "Contact ID is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	CONTACT_RECORD_NULL( new ServiceException( "CONTACT_03", "The provided record is null.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	CONTACT_DESCRIPTION_MISSING( new ServiceException( "CONTACT_04", "Contact description is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	CONTACT_FIRSTNAME_MISSING( new ServiceException( "CONTACT_05", "Contact first name is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	CONTACT_LASTNAME_MISSING( new ServiceException( "CONTACT_06", "Contact last name is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	CONTACT_PERSON_MISMATCH( new ServiceException( "CONTACT_07", "The peson doesn't have access to this contact.", HttpStatus.NOT_FOUND ) ),
+	CONTACT_PERSON_MISSING( new ServiceException( "CONTACT_08", "The contact does not have an owner.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	CONTACT_MISSING( new ServiceException( "CONTACT_09", "The contact object is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
+	
 	// FIELD ERRORS
 	FIELD_NOT_FOUND( new ServiceException( "FIELD_01", "Field record not found.", HttpStatus.NOT_FOUND ) ),
 	FIELD_MISSING_ID( new ServiceException( "FIELD_02", "Field ID is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
@@ -64,7 +75,7 @@ public enum ErrorCode
 	PERSON_LASTNAME_MISSING( new ServiceException( "PERSON_05", "Person's last name is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	PERSON_ALREADY_EXISTS( new ServiceException( "PERSON_06", "Person record already exists.", HttpStatus.BAD_REQUEST ) ),
 
-	// PERSON PROFILE ERRORS
+	// PRODUCT ERRORS
 	PRODUCT_NOT_FOUND( new ServiceException( "PRODUCT_01", "Product record not found.", HttpStatus.NOT_FOUND ) ),
 	PRODUCT_MISSING_ID( new ServiceException( "PRODUCT_02", "Product ID is missing.", HttpStatus.UNPROCESSABLE_ENTITY ) ),
 	PRODUCT_RECORD_NULL( new ServiceException( "PRODUCT_03", "The provided record is null.", HttpStatus.UNPROCESSABLE_ENTITY ) ),

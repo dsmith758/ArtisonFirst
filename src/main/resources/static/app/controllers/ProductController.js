@@ -1,4 +1,4 @@
-app.controller('productController', [ '$rootScope', '$scope', '$location', 'LoginService', 'ProductService', function($rootScope, $scope, $location, LoginService, ProductService ) {
+app.controller('productController', [ '$rootScope', '$scope', '$location', '$anchorScroll', 'LoginService', 'ProductService', function($rootScope, $scope, $location, $anchorScroll,  LoginService, ProductService ) {
 	
 	$scope.message = "";
 	$scope.userName = LoginService.getUserName();
@@ -112,6 +112,8 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 			$scope.registration.company = results.data.company;
 			$scope.message = "Product created";
 			$scope.showImageControl = true;
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			if(response.status === 401) {
 				$location.path( "/login" );
@@ -131,6 +133,8 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 			$scope.product = results.data.product;
 			$scope.registration.company = results.data.company;
 			$scope.message = "Product updated";
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			if(response.status === 401) {
 				$location.path( "/login" );
@@ -177,6 +181,8 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 			}
 			$scope.registration.company = results.data.company;
 			$scope.message = "";
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			if(response.status === 401) {
 				$location.path( "/login" );
@@ -209,6 +215,8 @@ app.controller('productController', [ '$rootScope', '$scope', '$location', 'Logi
 			LoginService.setAuth(results.data);
 			$scope.product.imageUri = results.data.product.imageUri;
 			$scope.message = "Logo updated";
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			if(response.status === 401) {
 				$location.path( "/login" );

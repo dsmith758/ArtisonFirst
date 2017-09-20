@@ -32,13 +32,13 @@ public class PersonCompanyService extends BaseRelationService<OrganizationPrinci
 		OrganizationPrincipal match = getRelationsByPrincipleAndOrganization( person.getObjectUid(), company.getObjectUid() );
 		if ( match != null )
 		{
-			updateSender( organization );
+			updatePersonCompany( organization );
 		}
 		organization = createModel( organization );
 		return organization;
 	}
 
-	public OrganizationPrincipal updateSender( OrganizationPrincipal organization ) throws ServiceException
+	public OrganizationPrincipal updatePersonCompany( OrganizationPrincipal organization ) throws ServiceException
 	{
 		validate( organization );
 		organization = updateModel( organization );

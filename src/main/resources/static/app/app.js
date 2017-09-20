@@ -21,6 +21,14 @@ app.config([ '$routeProvider', function($routeProvider) {
 		}
 	})
 
+	.when('/inventory', {
+		templateUrl : 'app/views/inventory.html',
+		controller : 'inventoryController',
+		data : {
+			registration : "required"
+		}
+	})
+
 	.when('/profile', {
 		templateUrl : 'app/views/profile.html',
 		controller : 'profileController',

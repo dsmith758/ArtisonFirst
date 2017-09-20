@@ -1,4 +1,4 @@
-app.controller('businessController', [ '$rootScope', '$scope', '$location', 'BusinessService', 'LoginService', function($rootScope, $scope, $location, BusinessService, LoginService) {
+app.controller('businessController', [ '$rootScope', '$scope', '$location', '$anchorScroll', 'BusinessService', 'LoginService', function($rootScope, $scope, $location, $anchorScroll, BusinessService, LoginService) {
 
 	$scope.message = '';
 	$scope.header = 'Business Profile';
@@ -52,6 +52,8 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 			$scope.registration.company = results.data.company;
 			$scope.registration.addressInfo = results.data.addressInfo;
 			$scope.message = "Business Profile created";
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			if(response.status === 401) {
 				$location.path( "/login" );
@@ -69,6 +71,8 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 			$scope.registration.company = results.data.company;
 			$scope.registration.addressInfo = results.data.addressInfo;
 			$scope.message = "Business Profile updated";
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			if(response.status === 401) {
 				$location.path( "/login" );
@@ -86,6 +90,8 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 			$scope.registration.company = results.data.company;
 			$scope.registration.addressInfo = results.data.addressInfo;
 			$scope.message = "";
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			if(response.status === 401) {
 				$location.path( "/login" );
@@ -101,6 +107,8 @@ app.controller('businessController', [ '$rootScope', '$scope', '$location', 'Bus
 			LoginService.setAuth(results.data);
 			$scope.registration = results.data;
 			$scope.message = "Logo updated";
+			$location.hash( "top" );
+			$anchorScroll();
 		}, function(error) {
 			if(response.status === 401) {
 				$location.path( "/login" );

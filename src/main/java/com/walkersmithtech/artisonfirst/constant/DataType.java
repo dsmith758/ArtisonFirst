@@ -3,6 +3,7 @@ package com.walkersmithtech.artisonfirst.constant;
 public enum DataType
 {
 	COMPANY( "COMPANY" ), 
+	CONTACT( "CONTACT" ),
 	FIELD( "FIELD" ),
 	FILE( "FILE" ),
 	INVENTORY_ITEM( "INVENTORY_ITEM" ),

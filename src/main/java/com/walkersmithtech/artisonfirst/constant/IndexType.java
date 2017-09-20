@@ -25,6 +25,8 @@ public enum IndexType
 	OWNER( "OWNER" ),
 	PRINCIPLE( "PRINCIPLE" ),
 	ORGANIZATION( "ORGANIZATION" ),
+	PERSON( "PERSON" ),
+	CONTACT( "CONTACT" ),
 	;
 
 	public String name;

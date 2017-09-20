@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.walkersmithtech.artisonfirst.constant.ErrorCode;
 import com.walkersmithtech.artisonfirst.constant.RelationshipRole;
 import com.walkersmithtech.artisonfirst.core.BaseBuilder;
 import com.walkersmithtech.artisonfirst.core.ServiceException;
@@ -13,18 +14,24 @@ import com.walkersmithtech.artisonfirst.core.service.CompanyLocationService;
 import com.walkersmithtech.artisonfirst.core.service.CompanyService;
 import com.walkersmithtech.artisonfirst.core.service.LocationService;
 import com.walkersmithtech.artisonfirst.core.service.PersonCompanyService;
+import com.walkersmithtech.artisonfirst.core.service.PersonService;
 import com.walkersmithtech.artisonfirst.data.entity.RoleData;
 import com.walkersmithtech.artisonfirst.data.model.dto.OrganizationDto;
 import com.walkersmithtech.artisonfirst.data.model.dto.PrincipalOrganizationsDto;
 import com.walkersmithtech.artisonfirst.data.model.object.Company;
 import com.walkersmithtech.artisonfirst.data.model.object.Location;
+import com.walkersmithtech.artisonfirst.data.model.object.Person;
 import com.walkersmithtech.artisonfirst.data.model.relation.CompanyLocation;
+import com.walkersmithtech.artisonfirst.data.model.relation.OrganizationPrincipal;
 
 @Service
 public class OrganizationBuilder extends BaseBuilder<OrganizationDto>
 {
 	@Autowired
 	private CompanyService companyService;
+	
+	@Autowired
+	private PersonService personService;
 
 	@Autowired
 	private LocationService locationService;
@@ -40,6 +47,7 @@ public class OrganizationBuilder extends BaseBuilder<OrganizationDto>
 		Company company = companyService.createCompany( model.getCompany() );
 		List<Location> locations = locationService.createLocations( model.getAddressInfo() );
 		companyLocationService.createOrUpdateCompanyLocations( locations, company );
+		model = createOrUpdateCompanyPrincipal( model );
 		return buildCompanyDto( company, model );
 	}
 
@@ -48,7 +56,30 @@ public class OrganizationBuilder extends BaseBuilder<OrganizationDto>
 		Company company = companyService.updateCompany( model.getCompany() );
 		List<Location> locations = locationService.updateLocations( model.getAddressInfo() );
 		companyLocationService.createOrUpdateCompanyLocations( locations, company );
+		model = createOrUpdateCompanyPrincipal( model );
 		return buildCompanyDto( company, model );
+	}
+	
+	public OrganizationDto createOrUpdateCompanyPrincipal( OrganizationDto model ) throws ServiceException
+	{
+		Person person = personService.getModelByUid( model.getAccount().getPersonUid() );
+		if ( person == null )
+		{
+			throw ErrorCode.ORGRANIZATION_MISSING_PERSON.exception;
+		}
+		
+		Company company = model.getCompany();
+		if ( company == null )
+		{
+			throw ErrorCode.ORGRANIZATION_MISSING_COMPANY.exception;
+		}
+
+		OrganizationPrincipal personCompany = new OrganizationPrincipal();
+		personCompany.addOrganization( company );
+		personCompany.addPrincipal( person );
+		personCompany.setIsDefault( false );
+		personCompany = personCompanyService.createModel( personCompany );
+		return model;
 	}
 	
 	public PrincipalOrganizationsDto getOrganizationsByPersonUid( OrganizationDto model ) throws ServiceException
